@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>ConfigVideo.qml</file>
+        <file>resources/font/FontAwesome.otf</file>
+        <file>ConfigVideoItem.qml</file>
+        <file>MirrorScreen.qml</file>
+    </qresource>
+</RCC>

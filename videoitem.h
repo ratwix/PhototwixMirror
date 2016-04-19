@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QQmlContext>
 #include <QtQml>
+#include "parameters.h"
 
 class VideoItem : public QObject
 {
@@ -12,7 +13,7 @@ class VideoItem : public QObject
     Q_PROPERTY(QString videoPath READ videoPath WRITE setVideoPath NOTIFY videoItemChanged)
 public:
     explicit VideoItem(QObject *parent = 0);
-    VideoItem(QUrl appDirPath);
+    VideoItem(Parameters *parameters);
 
     QString videoName() const;
     void setVideoName(const QString &videoName);
@@ -21,9 +22,10 @@ public:
     void setVideoPath(const QString &videoPath);
 
 private:
-    QString m_videoName;
-    QString m_videoPath;
-    QUrl    m_applicationDirPath;
+    QString     m_videoName;
+    QString     m_videoPath;
+    QUrl        m_applicationDirPath;
+    Parameters  *m_parameters;
 signals:
     void    videoItemChanged();
 public slots:

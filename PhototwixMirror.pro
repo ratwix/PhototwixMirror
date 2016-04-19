@@ -5,7 +5,14 @@ CONFIG += c++11
 
 SOURCES += main.cpp \
     parameters.cpp \
-    videoitem.cpp
+    videoitem.cpp \
+    clog.cpp \
+    photo.cpp \
+    photogallery.cpp \
+    photopart.cpp \
+    template.cpp \
+    templatephotoposition.cpp \
+    mail.cpp
 
 RESOURCES += qml.qrc
 
@@ -18,4 +25,11 @@ include(deployment.pri)
 HEADERS += \
     parameters.h \
     videoitem.h \
-    common.h
+    common.h \
+    clog.h \
+    photo.h \
+    photogallery.h \
+    photopart.h \
+    template.h \
+    templatephotoposition.h \
+    mail.h

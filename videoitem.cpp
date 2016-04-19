@@ -8,9 +8,9 @@ VideoItem::VideoItem(QObject *parent) : QObject(parent)
     m_videoPath = "";
 }
 
-VideoItem::VideoItem(QUrl appDirPath)
+VideoItem::VideoItem(Parameters *parameters)
 {
-    m_applicationDirPath = appDirPath;
+    m_parameters = parameters;
 }
 
 QString VideoItem::videoName() const
@@ -27,7 +27,7 @@ void VideoItem::setVideoName(const QString &videoName)
 
     if (fileInfo.exists()) {
         //Copy video to video path
-        QFile::copy(tmp.toLocalFile(), m_applicationDirPath.toString() + "/" + VIDEO_FOLDER + "/" + fileInfo.fileName());
+        QFile::copy(tmp.toLocalFile(), m_parameters->getApplicationDirPath().toString() + "/" + VIDEO_FOLDER + "/" + fileInfo.fileName());
         m_videoName = fileInfo.fileName();
     }
     emit videoItemChanged();
@@ -35,7 +35,7 @@ void VideoItem::setVideoName(const QString &videoName)
 
 QString VideoItem::videoPath() const
 {
-    return m_applicationDirPath.toString() + "/" + VIDEO_FOLDER + "/" + m_videoName;
+    return m_parameters->getApplicationDirPath().toString() + "/" + VIDEO_FOLDER + "/" + m_videoName;
 }
 
 void VideoItem::setVideoPath(const QString &videoPath)

@@ -5,5 +5,19 @@
         <file>resources/font/FontAwesome.otf</file>
         <file>ConfigVideoItem.qml</file>
         <file>MirrorScreen.qml</file>
+        <file>ConfigScreen.qml</file>
+        <file>ConfigTemplateScreen.qml</file>
+        <file>resources/controls/FreePhotoPicker.qml</file>
+        <file>resources/controls/InputPanel.qml</file>
+        <file>resources/controls/KeyButton.qml</file>
+        <file>resources/controls/KeyModel.qml</file>
+        <file>resources/controls/KeyPopup.qml</file>
+        <file>resources/controls/MaxPhotoPicker.qml</file>
+        <file>resources/controls/MessageScreen.qml</file>
+        <file>resources/controls/PricePhotoPicker.qml</file>
+        <file>ConfigPrinter.qml</file>
+        <file>ConfigCamera.qml</file>
+        <file>ConfigGallery.qml</file>
+        <file>ConfigMail.qml</file>
     </qresource>
 </RCC>

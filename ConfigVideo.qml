@@ -2,11 +2,17 @@ import QtQuick 2.4
 import QtQuick.Controls 1.4
 import QtMultimedia 5.4
 
-Rectangle {
+Item {
     id:configVideo
     state: "NORMAL"
+    anchors.topMargin: 15
 
     property alias videoPreview: previewPlayer
+
+    MouseArea {
+        anchors { fill: parent;  }
+        onClicked: {}
+    }
 
     Column {
         id: videoConfigColumn

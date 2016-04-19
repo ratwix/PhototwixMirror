@@ -7,9 +7,9 @@ import com.phototwix.components 1.0
 Rectangle {
     id:configVideoItem
     property alias videoLabel:label.text;
-
     property VideoItem videoItem;
 
+    anchors.topMargin: 15
     color: "transparent"
     width: 500
     FontLoader {

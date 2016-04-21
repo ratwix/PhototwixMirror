@@ -8,9 +8,31 @@ VideoItem::VideoItem(QObject *parent) : QObject(parent)
     m_videoPath = "";
 }
 
-VideoItem::VideoItem(Parameters *parameters)
+VideoItem::VideoItem(Parameters *parameters, QString videoType)
 {
     m_parameters = parameters;
+    m_videoType = videoType;
+}
+
+void VideoItem::serialize(PrettyWriter<StringBuffer> &writer)
+{
+    writer.StartObject();
+
+    writer.Key("videoType");
+    writer.String(m_videoType.toStdString().c_str());
+
+    writer.Key("videoName");
+    writer.String(m_videoName.toStdString().c_str());
+
+    writer.Key("videoPath");
+    writer.String(m_videoPath.toStdString().c_str());
+
+    writer.EndObject();
+}
+
+void VideoItem::unserialize(const Value &value)
+{
+
 }
 
 QString VideoItem::videoName() const

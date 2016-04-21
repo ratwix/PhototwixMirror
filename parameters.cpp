@@ -83,10 +83,10 @@ void Parameters::init() {
     m_mailSubject = "";
     m_mailContent = "";
 
-    m_waitVideo = new VideoItem(this);
-    m_startGlobalPhotoProcessVideo = new VideoItem(this);
-    m_startPhotoProcessVideo = new VideoItem(this);
-    m_endGlobalPhotoProcessVideo = new VideoItem(this);
+    m_waitVideo = new VideoItem(this, "waitVideo");
+    m_startGlobalPhotoProcessVideo = new VideoItem(this, "startGlobalPhotoProcessVideo");
+    m_startPhotoProcessVideo = new VideoItem(this, "startPhotoProcessVideo");
+    m_endGlobalPhotoProcessVideo = new VideoItem(this, "endGlobalPhotoProcessVideo");
 
     Unserialize(); //Unserialize parameters
     m_photogallery->Unserialize(m_templates); //unserialize current gallery
@@ -182,6 +182,14 @@ void Parameters::Serialize() {
                 CLog::Write(CLog::Fatal, "Bad type QObject -> Template");
             }
         }
+        writer.EndArray();
+            m_waitVideo->serialize(writer);
+            m_startGlobalPhotoProcessVideo->serialize(writer);
+            m_startPhotoProcessVideo->serialize(writer);
+            m_endGlobalPhotoProcessVideo->serialize(writer);
+        writer.Key("videos");
+        writer.StartArray();
+
         writer.EndArray();
 
     writer.EndObject();

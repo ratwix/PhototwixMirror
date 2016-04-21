@@ -4,7 +4,11 @@
 #include <QObject>
 #include <QQmlContext>
 #include <QtQml>
+#include "rapidjson/document.h"
+
 #include "parameters.h"
+
+using namespace rapidjson;
 
 class VideoItem : public QObject
 {
@@ -13,17 +17,20 @@ class VideoItem : public QObject
     Q_PROPERTY(QString videoPath READ videoPath WRITE setVideoPath NOTIFY videoItemChanged)
 public:
     explicit VideoItem(QObject *parent = 0);
-    VideoItem(Parameters *parameters);
+    VideoItem(Parameters *parameters, QString type);
+
+    void serialize(PrettyWriter<StringBuffer> &writer);
+    void unserialize(Value const &value);
 
     QString videoName() const;
     void setVideoName(const QString &videoName);
 
     QString videoPath() const;
     void setVideoPath(const QString &videoPath);
-
 private:
     QString     m_videoName;
     QString     m_videoPath;
+    QString     m_videoType;
     QUrl        m_applicationDirPath;
     Parameters  *m_parameters;
 signals:

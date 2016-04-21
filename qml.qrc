@@ -19,5 +19,8 @@
         <file>ConfigCamera.qml</file>
         <file>ConfigGallery.qml</file>
         <file>ConfigMail.qml</file>
+        <file>resources/controls/ConfirmScreen.qml</file>
+        <file>resources/images/Accept-icon.png</file>
+        <file>resources/images/Refuse-icon.png</file>
     </qresource>
 </RCC>

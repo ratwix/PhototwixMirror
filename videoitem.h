@@ -7,6 +7,7 @@
 #include "rapidjson/document.h"
 
 #include "parameters.h"
+#include "common.h"
 
 using namespace rapidjson;
 
@@ -17,7 +18,7 @@ class VideoItem : public QObject
     Q_PROPERTY(QString videoPath READ videoPath WRITE setVideoPath NOTIFY videoItemChanged)
 public:
     explicit VideoItem(QObject *parent = 0);
-    VideoItem(Parameters *parameters, QString type);
+    VideoItem(Parameters *parameters, VideoType type);
 
     void serialize(PrettyWriter<StringBuffer> &writer);
     void unserialize(Value const &value);
@@ -30,7 +31,7 @@ public:
 private:
     QString     m_videoName;
     QString     m_videoPath;
-    QString     m_videoType;
+    VideoType   m_videoType;
     QUrl        m_applicationDirPath;
     Parameters  *m_parameters;
 signals:

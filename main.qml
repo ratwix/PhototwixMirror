@@ -2,6 +2,7 @@ import QtQuick 2.6
 import QtQuick.Window 2.2
 
 import com.phototwix.components 1.0
+import "./resources/controls"
 
 Window {
     title: "Phototwix V5"
@@ -17,5 +18,13 @@ Window {
             id: configScreen
             anchors.fill: parent
         }
+    }
+
+    MessageScreen {
+        id:mbox
+    }
+
+    ConfirmScreen {
+        id:cbox
     }
 }

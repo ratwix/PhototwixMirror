@@ -23,6 +23,14 @@
 #define CONFIG_FILE         string(m_applicationDirPath.toString().toStdString() + "/config.json").c_str()
 #define GALLERY_FILE        string(m_applicationDirPath.toString().toStdString() + "/gallery.json").c_str()
 
+enum VideoType {
+    VIDEO_WAIT = 0,
+    VIDEO_STARTGLOBALPHOTOPROCESS,
+    VIDEO_STARTPHOTOPROCESS,
+    VIDEO_ENDGLOBALPHOTOPROCESS
+
+};
+
 static inline std::string itos(int i) {
     std::ostringstream tmp;
     tmp  << i;

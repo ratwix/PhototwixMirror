@@ -7,7 +7,10 @@ import QtMultimedia 5.4
 import "./resources/controls"
 
 Item {
+    id: configGalleryScreen
+
     anchors.topMargin: 15
+    state: ""
 
     MouseArea {
         anchors { fill: parent;  }
@@ -15,7 +18,6 @@ Item {
     }
 
     Column {
-        id: mailCol
         spacing: 5
 
         Row {
@@ -126,6 +128,161 @@ Item {
         }
     }
 
+    /**
+      * Template view
+      */
+
+    ListView {
+        anchors.top: parent.top
+        anchors.right: parent.right
+        height: parent.height
+        width: parent.width * 0.4
+
+        //Dans quel répertoire il faut chercher
+
+        //Représentation des template, avec un bouton et un switch
+        Component {
+            id: fileDelegate
+
+            Row {
+                spacing : 30
+                anchors.leftMargin: 20
+                Column {
+                    width: 250
+                    spacing: 10
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    BusyIndicator {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        running: templateImage.status === Image.Loading
+                    }
+
+                    Image {
+                        id:templateImage
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        source: model.modelData.url
+                        sourceSize.height: 200
+                        cache: false
+                        asynchronous: true
+                        antialiasing: true
+                    }
+
+                    Text {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: qsTr(model.modelData.name)
+                    }
+                }
+
+
+                Column {
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing : 10
+
+                    Grid {
+                        columns: 2
+                        columnSpacing: 10
+                        Label {
+                            height: 30
+                            text: "Active"
+                            font.pixelSize: 15
+                        }
+
+                        Switch {
+                            id:templateActiveSwitch
+                            onCheckedChanged: {
+                                model.modelData.active = checked
+                            }
+                            Component.onCompleted: {
+                                checked = model.modelData.active
+                            }
+                        }
+
+                        Label {
+                            height: 30
+                            text: "Cutter print"
+                            font.pixelSize: 15
+                        }
+
+                        Switch {
+                            id:templateCutterSwitch
+                            onCheckedChanged: {
+                                model.modelData.printcutter = checked
+                            }
+                            Component.onCompleted: {
+                                checked = model.modelData.printcutter
+                            }
+                        }
+
+                        Label {
+                            height: 30
+                            text: "Double print"
+                            font.pixelSize: 15
+                        }
+
+                        Switch {
+                            id:templateDoubleSwitch
+                            onCheckedChanged: {
+                                model.modelData.doubleprint = checked
+                            }
+                            Component.onCompleted: {
+                                checked = model.modelData.doubleprint
+                            }
+                        }
+
+                        Label {
+                            height: 30
+                            text: "Landscape"
+                            font.pixelSize: 15
+                        }
+
+                        Switch {
+                            id:landscapeSwitch
+                            onCheckedChanged: {
+                                model.modelData.landscape = checked
+                            }
+                            Component.onCompleted: {
+                                checked = model.modelData.landscape
+                            }
+                        }
+                    }
+
+
+
+                    Button {
+                        text: "Config"
+                        onClicked: {
+                            configTemplate.currentTemplate = model.modelData
+                            configGalleryScreen.state = "CONFIG_TEMPLATE"
+                        }
+                    }
+
+                    Button {
+                        visible: admin
+                        text: "Supprimer"
+                        onClicked: {
+                            console.debug("Delete template");
+                            cbox.message = "Supprimer ce visuel ?"
+                            cbox.acceptFunction = function () {
+                                parameters.deleteTemplateFromName(model.modelData.name);
+                            }
+                            cbox.state = "show"
+                        }
+                    }
+                }
+            }
+        }
+
+        model: parameters.templates
+        delegate: fileDelegate
+    }
+
+    ConfigTemplateScreen {
+        id:configTemplate
+        anchors.fill: parent
+        visible:false
+    }
+
+
     FileDialog {
         id: importTemplateFileDialog
         title: "Import de template"
@@ -192,4 +349,14 @@ Item {
             mbox.message = "Copy " + photoGallery.currentCopy + " / " + photoGallery.totalFileNumber;
         }
     }
+
+    states: [
+        State {
+            name: "CONFIG_TEMPLATE"
+            PropertyChanges {
+                target: configTemplate
+                visible: true
+            }
+        }
+    ]
 }

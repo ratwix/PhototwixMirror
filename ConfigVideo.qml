@@ -6,6 +6,7 @@ Item {
     id:configVideo
     state: "NORMAL"
     anchors.topMargin: 15
+    anchors.fill: parent
 
     property alias videoPreview: previewPlayer
 
@@ -48,57 +49,29 @@ Item {
         }
     }
 
-    Rectangle {
-        id:backPreview
-        visible: false
-        color: "white"
-        anchors.fill: parent
-    }
-
     MediaPlayer {
         id: previewPlayer
         loops: MediaPlayer.Infinite
         autoPlay: false
+        source: "file:///d:/Projets/build-PhototwixMirror-Desktop_Qt_5_6_0_MinGW_32bit-Debug/debug/video/intro_test.mp4"
     }
 
     VideoOutput {
         visible: false
         id: previewVideoOutput
         source: previewPlayer
-        anchors.fill: parent
-    }
-
-    Rectangle {
-        id:previewButtonClose
-        visible: false
-        height: 50
-        width: 50
-        anchors.top: parent.top
-        anchors.right: parent.right
-        anchors.topMargin: 10
-        anchors.rightMargin: 10
-        color: "black"
-        radius: 10
-
-        Text {
-            color: "white"
-            height: parent.height
-            width: parent.height
-            fontSizeMode: Text.Fit
-            font.pixelSize: height * 0.8
-            font.family: "FontAwesome"
-
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            text: "\uf00d"
-        }
+        width: parent.width / 2
+        height: parent.height / 2
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
 
         MouseArea {
-            anchors.fill: parent
+            anchors.fill: parent;
             onClicked: {
-                configVideo.state = "NORMAL";
                 previewPlayer.stop();
+                configVideo.state = "NORMAL"
             }
+
         }
     }
 
@@ -108,9 +81,7 @@ Item {
             },
             State {
                 name: "PREVIEW"
-                PropertyChanges { target: previewButtonClose; visible: true}
                 PropertyChanges { target: previewVideoOutput; visible: true}
-                PropertyChanges { target: backPreview; visible: true}
             }
         ]
 }

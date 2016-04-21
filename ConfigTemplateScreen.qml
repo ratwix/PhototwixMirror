@@ -4,19 +4,24 @@ import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.2
 
-import "../resources/controls"
+import com.phototwix.components 1.0
+
+import "./resources/controls"
 
 Rectangle {
     id: configTemplateScreen
-
+    color: "lightgrey"
     height: parent.height
     width: parent.width
 
     property var currentFrame: null
     property int currentFrameNumber : 0
+    property Template currentTemplate
 
     function updateTemplatePhotoPositionsRepeater() {
-        templatePhotoPositionsRepeater.model = applicationWindows.currentEditedTemplate.templatePhotoPositions;
+        if (currentTemplate) {
+            templatePhotoPositionsRepeater.model = currentTemplate.templatePhotoPositions;
+        }
     }
 
     MouseArea {
@@ -34,45 +39,45 @@ Rectangle {
             anchors.horizontalCenter : parent.horizontalCenter
             spacing: 20
 
-            ButtonImage {
+            Button {
                 id: addPhoto;
                 anchors.horizontalCenter: parent.horizontalCenter
-                label: "Ajouter";
+                text: "Ajouter";
                 onClicked:
                 {
-                    applicationWindows.currentEditedTemplate.addTemplatePhotoPosition();
+                    currentTemplate.addTemplatePhotoPosition();
                     updateTemplatePhotoPositionsRepeater();
                 }
             }
 
-            ButtonImage {
+            Button {
                 id: deletePhoto;
                 anchors.horizontalCenter: parent.horizontalCenter
-                label: "Supprimer";
+                text: "Supprimer";
                 onClicked:
                 {
                     if (currentFrame) {
-                        applicationWindows.currentEditedTemplate.deleteTemplatePhotoPosition(currentFrameNumber);
+                        currentTemplate.deleteTemplatePhotoPosition(currentFrameNumber);
                         updateTemplatePhotoPositionsRepeater();
                     }
                 }
             }
 
-            ButtonImage {
+            Button {
                 id: saveTemplate;
                 anchors.horizontalCenter: parent.horizontalCenter
-                label: "Sauvegarder";
+                text: "Sauvegarder";
                 onClicked:
                 {
                     parameters.Serialize();
-                    mainRectangle.state = "CONFIG"
+                    configGalleryScreen.state = ""
                 }
             }
 
-            ButtonImage {
+            Button {
                 id: updateTemplate;
                 anchors.horizontalCenter: parent.horizontalCenter
-                label: "Changer image";
+                text: "Changer image";
                 onClicked:
                 {
                     updateTemplateFileDialog.open();
@@ -89,7 +94,7 @@ Rectangle {
                 modality: Qt.NonModal
                 nameFilters: [ "Images (*.jpg *.png)" ]
                 onAccepted: {
-                    applicationWindows.currentEditedTemplate.updateImageFromUrl(updateTemplateFileDialog.fileUrl);
+                    currentTemplate.updateImageFromUrl(updateTemplateFileDialog.fileUrl);
                 }
             }
         }
@@ -100,8 +105,7 @@ Rectangle {
 
         property int highestZ: 0
 
-
-        color: applicationWindows.backColor
+        color: "lightgrey"
         anchors.right: parent.right
         height: parent.height
         width: parent.width - configTemplateScreenButtons.width
@@ -109,7 +113,7 @@ Rectangle {
         Image {
             id: currentEditedTemplate
 
-            source: applicationWindows.currentEditedTemplate ? applicationWindows.currentEditedTemplate.url : ""
+            source: currentTemplate ? currentTemplate.url : ""
             antialiasing: true
             asynchronous: true
             cache: false
@@ -126,7 +130,7 @@ Rectangle {
                 id:templatePhotoPositionsRepeater
                 anchors.fill: parent
 
-                model: applicationWindows.currentEditedTemplate ? applicationWindows.currentEditedTemplate.templatePhotoPositions : ""
+                model: currentTemplate ? currentTemplate.templatePhotoPositions : ""
 
                 Rectangle {
                     id:templatePhotoPosition
@@ -134,7 +138,7 @@ Rectangle {
                     x: currentEditedTemplate.width * modelData.x
                     z:10
                     height: currentEditedTemplate.height * modelData.height
-                    width: height * applicationWindows.cameraRation
+                    width: height * (parameters.cameraWidth / parameters.cameraHeight)
                     rotation: modelData.rotate
                     color: "#800000FF"
                     smooth: true

@@ -89,7 +89,6 @@ Rectangle {
                     console.debug("Video source : file:///" + videoItem.videoPath)
                     configVideo.videoPreview.source = "file:///" + videoItem.videoPath;
                     configVideo.videoPreview.play();
-                    //console.log("Play video : " + videoUrl);
                     configVideo.state = "PREVIEW"
                 }
             }

@@ -8,10 +8,11 @@ VideoItem::VideoItem(QObject *parent) : QObject(parent)
     m_videoPath = "";
 }
 
-VideoItem::VideoItem(Parameters *parameters, QString videoType)
+VideoItem::VideoItem(Parameters *parameters, VideoType type)
 {
     m_parameters = parameters;
-    m_videoType = videoType;
+    m_videoType = type;
+    m_videoPath = "";
 }
 
 void VideoItem::serialize(PrettyWriter<StringBuffer> &writer)
@@ -19,7 +20,7 @@ void VideoItem::serialize(PrettyWriter<StringBuffer> &writer)
     writer.StartObject();
 
     writer.Key("videoType");
-    writer.String(m_videoType.toStdString().c_str());
+    writer.Int(m_videoType);
 
     writer.Key("videoName");
     writer.String(m_videoName.toStdString().c_str());
@@ -32,7 +33,13 @@ void VideoItem::serialize(PrettyWriter<StringBuffer> &writer)
 
 void VideoItem::unserialize(const Value &value)
 {
+    if (value.HasMember("videoName")) {
+        m_videoName = QString(value["videoName"].GetString());
+    }
 
+    if (value.HasMember("videoPath")) {
+        m_videoPath = QString(value["videoPath"].GetString());
+    }
 }
 
 QString VideoItem::videoName() const
@@ -52,6 +59,7 @@ void VideoItem::setVideoName(const QString &videoName)
         QFile::copy(tmp.toLocalFile(), m_parameters->getApplicationDirPath().toString() + "/" + VIDEO_FOLDER + "/" + fileInfo.fileName());
         m_videoName = fileInfo.fileName();
     }
+    m_parameters->Serialize();
     emit videoItemChanged();
 }
 

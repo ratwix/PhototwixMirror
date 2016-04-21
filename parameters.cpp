@@ -83,10 +83,10 @@ void Parameters::init() {
     m_mailSubject = "";
     m_mailContent = "";
 
-    m_waitVideo = new VideoItem(this, "waitVideo");
-    m_startGlobalPhotoProcessVideo = new VideoItem(this, "startGlobalPhotoProcessVideo");
-    m_startPhotoProcessVideo = new VideoItem(this, "startPhotoProcessVideo");
-    m_endGlobalPhotoProcessVideo = new VideoItem(this, "endGlobalPhotoProcessVideo");
+    m_waitVideo = new VideoItem(this, VIDEO_WAIT);
+    m_startGlobalPhotoProcessVideo = new VideoItem(this, VIDEO_STARTGLOBALPHOTOPROCESS);
+    m_startPhotoProcessVideo = new VideoItem(this, VIDEO_STARTPHOTOPROCESS);
+    m_endGlobalPhotoProcessVideo = new VideoItem(this, VIDEO_ENDGLOBALPHOTOPROCESS);
 
     Unserialize(); //Unserialize parameters
     m_photogallery->Unserialize(m_templates); //unserialize current gallery
@@ -183,13 +183,13 @@ void Parameters::Serialize() {
             }
         }
         writer.EndArray();
-            m_waitVideo->serialize(writer);
-            m_startGlobalPhotoProcessVideo->serialize(writer);
-            m_startPhotoProcessVideo->serialize(writer);
-            m_endGlobalPhotoProcessVideo->serialize(writer);
+
         writer.Key("videos");
         writer.StartArray();
-
+        m_waitVideo->serialize(writer);
+        m_startGlobalPhotoProcessVideo->serialize(writer);
+        m_startPhotoProcessVideo->serialize(writer);
+        m_endGlobalPhotoProcessVideo->serialize(writer);
         writer.EndArray();
 
     writer.EndObject();
@@ -320,6 +320,33 @@ void Parameters::Unserialize() {
         if (templates.IsArray()) {
             for (SizeType i = 0; i < templates.Size(); i++) {
                 addTemplate(templates[i]);
+            }
+        }
+    }
+
+    if (document.HasMember("videos")) {
+        const Value& videos = document["videos"];
+        if (videos.IsArray()) {
+            for (SizeType i = 0; i < videos.Size(); i++) {
+                if (videos[i].HasMember("videoType")) {
+                    VideoType type = (VideoType)videos[i]["videoType"].GetInt();
+                    switch (type) {
+                        case VIDEO_WAIT:
+                            m_waitVideo->unserialize(videos[i]);
+                        break;
+                        case VIDEO_STARTGLOBALPHOTOPROCESS:
+                            m_startGlobalPhotoProcessVideo->unserialize(videos[i]);
+                        break;
+                        case VIDEO_STARTPHOTOPROCESS:
+                            m_startPhotoProcessVideo->unserialize(videos[i]);
+                        break;
+                        case VIDEO_ENDGLOBALPHOTOPROCESS:
+                            m_endGlobalPhotoProcessVideo->unserialize(videos[i]);
+                        break;
+                    default:
+                        CLog::Write(CLog::Error, QString("Unknown video type:") + type);
+                    }
+                }
             }
         }
     }

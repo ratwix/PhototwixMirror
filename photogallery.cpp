@@ -138,13 +138,14 @@ void PhotoGallery::saveGalleryThread(QUrl d, bool saveSingle, bool saveDeleted, 
 
     updateGalleryDiskSize(saveSingle, saveDeleted, saveDeletedSingle);
 
-    QString destPath = d.toString();
+    QString destPath = d.toLocalFile();
+    /* toLocalFile() remove file:///
     string prefix("file://");
 
     if (destPath.toStdString().substr(0, prefix.size()) == prefix) {
         destPath = QString(destPath.toStdString().substr(prefix.size(), destPath.size() - prefix.size()).c_str());
     }
-
+    */
     if (destPath.toStdString().back() != '/') {
         destPath = destPath + "/";
     }

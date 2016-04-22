@@ -135,6 +135,23 @@ Item {
             }
         }
 
+        ButtonAwesome {
+            anchors.right: parent.right
+            anchors.top : parent.top
+            anchors.rightMargin: 10
+            anchors.topMargin: 10
+            size: 60
+            code:"\uf015"
+
+            onClicked: {
+                /*
+                timerPhotoPreview.stop()
+                cameraWorker.closeCamera();
+                focusRectangle.visible = false
+                */
+            }
+        }
+/*
         Rectangle {
             anchors.right: parent.right
             anchors.top : parent.top
@@ -167,7 +184,7 @@ Item {
                 }
             }
         }
-
+*/
     }
 
 }

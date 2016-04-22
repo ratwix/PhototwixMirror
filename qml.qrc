@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
+        <file>CommandScreenMain.qml</file>
         <file>ConfigVideo.qml</file>
         <file>resources/font/FontAwesome.otf</file>
         <file>ConfigVideoItem.qml</file>
@@ -22,5 +22,9 @@
         <file>resources/controls/ConfirmScreen.qml</file>
         <file>resources/images/Accept-icon.png</file>
         <file>resources/images/Refuse-icon.png</file>
+        <file>CommandScreen.qml</file>
+        <file>resources/controls/PasswordScreen.qml</file>
+        <file>resources/controls/ButtonAwesome.qml</file>
+        <file>resources/controls/ChooseTemplateControl.qml</file>
     </qresource>
 </RCC>

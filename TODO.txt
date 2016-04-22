@@ -1,0 +1,1 @@
+* Print auto + choix effet par defaut

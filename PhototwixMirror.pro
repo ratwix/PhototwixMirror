@@ -12,7 +12,8 @@ SOURCES += main.cpp \
     photopart.cpp \
     template.cpp \
     templatephotoposition.cpp \
-    mail.cpp
+    mail.cpp \
+    keyemitter.cpp
 
 RESOURCES += qml.qrc
 
@@ -32,4 +33,5 @@ HEADERS += \
     photopart.h \
     template.h \
     templatephotoposition.h \
-    mail.h
+    mail.h \
+    keyemitter.h

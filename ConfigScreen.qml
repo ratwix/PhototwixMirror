@@ -8,7 +8,7 @@ import "./resources/controls"
 
 Rectangle {
     id: configScreen
-    //color: applicationWindows.backColor
+    color: globalVar.backColor
     height: parent.height
     width: parent.width
 
@@ -82,161 +82,39 @@ Rectangle {
         height: parent.height
         spacing:15
 
-        Rectangle {
+        ButtonAwesome {
             id:homeButton
             anchors.horizontalCenter: parent.horizontalCenter
-            height: width
-            width: parent.width * 0.85
-            color:"#212126"
-            radius:height / 7
-
-            Text {
-                color: "white"
-                height: parent.height
-                width: parent.height
-                fontSizeMode: Text.Fit
-                font.pixelSize: height * 0.8
-                font.family: "FontAwesome"
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                text: "\uf015" //Home
-            }
-
-
-            MouseArea {
-                anchors { fill: parent;  }
-                onClicked: { mainRectangle.state = "MIRROR" }
+            size: parent.width * 0.85
+            code: "\uf015"
+            onClicked: {
+                commandScreenItem.state = "CHOOSE_TEMPLATE"
             }
         }
 
-        Rectangle {
+        ButtonAwesome {
             id:quitButton
             anchors.horizontalCenter: parent.horizontalCenter
-            height: width
-            width: parent.width * 0.85
-            color:"#212126"
-            radius:height / 7
-
-            Text {
-                color: "white"
-                height: parent.height
-                width: parent.height
-                fontSizeMode: Text.Fit
-                font.pixelSize: height * 0.8
-                font.family: "FontAwesome"
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                text: "\uf08b" //Exit
-            }
-
-
-            MouseArea {
-                anchors { fill: parent;  }
-                onClicked: {
-                    Qt.quit()
-                }
+            size: parent.width * 0.85
+            code: "\uf08b"
+            onClicked: {
+                Qt.quit()
             }
         }
 
-        Rectangle {
+        ButtonAwesome {
             id:haltButton
             anchors.horizontalCenter: parent.horizontalCenter
-            height: width
-            width: parent.width * 0.85
-            color:"#212126"
-            radius:height / 7
-
-            Text {
-                color: "white"
-                height: parent.height
-                width: parent.height
-                fontSizeMode: Text.Fit
-                font.pixelSize: height * 0.8
-                font.family: "FontAwesome"
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                text: "\uf011" //Power Off
-            }
-
-
-            MouseArea {
-                anchors { fill: parent;  }
-                onClicked: {
-                    parameters.haltSystem()
-                    Qt.quit()
-                }
+            size: parent.width * 0.85
+            code: "\uf011"
+            onClicked: {
+                parameters.haltSystem()
+                Qt.quit()
             }
         }
+
     }
 
-    /*
-    //Actions
-    Column {
-        anchors.left: parent.left
-        width: parent.width * 0.4
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.leftMargin: 40
-        spacing: 15
-
-        Row {
-            anchors.left: parent.left
-            spacing: 10
-
-            Button {
-                //anchors.left: parent.left
-                text:"Quitter"
-                onClicked: {
-                    Qt.quit()
-                }
-            }
-
-            Button {
-                //anchors.left: parent.left
-                text:"Eteindre"
-                onClicked: {
-                    parameters.haltSystem()
-                    Qt.quit()
-                }
-            }
-        }
-    }
-
-
-    //Liste des templates
-
-
-
-
-    Rectangle {
-        id:homeButton
-        anchors.right: parent.right
-        anchors.top : parent.top
-        anchors.rightMargin: 10
-        anchors.topMargin: 10
-        height: 60
-        width: 60
-        color:"#212126"
-        radius:height / 7
-
-        Text {
-            color: "white"
-            height: parent.height
-            width: parent.height
-            fontSizeMode: Text.Fit
-            font.pixelSize: height * 0.8
-            font.family: "FontAwesome"
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            text: "\uf015" //Home
-        }
-
-
-        MouseArea {
-            anchors { fill: parent;  }
-            onClicked: { mainRectangle.state = "MIRROR" }
-        }
-    }
-    */
     states: [
         State {
             name: "FULL"

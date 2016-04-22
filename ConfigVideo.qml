@@ -53,7 +53,6 @@ Item {
         id: previewPlayer
         loops: MediaPlayer.Infinite
         autoPlay: false
-        source: "file:///d:/Projets/build-PhototwixMirror-Desktop_Qt_5_6_0_MinGW_32bit-Debug/debug/video/intro_test.mp4"
     }
 
     VideoOutput {

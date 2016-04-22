@@ -4,6 +4,8 @@ import QtQuick.Controls 1.4
 import QtQuick.Dialogs 1.2
 import com.phototwix.components 1.0
 
+import "./resources/controls"
+
 Rectangle {
     id:configVideoItem
     property alias videoLabel:label.text;
@@ -36,6 +38,16 @@ Rectangle {
             verticalAlignment: Text.AlignVCenter
         }
 
+        ButtonAwesome {
+            size: configVideoItem.height
+            code: "\uf1c8"
+            onClicked: {
+                fileDialog.visible = true;
+            }
+        }
+
+
+/*
         Rectangle {
             height: configVideoItem.height
             width: configVideoItem.height
@@ -63,7 +75,17 @@ Rectangle {
                 }
             }
         }
-
+*/
+        ButtonAwesome {
+            size: configVideoItem.height
+            code: "\uf04b"
+            onClicked: {
+                configVideo.videoPreview.source = "file:///" + videoItem.videoPath;
+                configVideo.videoPreview.play();
+                configVideo.state = "PREVIEW"
+            }
+        }
+/*
         Rectangle {
             height: configVideoItem.height
             width: configVideoItem.height
@@ -93,7 +115,7 @@ Rectangle {
                 }
             }
         }
-
+*/
     }
 
     FileDialog {

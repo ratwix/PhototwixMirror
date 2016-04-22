@@ -502,19 +502,21 @@ void Parameters::deleteTemplateFromName(QString name)
                 //Delete image file
                 QString furl = t->getUrl().toString();
                 if (furl.startsWith("file://")) {
-                    furl = furl.right(furl.length() - QString("file://").length());
+                    furl = t->getUrl().toLocalFile();
                 }
                 if (!QFile::remove(furl)) {
                     CLog::Write(CLog::Error, "Unable to delete file : " + t->getUrl().toString().toStdString());
                 }
                 //Delete template from library
-                m_templates.removeOne(*it);
+                //m_templates.removeOne(*it);
+                m_templates.removeAt(it - m_templates.begin());
 
                 //Serialize
                 Serialize();
 
                 //Update interface
                 emit templatesChanged();
+                break ;
             }
         }
     }

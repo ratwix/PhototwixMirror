@@ -206,6 +206,9 @@ void Template::deleteTemplatePhotoPosition(int i)
 
 void Template::updateImageFromUrl(QUrl source_url)
 {
+    QString source_url_s = source_url.toLocalFile();
+    QString targer_url_s = m_url.toLocalFile();
+    /* REMOVE
     QString source_url_s = source_url.toString();
     QString targer_url_s = m_url.toString();
 
@@ -228,7 +231,7 @@ void Template::updateImageFromUrl(QUrl source_url)
     if (targer_url_s.startsWith("file:///")) {
         targer_url_s = targer_url_s.right(targer_url_s.length() - QString("file://").length());
     }
-
+    */
     if (QFile::exists(targer_url_s) && QFile::exists(source_url_s)) {
         CLog::Write(CLog::Info, "Success change 1");
         if (QFile::remove(targer_url_s)) {

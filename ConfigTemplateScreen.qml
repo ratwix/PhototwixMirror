@@ -10,7 +10,7 @@ import "./resources/controls"
 
 Rectangle {
     id: configTemplateScreen
-    color: "lightgrey"
+    color: globalVar.backColor
     height: parent.height
     width: parent.width
 
@@ -87,7 +87,6 @@ Rectangle {
             FileDialog {
                 id: updateTemplateFileDialog
                 title: "Mise à jour de de template"
-                folder: shortcuts.home
                 visible:false
                 selectMultiple: false
                 selectExisting: true
@@ -105,7 +104,7 @@ Rectangle {
 
         property int highestZ: 0
 
-        color: "lightgrey"
+        color: globalVar.backColor
         anchors.right: parent.right
         height: parent.height
         width: parent.width - configTemplateScreenButtons.width

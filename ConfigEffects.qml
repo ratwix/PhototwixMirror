@@ -53,5 +53,7 @@ Item {
         orientation: Qt.Vertical
         anchors.fill: parent
         model:effectButtonDelegate
+
+        ExclusiveGroup {id: effectTwitterDefaultGroup}
     }
 }

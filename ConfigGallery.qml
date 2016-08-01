@@ -138,6 +138,8 @@ Item {
         height: parent.height
         width: parent.width * 0.4
 
+
+        ExclusiveGroup { id: templateDefaultSwitchGroup }
         //Dans quel répertoire il faut chercher
 
         //Représentation des template, avec un bouton et un switch
@@ -173,7 +175,6 @@ Item {
                     }
                 }
 
-
                 Column {
                     anchors.verticalCenter: parent.verticalCenter
                     spacing : 10
@@ -203,8 +204,10 @@ Item {
                             font.pixelSize: 15
                         }
 
-                        Switch {
+                        RadioButton {
                             id:templateDefaultSwitch
+                            exclusiveGroup: templateDefaultSwitchGroup
+
                             onCheckedChanged: {
                                 model.modelData.twitterDefault = checked
                             }
@@ -261,8 +264,6 @@ Item {
                             }
                         }
                     }
-
-
 
                     Button {
                         text: "Config"

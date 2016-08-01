@@ -1,6 +1,7 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.4
 import QtQuick.Dialogs 1.2
+import '../renderer'
 
 Item {
     property url    effectImageSource: ""
@@ -14,23 +15,176 @@ Item {
         height: parent.height
         anchors.left: parent.left
 
-        Image {
-                id:effectImage
-                source: "../images/samplePhotobooth.jpg"
-                height: parent.height
-                fillMode: Image.PreserveAspectFit
+        Item {
+            height: parent.height
+            width: parent.height * 1.5
+            Image {
+                    id:effectButtonImage
+                    source: "../images/samplePhotobooth.jpg"
+                    anchors.fill: parent
+                    fillMode: Image.PreserveAspectFit
+            }
 
-                Text {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: effectName
+            ShaderEffectSource { //Duplication de la camera
+                    id:shaderImageSource
+                    anchors.fill: parent
+                    sourceItem: effectButtonImage
+                    visible: false
+            }
+
+            EffectSepia {
+                    anchors.fill: parent
+                    itemSource:shaderImageSource
+                    visible:effectName == "Sepia"
+            }
+
+            EffectEdge {
+                    anchors.fill: parent
+                    itemSource:shaderImageSource
+                    visible:effectName == "Edge"
                 }
+
+                EffectInkwell {
+                    anchors.fill: parent
+                    itemSource:shaderImageSource
+                    visible:effectName == "Inkwell"
+                }
+
+                Effect1977 {
+                    anchors.fill: parent
+                    itemSource:shaderImageSource
+                    visible:effectName == "1977"
+                }
+
+                EffectAmaro {
+                    anchors.fill: parent
+                    itemSource:shaderImageSource
+                    visible:effectName == "Amaro"
+                }
+
+                EffectBranna {
+                    anchors.fill: parent
+                    itemSource:shaderImageSource
+                    visible:effectName == "Branna"
+                }
+
+                EffectEarlyBird {
+                    anchors.fill: parent
+                    itemSource:shaderImageSource
+                    visible:effectName == "Early Bird"
+                }
+
+                EffectHefe {
+                    anchors.fill: parent
+                    itemSource:shaderImageSource
+                    visible:effectName == "Hefe"
+                }
+
+                EffectHudson {
+                    anchors.fill: parent
+                    itemSource:shaderImageSource
+                    visible:effectName == "Hudson"
+                }
+
+                EffectLomo {
+                    anchors.fill: parent
+                    itemSource:shaderImageSource
+                    visible:effectName == "Lomo"
+                }
+
+                EffectLordKelvin {
+                    anchors.fill: parent
+                    itemSource:shaderImageSource
+                    visible:effectName == "Lord Kelvin"
+                }
+
+                EffectNashville {
+                    anchors.fill: parent
+                    itemSource:shaderImageSource
+                    visible:effectName == "Nashville"
+                }
+
+                EffectPixel {
+                    anchors.fill: parent
+                    itemSource:shaderImageSource
+                    visible:effectName == "Pixel"
+                }
+
+                EffectRise {
+                    anchors.fill: parent
+                    itemSource:shaderImageSource
+                    visible:effectName == "Rise"
+                }
+
+                EffectSierra {
+                    anchors.fill: parent
+                    itemSource:shaderImageSource
+                    visible:effectName == "Sierra"
+                }
+
+                EffectSutro {
+                    anchors.fill: parent
+                    itemSource:shaderImageSource
+                    visible:effectName == "Sutro"
+                }
+
+                EffectToaster {
+                    anchors.fill: parent
+                    itemSource:shaderImageSource
+                    visible:effectName == "Toaster"
+                }
+
+                EffectValancia {
+                    anchors.fill: parent
+                    itemSource:shaderImageSource
+                    visible:effectName == "Valancia"
+                }
+
+                EffectWalden {
+                    anchors.fill: parent
+                    itemSource:shaderImageSource
+                    visible:effectName == "Walden"
+                }
+
+                EffectXpro {
+                    anchors.fill: parent
+                    itemSource:shaderImageSource
+                    visible:effectName == "XPro"
+                }
+
+                Rectangle {
+                    border.color: "white"
+                    border.width: 1
+                    color: "#A0707070"
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    height: parent.height * 0.20
+                    width: parent.width * 0.60
+
+                    Text {
+                        id: effectNameLabel
+                        text: qsTr(effectName)
+                        font.pixelSize: parent.height * 0.6
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        color: "white"
+                    }
+                }
+                /*
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                text: effectName
+            }
+            */
         }
 
         Grid {
                 height: parent.height
                 columns: 2
                 columnSpacing: 10
+                anchors.verticalCenter: parent.verticalCenter
+
                 Label {
                     height: 30
                     text: "Active"
@@ -53,8 +207,10 @@ Item {
                     font.pixelSize: 15
                 }
 
-                Switch {
+                RadioButton {
                     id:effectTwitterDefault
+                    text: "Select"
+                    exclusiveGroup: effectTwitterDefaultGroup
                     onCheckedChanged: {
                         //model.modelData.twitterDefault = checked
                     }

@@ -199,6 +199,22 @@ Item {
 
                         Label {
                             height: 30
+                            text: "Twitter Default"
+                            font.pixelSize: 15
+                        }
+
+                        Switch {
+                            id:templateDefaultSwitch
+                            onCheckedChanged: {
+                                model.modelData.twitterDefault = checked
+                            }
+                            Component.onCompleted: {
+                                checked = model.modelData.twitterDefault
+                            }
+                        }
+
+                        Label {
+                            height: 30
                             text: "Cutter print"
                             font.pixelSize: 15
                         }

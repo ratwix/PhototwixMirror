@@ -12,6 +12,7 @@ Template::Template()
     m_printcutter = false;
     m_doubleprint = false;
     m_landscape = true;
+    m_twitterDefault = false;
 }
 
 Template::Template(QString name, Parameters *parameters)
@@ -22,6 +23,7 @@ Template::Template(QString name, Parameters *parameters)
     m_printcutter = false;
     m_doubleprint = false;
     m_landscape = true;
+    m_twitterDefault = false;
     QString path = QString("file:///") + parameters->getApplicationDirPath().toString() + "/" + TEMPLATE_FOLDER + "/" + name;
 
     setUrl(QUrl(path));
@@ -106,6 +108,9 @@ void Template::Serialize(PrettyWriter<StringBuffer> &writer) const {
     writer.Key("landscape");
     writer.Bool(m_landscape);
 
+    writer.Key("twitterDefault");
+    writer.Bool(m_twitterDefault);
+
     //Serialisation des TemplatePhotoPosition
     QList<QObject*>::const_iterator it;
 
@@ -148,6 +153,10 @@ void Template::Unserialize(Value const &value) {
 
     if (value.HasMember("landscape")) {
         m_landscape = value["landscape"].GetBool();
+    }
+
+    if (value.HasMember("twitterDefault")) {
+        m_twitterDefault = value["twitterDefault"].GetBool();
     }
 
     if (value.HasMember("templatesPhotoPositions")) {
@@ -208,30 +217,7 @@ void Template::updateImageFromUrl(QUrl source_url)
 {
     QString source_url_s = source_url.toLocalFile();
     QString targer_url_s = m_url.toLocalFile();
-    /* REMOVE
-    QString source_url_s = source_url.toString();
-    QString targer_url_s = m_url.toString();
 
-    CLog::Write(CLog::Info, QString("Change " + source_url_s + " to " + targer_url_s).toStdString());
-    //TOTO: change with file path
-    if (source_url_s.startsWith("file:////")) {
-        source_url_s = source_url_s.right(source_url_s.length() - QString("file:///").length());
-    }
-
-
-    if (source_url_s.startsWith("file:///")) {
-        source_url_s = source_url_s.right(source_url_s.length() - QString("file://").length());
-    }
-
-    if (targer_url_s.startsWith("file:////")) {
-        targer_url_s = targer_url_s.right(targer_url_s.length() - QString("file:///").length());
-    }
-
-
-    if (targer_url_s.startsWith("file:///")) {
-        targer_url_s = targer_url_s.right(targer_url_s.length() - QString("file://").length());
-    }
-    */
     if (QFile::exists(targer_url_s) && QFile::exists(source_url_s)) {
         CLog::Write(CLog::Info, "Success change 1");
         if (QFile::remove(targer_url_s)) {
@@ -244,7 +230,7 @@ void Template::updateImageFromUrl(QUrl source_url)
         CLog::Write(CLog::Info, "error");
     }
 
-    emit urlChanged();
+    emit templateChanged();
 }
 
 
@@ -257,7 +243,7 @@ void Template::setPrintcutter(bool printcutter)
 {
     m_printcutter = printcutter;
     m_parameters->Serialize();
-    emit printcutterChanged();
+    emit templateChanged();
 }
 bool Template::getDoubleprint() const
 {
@@ -268,7 +254,7 @@ void Template::setDoubleprint(bool doubleprint)
 {
     m_doubleprint = doubleprint;
     m_parameters->Serialize();
-    emit doubleprintChanged();
+    emit templateChanged();
 }
 bool Template::getLandscape() const
 {
@@ -279,7 +265,17 @@ void Template::setLandscape(bool landscape)
 {
     m_landscape = landscape;
     m_parameters->Serialize();
-    emit landscapeChanged();
+    emit templateChanged();
+}
+
+bool Template::getTwitterDefault() const
+{
+    return m_twitterDefault;
+}
+
+void Template::setTwitterDefault(bool twitterDefault)
+{
+    m_twitterDefault = twitterDefault;
 }
 
 

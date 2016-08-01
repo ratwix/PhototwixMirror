@@ -21,13 +21,14 @@ class Parameters;
 class Template : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString name READ getName WRITE setName NOTIFY nameChanged)
-    Q_PROPERTY(QUrl url READ getUrl WRITE setUrl NOTIFY urlChanged)
-    Q_PROPERTY(bool active READ getActive WRITE setActive NOTIFY activeChanged)
-    Q_PROPERTY(QList<QObject*> templatePhotoPositions READ templatePhotoPositions WRITE setTemplatePhotoPositions NOTIFY templatePhotoPositionsChanged)
-    Q_PROPERTY(bool printcutter READ getPrintcutter WRITE setPrintcutter NOTIFY printcutterChanged)
-    Q_PROPERTY(bool doubleprint READ getDoubleprint WRITE setDoubleprint NOTIFY doubleprintChanged)
-    Q_PROPERTY(bool landscape READ getLandscape WRITE setLandscape NOTIFY landscapeChanged)
+    Q_PROPERTY(QString name READ getName WRITE setName NOTIFY templateChanged)
+    Q_PROPERTY(QUrl url READ getUrl WRITE setUrl NOTIFY templateChanged)
+    Q_PROPERTY(bool active READ getActive WRITE setActive NOTIFY templateChanged)
+    Q_PROPERTY(QList<QObject*> templatePhotoPositions READ templatePhotoPositions WRITE setTemplatePhotoPositions NOTIFY templateChanged)
+    Q_PROPERTY(bool printcutter READ getPrintcutter WRITE setPrintcutter NOTIFY templateChanged)
+    Q_PROPERTY(bool doubleprint READ getDoubleprint WRITE setDoubleprint NOTIFY templateChanged)
+    Q_PROPERTY(bool landscape READ getLandscape WRITE setLandscape NOTIFY templateChanged)
+    Q_PROPERTY(bool twitterDefault READ getTwitterDefault WRITE setTwitterDefault NOTIFY templateChanged)
 
 public:
     Template();
@@ -66,14 +67,12 @@ public:
     bool getLandscape() const;
     void setLandscape(bool landscape);
 
+    bool getTwitterDefault() const;
+    void setTwitterDefault(bool twitterDefault);
+
 signals:
-    void nameChanged(QString);
-    void urlChanged();
+    void templateChanged();
     void activeChanged();
-    void templatePhotoPositionsChanged();
-    void printcutterChanged();
-    void doubleprintChanged();
-    void landscapeChanged();
 
 private:
     bool            m_active;
@@ -84,6 +83,7 @@ private:
     bool            m_printcutter;
     bool            m_doubleprint;
     bool            m_landscape;
+    bool            m_twitterDefault;
 };
 
 #endif // TEMPLATE_H

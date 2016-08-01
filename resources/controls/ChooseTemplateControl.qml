@@ -14,7 +14,6 @@ Item {
     Component {
         id: activeTemplateDelegate
 
-        //Last template have particle system. This is this one that will be selected when press button
         Item {
             height: parent.height * 0.9
             width: templateSelect.width

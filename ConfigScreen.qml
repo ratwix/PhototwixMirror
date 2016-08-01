@@ -50,9 +50,25 @@ Rectangle {
         }
 
         Tab {
-            title: "Gallery & Visuels"
+            title: "Gallerie & Visuels"
             ConfigGallery {
                 id:configGallery
+                anchors.fill: parent
+            }
+        }
+
+        Tab {
+            title: "Twitter"
+            ConfigTwitter {
+                id:configTwitter
+                anchors.fill: parent
+            }
+        }
+
+        Tab {
+            title: "Mail"
+            ConfigMail {
+                id:configMail
                 anchors.fill: parent
             }
         }
@@ -66,9 +82,9 @@ Rectangle {
         }
 
         Tab {
-            title: "Mail"
-            ConfigMail {
-                id:configMail
+            title: "Effets"
+            ConfigEffects {
+                id:configEffets
                 anchors.fill: parent
             }
         }

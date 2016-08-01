@@ -12,15 +12,9 @@ Item {
         spacing : 30
         anchors.leftMargin: 20
         anchors.left: parent.left
+        height: parent.height
 
-        Column {
-            width: parent.width * 0.6
-            height: parent.height
-
-            spacing: 10
-            anchors.verticalCenter: parent.verticalCenter
-
-            Image {
+        Image {
                 id:effectImage
                 source: "../images/samplePhotobooth.jpg"
                 height: parent.height
@@ -34,19 +28,9 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     text: effectName
                 }
-            }
-
-
         }
 
-
-        Column {
-            width: parent.width * 0.3
-            height: parent.height
-            anchors.verticalCenter: parent.verticalCenter
-            spacing : 10
-
-            Grid {
+        Grid {
                 anchors.fill: parent
                 columns: 2
                 columnSpacing: 10
@@ -81,7 +65,6 @@ Item {
                         //checked = model.modelData.twitterDefault
                     }
                 }
-            }
         }
     }
 }

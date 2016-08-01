@@ -11,17 +11,14 @@ Item {
     Row {
         spacing : 30
         anchors.leftMargin: 20
-        anchors.left: parent.left
         height: parent.height
+        anchors.left: parent.left
 
         Image {
                 id:effectImage
                 source: "../images/samplePhotobooth.jpg"
                 height: parent.height
                 fillMode: Image.PreserveAspectFit
-                cache: true
-                asynchronous: true
-                antialiasing: true
 
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -31,7 +28,7 @@ Item {
         }
 
         Grid {
-                anchors.fill: parent
+                height: parent.height
                 columns: 2
                 columnSpacing: 10
                 Label {

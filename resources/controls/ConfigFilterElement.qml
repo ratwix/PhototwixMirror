@@ -42,7 +42,7 @@ Item {
                     anchors.fill: parent
                     itemSource:shaderImageSource
                     visible:effectName == "Edge"
-                }
+            }
 
                 EffectInkwell {
                     anchors.fill: parent
@@ -170,13 +170,6 @@ Item {
                         color: "white"
                     }
                 }
-                /*
-            Text {
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-                text: effectName
-            }
-            */
         }
 
         Grid {
@@ -194,10 +187,11 @@ Item {
                 Switch {
                     id:effectActiveSwitch
                     onCheckedChanged: {
-                        //model.modelData.active = checked
+                        model.modelData.effectEnable = checked;
+                        parameters.Serialize();
                     }
                     Component.onCompleted: {
-                        //checked = model.modelData.active
+                        checked = model.modelData.effectEnable
                     }
                 }
 
@@ -212,10 +206,11 @@ Item {
                     text: "Select"
                     exclusiveGroup: effectTwitterDefaultGroup
                     onCheckedChanged: {
-                        //model.modelData.twitterDefault = checked
+                        model.modelData.effectTwitterDefault = checked
+                        parameters.Serialize();
                     }
                     Component.onCompleted: {
-                        //checked = model.modelData.twitterDefault
+                        checked = model.modelData.effectTwitterDefault
                     }
                 }
         }

@@ -276,6 +276,8 @@ bool Template::getTwitterDefault() const
 void Template::setTwitterDefault(bool twitterDefault)
 {
     m_twitterDefault = twitterDefault;
+    m_parameters->Serialize();
+    emit templateChanged();
 }
 
 

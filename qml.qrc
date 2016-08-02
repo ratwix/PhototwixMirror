@@ -94,5 +94,6 @@
         <file>resources/renderer/EffectXpro.qml</file>
         <file>resources/renderer/PhotoShootRenderer.qml</file>
         <file>resources/images/samplePhotobooth.jpg</file>
+        <file>resources/controls/ChooseEffectControl.qml</file>
     </qresource>
 </RCC>

@@ -214,7 +214,7 @@ Item {
             spacing: 10
 
             Button {
-                text:"Sauvegarder"
+                text:"Sauvegarder parametres mail"
 
                 onClicked: {
                     parameters.mailFrom = mailFrom.text

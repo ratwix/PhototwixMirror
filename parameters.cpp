@@ -6,6 +6,7 @@
 #include <QFile>
 #include <iostream>
 #include <fstream>
+#include "effect.h"
 
 #include "rapidjson/document.h"
 #include "clog.h"
@@ -82,11 +83,19 @@ void Parameters::init() {
     m_mailPassword = "";
     m_mailSubject = "";
     m_mailContent = "";
+    m_twitterListenTwitter = true;
+    m_twitterTwitterOnly = false;
+    m_twitterAccount = "";
+    m_twitterKey = "";
+    m_twitterSecret = "";
+    m_twitterTag = "";
 
     m_waitVideo = new VideoItem(this, VIDEO_WAIT);
     m_startGlobalPhotoProcessVideo = new VideoItem(this, VIDEO_STARTGLOBALPHOTOPROCESS);
     m_startPhotoProcessVideo = new VideoItem(this, VIDEO_STARTPHOTOPROCESS);
     m_endGlobalPhotoProcessVideo = new VideoItem(this, VIDEO_ENDGLOBALPHOTOPROCESS);
+
+    initEffects();
 
     Unserialize(); //Unserialize parameters
     m_photogallery->Unserialize(m_templates); //unserialize current gallery
@@ -96,6 +105,15 @@ void Parameters::init() {
     updatePaperPrint();
     Serialize();
     rebuildActivesTemplates();
+}
+
+void Parameters::initEffects()
+{
+    for (unsigned int i = 0; i < m_effectNameList.size(); i++) {
+        QString effectName = m_effectNameList[i];
+        Effect *effect = new Effect(effectName);
+        m_effects.append(effect);
+    }
 }
 
 /**
@@ -173,6 +191,24 @@ void Parameters::Serialize() {
         writer.Key("mailContent");
         writer.String(m_mailContent.toStdString().c_str());
 
+        writer.Key("twitterTwitterOnly");
+        writer.Bool(m_twitterTwitterOnly);
+
+        writer.Key("twitterListenTwitter");
+        writer.Bool(m_twitterListenTwitter);
+
+        writer.Key("twitterKey");
+        writer.String(m_twitterKey.toStdString().c_str());
+
+        writer.Key("twitterSecret");
+        writer.String(m_twitterSecret.toStdString().c_str());
+
+        writer.Key("twitterAccount");
+        writer.String(m_twitterAccount.toStdString().c_str());
+
+        writer.Key("twitterTag");
+        writer.String(m_twitterTag.toStdString().c_str());
+
         writer.Key("templates");
         writer.StartArray();
         for (QList<QObject*>::const_iterator it = m_templates.begin(); it != m_templates.end(); it++) {
@@ -180,6 +216,17 @@ void Parameters::Serialize() {
                 t->Serialize(writer);
             } else {
                 CLog::Write(CLog::Fatal, "Bad type QObject -> Template");
+            }
+        }
+        writer.EndArray();
+
+        writer.Key("effects");
+        writer.StartArray();
+        for (QList<QObject*>::const_iterator it = m_effects.begin(); it != m_effects.end(); it++) {
+            if (Effect *e = dynamic_cast<Effect*>(*it)) {
+                e->Serialize(writer);
+            } else {
+                CLog::Write(CLog::Fatal, "Bad type QObject -> Effect");
             }
         }
         writer.EndArray();
@@ -315,11 +362,60 @@ void Parameters::Unserialize() {
         m_mailContent = QString(document["mailContent"].GetString());
     }
 
+    if (document.HasMember("twitterTwitterOnly")) {
+        m_twitterTwitterOnly = document["twitterTwitterOnly"].GetBool();
+    }
+
+    if (document.HasMember("twitterListenTwitter")) {
+        m_twitterListenTwitter = document["twitterListenTwitter"].GetBool();
+    }
+
+    if (document.HasMember("twitterKey")) {
+        m_twitterKey = QString(document["twitterKey"].GetString());
+    }
+
+    if (document.HasMember("twitterSecret")) {
+        m_twitterSecret = QString(document["twitterSecret"].GetString());
+    }
+
+    if (document.HasMember("twitterAccount")) {
+        m_twitterAccount = QString(document["twitterAccount"].GetString());
+    }
+
+    if (document.HasMember("twitterTag")) {
+        m_twitterTag = QString(document["twitterTag"].GetString());
+    }
+
     if (document.HasMember("templates")) {
         const Value& templates = document["templates"];
         if (templates.IsArray()) {
             for (SizeType i = 0; i < templates.Size(); i++) {
                 addTemplate(templates[i]);
+            }
+        }
+    }
+
+    if (document.HasMember("effects")) {
+        const Value& effects = document["effects"];
+        if (effects.IsArray()) {
+            for (SizeType i = 0; i < effects.Size(); i++) {
+                Value const &value = effects[i];
+                QString effectName = "";
+                bool effectEnable = true;
+                bool effectTwitterDefault = false;
+
+                if (value.HasMember("effect_name")) {
+                    effectName = QString(value["effect_name"].GetString());
+                }
+
+                if (value.HasMember("effect_enable")) {
+                    effectEnable = value["effect_enable"].GetBool();
+                }
+
+                if (value.HasMember("effect_twitterDefault")) {
+                    effectTwitterDefault = value["effect_twitterDefault"].GetBool();
+                }
+                updateEffect(effectName, effectEnable, effectTwitterDefault);
             }
         }
     }
@@ -432,6 +528,137 @@ void Parameters::printThread(QUrl m_applicationDirPath, QUrl url, bool doublepri
         CLog::Write(CLog::Debug, "Print cmd :" + cmd);
         system(cmd.c_str());
     }
+}
+
+void Parameters::updateEffect(QString name, bool active, bool twitterDefault)
+{
+    //Parcour de tout les effects jusqu'a trouver celui avec le même nom
+    for (QList<QObject*>::iterator it = m_effects.begin(); it != m_effects.end(); it++) {
+        if (Effect *t = dynamic_cast<Effect*>(*it)) {
+            if (t->getEffectName() == name) {
+                t->setEffectEnable(active);
+                t->setEffectTwitterDefault(twitterDefault);
+
+                if (active) {
+                    bool find = false;
+                    //On regarde si il est deja present
+                    for (QList<QObject*>::iterator it = m_activesEffects.begin(); it != m_activesEffects.end(); it++) {
+                        if (Effect *at = dynamic_cast<Effect*>(*it)) {
+                            if (at->getEffectName() == name) {
+                                //On l'a trouvé, on le met a jour
+                                find = true;
+                                at->setEffectEnable(active);
+                                at->setEffectTwitterDefault(twitterDefault);
+                            }
+                        }
+                    }
+                    //Sinon on l'ajoute
+                    if (!find) {
+                        m_activesEffects.append(t);
+                    }
+                } else {
+                    //Si il est présent on le supprime
+                    int i = 0;
+                    for (QList<QObject*>::iterator it = m_activesEffects.begin(); it != m_activesEffects.end(); it++) {
+                        i++;
+                        if (Effect *at = dynamic_cast<Effect*>(*it)) {
+                            if (at->getEffectName() == name) {
+                                m_activesTemplates.removeAt(i);
+                                break;
+                            }
+                        }
+                    }
+                }
+                emit effectsChanged();
+                break;
+            }
+        }
+    }
+
+
+    //Mis a jour du template
+
+    //Si actif, ajouter a la liste des template actifs
+}
+
+QList<QObject *> Parameters::getActivesEffects() const
+{
+    return m_activesEffects;
+}
+
+void Parameters::setActivesEffects(const QList<QObject *> &activesEffects)
+{
+    m_activesEffects = activesEffects;
+}
+
+QList<QObject *> Parameters::getEffects() const
+{
+    return m_effects;
+}
+
+void Parameters::setEffects(const QList<QObject *> &effects)
+{
+    m_effects = effects;
+}
+
+QString Parameters::getTwitterTag() const
+{
+    return m_twitterTag;
+}
+
+void Parameters::setTwitterTag(const QString &twitterTag)
+{
+    m_twitterTag = twitterTag;
+}
+
+QString Parameters::getTwitterAccount() const
+{
+    return m_twitterAccount;
+}
+
+void Parameters::setTwitterAccount(const QString &twitterAccount)
+{
+    m_twitterAccount = twitterAccount;
+}
+
+QString Parameters::getTwitterSecret() const
+{
+    return m_twitterSecret;
+}
+
+void Parameters::setTwitterSecret(const QString &twitterSecret)
+{
+    m_twitterSecret = twitterSecret;
+}
+
+QString Parameters::getTwitterKey() const
+{
+    return m_twitterKey;
+}
+
+void Parameters::setTwitterKey(const QString &twitterKey)
+{
+    m_twitterKey = twitterKey;
+}
+
+bool Parameters::getTwitterListenTwitter() const
+{
+    return m_twitterListenTwitter;
+}
+
+void Parameters::setTwitterListenTwitter(bool twitterListenTwitter)
+{
+    m_twitterListenTwitter = twitterListenTwitter;
+}
+
+bool Parameters::getTwitterTwitterOnly() const
+{
+    return m_twitterTwitterOnly;
+}
+
+void Parameters::setTwitterTwitterOnly(bool twitterTwitterOnly)
+{
+    m_twitterTwitterOnly = twitterTwitterOnly;
 }
 
 /**

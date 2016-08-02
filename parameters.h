@@ -10,6 +10,7 @@
 #include "videoitem.h"
 #include "photogallery.h"
 #include "common.h"
+#include "parameters.h"
 
 class PhotoGallery;
 class VideoItem;
@@ -19,6 +20,8 @@ class Parameters : public QObject
 
     Q_PROPERTY(QList<QObject*> templates READ getTemplates WRITE setTemplates NOTIFY templatesChanged)
     Q_PROPERTY(QList<QObject*> activesTemplates READ getActivesTemplates WRITE setActivesTemplates NOTIFY activeTemplatesChanged)
+    Q_PROPERTY(QList<QObject*> effects READ getEffects WRITE setEffects NOTIFY effectsChanged)
+    Q_PROPERTY(QList<QObject*> activeEffects READ getActivesEffects WRITE setActivesEffects NOTIFY effectsChanged)
     Q_PROPERTY(PhotoGallery* photoGallery READ getPhotogallery WRITE setPhotogallery NOTIFY photoGalleryChanged)
     Q_PROPERTY(QUrl applicationDirPath READ getApplicationDirPath WRITE setApplicationDirPath NOTIFY applicationDirPathChanged)
     Q_PROPERTY(int nbprint READ getNbprint WRITE setNbprint NOTIFY nbPrintChanged)
@@ -46,6 +49,13 @@ class Parameters : public QObject
     Q_PROPERTY(VideoItem* startGlobalPhotoProcessVideo READ startGlobalPhotoProcessVideo WRITE setStartGlobalPhotoProcessVideo NOTIFY parameterVideoChanged)
     Q_PROPERTY(VideoItem* endGlobalPhotoProcessVideo READ endGlobalPhotoProcessVideo WRITE setEndGlobalPhotoProcessVideo NOTIFY parameterVideoChanged)
     Q_PROPERTY(VideoItem* startPhotoProcessVideo READ startPhotoProcessVideo WRITE setStartPhotoProcessVideo NOTIFY parameterVideoChanged)
+
+    Q_PROPERTY(bool twitterTwitterOnly READ getTwitterTwitterOnly WRITE setTwitterTwitterOnly NOTIFY twitterTwitterOnlyChanged)
+    Q_PROPERTY(bool twitterListenTwitter READ getTwitterListenTwitter WRITE setTwitterListenTwitter NOTIFY twitterListenTwitterChanged)
+    Q_PROPERTY(QString twitterKey READ getTwitterKey WRITE setTwitterKey NOTIFY twitterKeyChanged)
+    Q_PROPERTY(QString twitterSecret READ getTwitterSecret WRITE setTwitterSecret NOTIFY twitterSecretChanged)
+    Q_PROPERTY(QString twitterAccount READ getTwitterAccount WRITE setTwitterAccount NOTIFY twitterAccountChanged)
+    Q_PROPERTY(QString twitterTag READ getTwitterTag WRITE setTwitterTag NOTIFY twitterTagChanged)
 public:
     Parameters(QUrl appDirPath);
     ~Parameters();
@@ -60,6 +70,7 @@ public:
     Q_INVOKABLE void    changeBackground(QUrl url);
     Q_INVOKABLE void    updatePaperPrint();
     Q_INVOKABLE void    haltSystem();
+    Q_INVOKABLE void    updateEffect(QString name, bool active, bool twitterDefault);
 
     QList<QObject*> getTemplates();
     void setTemplates(QList<QObject*> templates);
@@ -149,19 +160,69 @@ public:
     VideoItem *endGlobalPhotoProcessVideo() const;
     void setEndGlobalPhotoProcessVideo(VideoItem *endGlobalPhotoProcessVideo);
 
+    bool getTwitterTwitterOnly() const;
+    void setTwitterTwitterOnly(bool twitterTwitterOnly);
+
+    bool getTwitterListenTwitter() const;
+    void setTwitterListenTwitter(bool twitterListenTwitter);
+
+    QString getTwitterKey() const;
+    void setTwitterKey(const QString &twitterKey);
+
+    QString getTwitterSecret() const;
+    void setTwitterSecret(const QString &twitterSecret);
+
+    QString getTwitterAccount() const;
+    void setTwitterAccount(const QString &twitterAccount);
+
+    QString getTwitterTag() const;
+    void setTwitterTag(const QString &twitterTag);
+
+    QList<QObject *> getEffects() const;
+    void setEffects(const QList<QObject *> &effects);
+
+    QList<QObject *> getActivesEffects() const;
+    void setActivesEffects(const QList<QObject *> &activesEffects);
+
 private:
     void addTemplate(QString name);
     void addTemplate(Value const &value);
     void init();
+    void initEffects();
     void readTemplateDir();
     void Unserialize();
     void createFolders();
     void clearGallery(bool del);
     void printThread(QUrl m_applicationDirPath, QUrl url, bool doubleprint, bool cutprint, bool landscape);
 
+
+    std::vector<QString> m_effectNameList = {   "Couleur",
+                                                    "Sepia",
+                                                    "Edge",
+                                                    "Inkwell",
+                                                    "1977",
+                                                    "Amaro",
+                                                    "Branna",
+                                                    "Early Bird",
+                                                    "Hefe",
+                                                    "Hudson",
+                                                    "Lomo",
+                                                    "Lord Kelvin",
+                                                    "Nashville",
+                                                    "Pixel",
+                                                    "Rise",
+                                                    "Sierra",
+                                                    "Sutro",
+                                                    "Toaster",
+                                                    "Valancia",
+                                                    "Walden",
+                                                    "XPro"};
+
     QUrl                 m_applicationDirPath;
     QList<QObject*>      m_templates;
     QList<QObject*>      m_activesTemplates;
+    QList<QObject*>      m_effects;
+    QList<QObject*>      m_activesEffects;
     PhotoGallery*        m_photogallery;
     int                  m_nbprint;
     int                  m_nbfreephotos;
@@ -188,6 +249,12 @@ private:
     VideoItem *          m_startGlobalPhotoProcessVideo;
     VideoItem *          m_startPhotoProcessVideo;
     VideoItem *          m_endGlobalPhotoProcessVideo;
+    bool                 m_twitterTwitterOnly;
+    bool                 m_twitterListenTwitter;
+    QString              m_twitterKey;
+    QString              m_twitterSecret;
+    QString              m_twitterAccount;
+    QString              m_twitterTag;
 
 signals:
     void templatesChanged();
@@ -209,6 +276,13 @@ signals:
     void mailChange();
     void countdownDelayChange();
     void parameterVideoChanged();
+    void twitterTwitterOnlyChanged();
+    void twitterListenTwitterChanged();
+    void twitterKeyChanged();
+    void twitterSecretChanged();
+    void twitterAccountChanged();
+    void twitterTagChanged();
+    void effectsChanged();
 };
 
 #endif // PARAMETERS_H

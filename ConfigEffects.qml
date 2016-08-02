@@ -9,43 +9,19 @@ Item {
     id:configEffects
     anchors.fill: parent
 
-    Rectangle {
-        anchors.fill: parent
-        color: "yellow"
-    }
-
-    ListModel {
-        id:effectButtonModel
-        ListElement { name: "Couleur"; }
-        ListElement { name: "Sepia"; }
-        ListElement { name: "Edge";}
-        ListElement { name: "Inkwell"}
-        ListElement { name: "1977"}
-        ListElement { name: "Amaro"}
-        ListElement { name: "Branna"}
-        ListElement { name: "Early Bird"}
-        ListElement { name: "Hefe"}
-        ListElement { name: "Hudson"}
-        ListElement { name: "Lomo"}
-        ListElement { name: "Lord Kelvin"}
-        ListElement { name: "Nashville"}
-        ListElement { name: "Pixel"}
-        ListElement { name: "Rise"}
-        ListElement { name: "Sierra"}
-        ListElement { name: "Sutro"}
-        ListElement { name: "Toaster"}
-        ListElement { name: "Valancia"}
-        ListElement { name: "Walden"}
-        ListElement { name: "XPro"}
+    MouseArea {
+        anchors { fill: parent;  }
+        onClicked: {}
     }
 
     DelegateModel {
         id:effectButtonDelegate
-        model:effectButtonModel
+        //model:effectButtonModel
+        model:parameters.effects
         delegate: ConfigFilterElement {
             height: 200
             width: height * 4
-            effectName: name
+            effectName: model.modelData.effectName
         }
     }
 

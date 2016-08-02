@@ -27,8 +27,17 @@ Item {
         ChooseTemplateControl {
             id:chooseTemplateListView
             height: parent.height * 0.5
-            width: parent.width
+            width: parent.width * 0.5
             anchors.left: parent.left
+            anchors.top:parent.top
+            anchors.topMargin: 20
+        }
+
+        ChooseEffectControl {
+            id:chooseEffectListView
+            height: parent.height * 0.5
+            width: parent.right * 0.5
+            anchors.right: parent.right
             anchors.top:parent.top
             anchors.topMargin: 20
         }

@@ -224,7 +224,7 @@ void Parameters::Serialize() {
         writer.StartArray();
         for (QList<QObject*>::const_iterator it = m_effects.begin(); it != m_effects.end(); it++) {
             if (Effect *e = dynamic_cast<Effect*>(*it)) {
-                e->Serialize(writer);
+                e->Serialize(writer, this);
             } else {
                 CLog::Write(CLog::Fatal, "Bad type QObject -> Effect");
             }
@@ -532,6 +532,8 @@ void Parameters::printThread(QUrl m_applicationDirPath, QUrl url, bool doublepri
 
 void Parameters::updateEffect(QString name, bool active, bool twitterDefault)
 {
+    CLog::Write(CLog::Debug, "Update Effect :" + name);
+
     //Parcour de tout les effects jusqu'a trouver celui avec le même nom
     for (QList<QObject*>::iterator it = m_effects.begin(); it != m_effects.end(); it++) {
         if (Effect *t = dynamic_cast<Effect*>(*it)) {
@@ -549,36 +551,25 @@ void Parameters::updateEffect(QString name, bool active, bool twitterDefault)
                                 find = true;
                                 at->setEffectEnable(active);
                                 at->setEffectTwitterDefault(twitterDefault);
+                                emit effectsSelectedChanged();
                             }
                         }
                     }
                     //Sinon on l'ajoute
                     if (!find) {
                         m_activesEffects.append(t);
+                        emit effectsSelectedChanged();
                     }
                 } else {
                     //Si il est présent on le supprime
-                    int i = 0;
-                    for (QList<QObject*>::iterator it = m_activesEffects.begin(); it != m_activesEffects.end(); it++) {
-                        i++;
-                        if (Effect *at = dynamic_cast<Effect*>(*it)) {
-                            if (at->getEffectName() == name) {
-                                m_activesTemplates.removeAt(i);
-                                break;
-                            }
-                        }
-                    }
+                    m_activesEffects.removeAll(t);
+                    emit effectsSelectedChanged();
                 }
-                emit effectsChanged();
+
                 break;
             }
         }
     }
-
-
-    //Mis a jour du template
-
-    //Si actif, ajouter a la liste des template actifs
 }
 
 QList<QObject *> Parameters::getActivesEffects() const

@@ -11,6 +11,7 @@
 #include "rapidjson/document.h"
 
 #include "common.h"
+#include "parameters.h"
 
 using namespace std;
 using namespace rapidjson;
@@ -26,7 +27,7 @@ public:
     Effect();
     Effect(QString effectName);
 
-    void Serialize(PrettyWriter<StringBuffer>& writer) const;
+    void Serialize(PrettyWriter<StringBuffer>& writer, Parameters *p) const;
     void Unserialize(Value const &value);
 
     QString getEffectName() const;

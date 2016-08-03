@@ -188,6 +188,7 @@ Item {
                     id:effectActiveSwitch
                     onCheckedChanged: {
                         model.modelData.effectEnable = checked;
+                        //parameters.updateEffect(effectName, effectActiveSwitch.checked, effectTwitterDefault.checked);
                         parameters.Serialize();
                     }
                     Component.onCompleted: {
@@ -207,6 +208,7 @@ Item {
                     exclusiveGroup: effectTwitterDefaultGroup
                     onCheckedChanged: {
                         model.modelData.effectTwitterDefault = checked
+                        //parameters.updateEffect(effectName, effectActiveSwitch.checked, effectTwitterDefault.checked);
                         parameters.Serialize();
                     }
                     Component.onCompleted: {

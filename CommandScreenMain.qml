@@ -7,8 +7,8 @@ import "./resources/controls"
 Window {
     title: "Phototwix V5"
     visible: true
-    height: 900
-    width: 1600
+    height: 480
+    width: 800
     
     QtObject {
         id:globalVar

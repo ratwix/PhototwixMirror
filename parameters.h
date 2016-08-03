@@ -21,7 +21,7 @@ class Parameters : public QObject
     Q_PROPERTY(QList<QObject*> templates READ getTemplates WRITE setTemplates NOTIFY templatesChanged)
     Q_PROPERTY(QList<QObject*> activesTemplates READ getActivesTemplates WRITE setActivesTemplates NOTIFY activeTemplatesChanged)
     Q_PROPERTY(QList<QObject*> effects READ getEffects WRITE setEffects NOTIFY effectsChanged)
-    Q_PROPERTY(QList<QObject*> activeEffects READ getActivesEffects WRITE setActivesEffects NOTIFY effectsChanged)
+    Q_PROPERTY(QList<QObject*> activeEffects READ getActivesEffects WRITE setActivesEffects NOTIFY effectsSelectedChanged)
     Q_PROPERTY(PhotoGallery* photoGallery READ getPhotogallery WRITE setPhotogallery NOTIFY photoGalleryChanged)
     Q_PROPERTY(QUrl applicationDirPath READ getApplicationDirPath WRITE setApplicationDirPath NOTIFY applicationDirPathChanged)
     Q_PROPERTY(int nbprint READ getNbprint WRITE setNbprint NOTIFY nbPrintChanged)
@@ -283,6 +283,7 @@ signals:
     void twitterAccountChanged();
     void twitterTagChanged();
     void effectsChanged();
+    void effectsSelectedChanged();
 };
 
 #endif // PARAMETERS_H

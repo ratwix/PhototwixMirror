@@ -75,6 +75,7 @@ Item {
             path: coverFlowPath
             preferredHighlightBegin: 0.5
             preferredHighlightEnd: 0.5
+            pathItemCount : 5
             focus: true
             onMovementEnded: {
                 last_template_index = currentIndex

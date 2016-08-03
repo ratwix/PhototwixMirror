@@ -36,8 +36,8 @@ Item {
         ChooseEffectControl {
             id:chooseEffectListView
             height: parent.height * 0.5
-            width: parent.right * 0.5
-            anchors.right: parent.right
+            width: parent.width * 0.5
+            anchors.left: chooseTemplateListView.right
             anchors.top:parent.top
             anchors.topMargin: 20
         }

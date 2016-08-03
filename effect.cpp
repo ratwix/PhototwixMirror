@@ -14,8 +14,10 @@ Effect::Effect(QString effectName)
     m_effectTwitterDefault = false;
 }
 
-void Effect::Serialize(PrettyWriter<StringBuffer> &writer) const
+void Effect::Serialize(PrettyWriter<StringBuffer> &writer, Parameters *p) const
 {
+    p->updateEffect(m_effectName, m_effectEnable, m_effectTwitterDefault);
+
     writer.StartObject();
 
     writer.Key("effect_name");

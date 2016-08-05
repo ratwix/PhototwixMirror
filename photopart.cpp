@@ -33,19 +33,9 @@ QUrl PhotoPart::path() const
 
 void PhotoPart::setPath(const QUrl &path)
 {
-    CLog::Write(CLog::Debug, "Ecriture du path" + path.toString().toStdString());
+    CLog::Write(CLog::Debug, "Ecriture du path " + path.toString().toStdString());
     m_path = path;
     emit pathChanged();
-}
-
-QString PhotoPart::pathS() const
-{
-    return m_path.toString();
-}
-
-void PhotoPart::setPathS(const QString &path)
-{
-    setPath(QUrl(path));
 }
 
 void PhotoPart::Serialize(PrettyWriter<StringBuffer> &writer) const

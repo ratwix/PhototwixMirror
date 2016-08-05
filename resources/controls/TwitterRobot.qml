@@ -130,6 +130,8 @@ Item {
 
             console.log("Date:" + date + "\nid:" + id + "\ntext:" + text +
                         "\nname:" + profile_name + "\navatar:" + profile_image + "\nmedia:" + media_url + "\n\n")
+
+            parameters.photoGallery.addPhoto("photo1_tweet", globalVar.currentTemplate, text, profile_name, media_url)
         }
     }
 
@@ -147,7 +149,7 @@ Item {
 
     //Cherche toute les 10 secondes un nouveau tweet si connecté à tweeter et ecoute de tweeter
     Timer {
-        interval: 10000;
+        interval: 15000;
         running: (parameters.twitterListenTwitter && (bearerToken !== ""))
         repeat: true;
         onTriggered: {

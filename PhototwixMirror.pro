@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick widgets concurrent core
+QT += qml quick widgets concurrent core network
 CONFIG += c++11
 
 SOURCES += main.cpp \
@@ -14,7 +14,8 @@ SOURCES += main.cpp \
     templatephotoposition.cpp \
     mail.cpp \
     keyemitter.cpp \
-    effect.cpp
+    effect.cpp \
+    filedownloader.cpp
 
 RESOURCES += qml.qrc
 
@@ -36,4 +37,5 @@ HEADERS += \
     templatephotoposition.h \
     mail.h \
     keyemitter.h \
-    effect.h
+    effect.h \
+    filedownloader.h

@@ -16,7 +16,6 @@ class PhotoPart : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QUrl path READ path WRITE setPath NOTIFY pathChanged)
-    Q_PROPERTY(QString pathS READ pathS WRITE setPathS NOTIFY pathChanged)
     Q_PROPERTY(TemplatePhotoPosition* photoPosition READ photoPosition WRITE setPhotoPosition NOTIFY photoPositionChanged)
 public:
     PhotoPart();
@@ -28,8 +27,6 @@ public:
 
     QUrl path() const;
     void setPath(const QUrl &path);
-    QString pathS() const;
-    void setPathS(const QString &path);
 
     void Serialize(PrettyWriter<StringBuffer>& writer) const;
 private:

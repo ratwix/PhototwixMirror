@@ -15,6 +15,7 @@
 #include "photogallery.h"
 #include "parameters.h"
 #include "common.h"
+#include "filedownloader.h"
 
 #define PHOTO_DEST  "photos"
 
@@ -43,6 +44,41 @@ Photo* PhotoGallery::addPhoto(QString name, Template *t)
     QQmlEngine::setObjectOwnership(p, QQmlEngine::CppOwnership);
     emit photoListChanged();
     return p;
+}
+
+/**
+ * @brief PhotoGallery::addPhoto Ajoute une photo depuis tweeter
+ * @return La nouvelle photo crée, vide de ses images
+ */
+Photo *PhotoGallery::addPhoto(QString name, Template *t, QString twitterMessage, QString twitterProfileName, QUrl twitterPhotoSource)
+{
+    //Download and create the photo
+    CLog::Write(CLog::Debug, "Add a new twitter Photo");
+
+    Photo *p = new Photo(name, t);
+    p->setPhotoTweeter(true);
+    p->setPhotoTweeterMessage(twitterMessage);
+    p->setPhotoTweeterProfileName(twitterProfileName);
+    m_photoList.prepend(p);
+
+    //Download image from URL and attach it to first gallery item
+    CLog::Write(CLog::Debug, QString("Try to download ") + twitterPhotoSource.toDisplayString() + " to folder" + QString(PHOTOSS_FOLDER));
+    FileDownloader *imageDownloader = new FileDownloader(twitterPhotoSource, PHOTOSS_FOLDER, p, m_applicationDirPath, this);
+
+    connect(imageDownloader, SIGNAL (downloaded()), this, SLOT (imageDownloaded()));
+
+    QQmlEngine::setObjectOwnership(p, QQmlEngine::CppOwnership);
+    emit photoListChanged();
+    return p;
+}
+
+/**
+ * Image is downloaded and attached, delete FileDownloader
+ * @brief PhotoGallery::imageDownloaded
+ */
+void PhotoGallery::imageDownloaded() {
+    QObject* downloader = sender();
+    delete downloader;
 }
 
 void PhotoGallery::removePhoto(QString name)

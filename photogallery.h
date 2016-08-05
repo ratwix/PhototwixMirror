@@ -18,6 +18,8 @@ public:
     PhotoGallery();
     ~PhotoGallery();
     Q_INVOKABLE Photo* addPhoto(QString name, Template *t);
+    Q_INVOKABLE Photo* addPhoto(QString name, Template *t, QString twitterMessage, QString twitterProfileName, QUrl twitterPhotoSource);
+
     Q_INVOKABLE void   removePhoto(QString name);
     Q_INVOKABLE void   removeFirstPhoto();
 
@@ -53,6 +55,9 @@ private:
     qint64          m_totalFileSize;
     int             m_totalFileNumber;
     std::thread     m_t;
+
+
+
 signals:
     void photoListChanged();
     void currentCopyChanged();
@@ -62,6 +67,7 @@ signals:
     void copyStart();
     void copyEnd();
 public slots:
+    void            imageDownloaded();
 };
 
 #endif // GALLERY_H

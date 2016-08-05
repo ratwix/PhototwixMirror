@@ -677,6 +677,7 @@ bool Parameters::getTwitterListenTwitter() const
 void Parameters::setTwitterListenTwitter(bool twitterListenTwitter)
 {
     m_twitterListenTwitter = twitterListenTwitter;
+    emit twitterListenTwitterChanged();
 }
 
 bool Parameters::getTwitterTwitterOnly() const
@@ -687,6 +688,7 @@ bool Parameters::getTwitterTwitterOnly() const
 void Parameters::setTwitterTwitterOnly(bool twitterTwitterOnly)
 {
     m_twitterTwitterOnly = twitterTwitterOnly;
+    emit twitterTwitterOnlyChanged();
 }
 
 /**
@@ -884,7 +886,7 @@ void Parameters::clearGallery(bool del)
     emit photoGalleryChanged();
 }
 
-
+/*
 Photo* Parameters::addPhotoToGallerie(QString name, QObject *temp)
 {
     if (name == "") {
@@ -901,7 +903,7 @@ Photo* Parameters::addPhotoToGallerie(QString name, QObject *temp)
     }
     return NULL;
 }
-
+*/
 /**
  * Accessors
  */

@@ -63,7 +63,7 @@ public:
     ~Parameters();
 
     Q_INVOKABLE void    Serialize();
-    Q_INVOKABLE Photo*  addPhotoToGallerie(QString name, QObject *temp);
+    //Q_INVOKABLE Photo*  addPhotoToGallerie(QString name, QObject *temp);
     Q_INVOKABLE void    printPhoto(QUrl url, bool doubleprint, bool cutprint, bool landscape);
     Q_INVOKABLE void    clearGallery();
     Q_INVOKABLE void    clearGalleryDeleteImages();

@@ -6,7 +6,10 @@
 Photo::Photo():
     m_finalResult(""),
     m_finalResultSD(""),
-    m_nbPrint(0)
+    m_nbPrint(0),
+    m_photoTweeter(false),
+    m_photoTweeterMessage(""),
+    m_photoTweeterProfileName("")
 {
 
 }
@@ -14,7 +17,10 @@ Photo::Photo():
 Photo::Photo(QString name, Template *t):
     m_finalResult(""),
     m_finalResultSD(""),
-    m_nbPrint(0)
+    m_nbPrint(0),
+    m_photoTweeter(false),
+    m_photoTweeterMessage(""),
+    m_photoTweeterProfileName("")
 {
     m_name = name;
     m_currentTemplate = t;
@@ -41,7 +47,10 @@ Photo::Photo(QString name, Template *t):
 Photo::Photo(const Value &value, Template *t):
     m_finalResult(""),
     m_finalResultSD(""),
-    m_nbPrint(0)
+    m_nbPrint(0),
+    m_photoTweeter(false),
+    m_photoTweeterMessage(""),
+    m_photoTweeterProfileName("")
 {
     m_currentTemplate = t;
     Unserialize(value, t);
@@ -142,6 +151,15 @@ void Photo::Serialize(PrettyWriter<StringBuffer> &writer) const
     writer.Key("currentTemplate");
     writer.String(m_currentTemplate->getName().toStdString().c_str());
 
+    writer.Key("photoTweeter");
+    writer.Bool(m_photoTweeter);
+
+    writer.Key("photoTweeterMessage");
+    writer.String(m_photoTweeterMessage.toStdString().c_str());
+
+    writer.Key("photoTweeterProfileName");
+    writer.String(m_photoTweeterProfileName.toStdString().c_str());
+
     QList<QObject*>::const_iterator it;
     writer.Key("photosPart");
     writer.StartArray();
@@ -158,12 +176,42 @@ void Photo::Serialize(PrettyWriter<StringBuffer> &writer) const
     writer.EndObject();
 }
 
+bool Photo::photoTweeter() const
+{
+    return m_photoTweeter;
+}
+
+void Photo::setPhotoTweeter(bool photoTweeter)
+{
+    m_photoTweeter = photoTweeter;
+}
+
+QString Photo::photoTweeterMessage() const
+{
+    return m_photoTweeterMessage;
+}
+
+void Photo::setPhotoTweeterMessage(const QString &photoTweeterMessage)
+{
+    m_photoTweeterMessage = photoTweeterMessage;
+}
+
+QString Photo::photoTweeterProfileName() const
+{
+    return m_photoTweeterProfileName;
+}
+
+void Photo::setPhotoTweeterProfileName(const QString &photoTweeterProfileName)
+{
+    m_photoTweeterProfileName = photoTweeterProfileName;
+}
+
 void Photo::Unserialize(const Value &value, Template *t)
 {
     if (value.HasMember("finalResult")) {
         m_finalResult = QString(value["finalResult"].GetString());
     }
-
+    
     if (value.HasMember("finalResultSD")) {
         m_finalResultSD = QString(value["finalResultSD"].GetString());
     }
@@ -174,6 +222,18 @@ void Photo::Unserialize(const Value &value, Template *t)
 
     if (value.HasMember("nbPrint")) {
         m_nbPrint = value["nbPrint"].GetInt();
+    }
+
+    if (value.HasMember("photoTweeter")) {
+        m_photoTweeter = value["photoTweeter"].GetBool();
+    }
+
+    if (value.HasMember("photoTweeterMessage")) {
+        m_photoTweeterMessage = QString(value["photoTweeterMessage"].GetString());
+    }
+
+    if (value.HasMember("photoTweeterProfileName")) {
+        m_photoTweeterProfileName = QString(value["photoTweeterProfileName"].GetString());
     }
 
     //Add all photo part

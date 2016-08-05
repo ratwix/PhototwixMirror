@@ -19,6 +19,9 @@ class Photo : public QObject
     Q_PROPERTY(QList<QObject*> photoPartList READ photoPartList WRITE setPhotoPartList NOTIFY photoPartListChange)
     Q_PROPERTY(int nbPrint READ nbPrint WRITE setNbPrint NOTIFY nbPrintChanged)
     Q_PROPERTY(Template* currentTemplate READ currentTemplate WRITE setCurrentTemplate NOTIFY currentTemplateChanged)
+    Q_PROPERTY(bool tweeter READ photoTweeter WRITE setPhotoTweeter NOTIFY tweeterChanged)
+    Q_PROPERTY(QString tweeterMessage READ photoTweeterMessage WRITE setPhotoTweeterMessage NOTIFY photoTweeterMessageChanged)
+    Q_PROPERTY(QString photoTweeterProfileName READ photoTweeterProfileName WRITE setPhotoTweeterProfileName NOTIFY photoTweeterProfileNameChanged)
 public:
     Photo();
     Photo(QString name, Template *t);
@@ -47,12 +50,24 @@ public:
 
     void Serialize(PrettyWriter<StringBuffer>& writer) const;
 
+    bool photoTweeter() const;
+    void setPhotoTweeter(bool photoTweeter);
+
+    QString photoTweeterMessage() const;
+    void setPhotoTweeterMessage(const QString &photoTweeterMessage);
+
+    QString photoTweeterProfileName() const;
+    void setPhotoTweeterProfileName(const QString &photoTweeterProfileName);
+
 private:
+    int                 m_nbPrint;
     QUrl                m_finalResult;
     QUrl                m_finalResultSD;
     QString             m_name;
+    bool                m_photoTweeter;
+    QString             m_photoTweeterMessage;
+    QString             m_photoTweeterProfileName;
     QList<QObject*>     m_photoPartList;
-    int                 m_nbPrint;
     Template*           m_currentTemplate;
 
     void                Unserialize(Value const &value, Template *t);
@@ -64,6 +79,10 @@ signals:
     void nbPrintChanged();
     void currentTemplateChanged();
     void photoPartListChange();
+    void tweeterChanged();
+    void photoTweeterMessageChanged();
+    void photoTweeterProfileNameChanged();
+    void tweeterLoadingComplete();
 };
 
 #endif // PHOTO_H

@@ -18,9 +18,6 @@ int main(int argc, char *argv[])
     Parameters parameters(QGuiApplication::applicationDirPath());
     KeyEmitter keyEmitter;
 
-    qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
-
-
     qmlRegisterType<VideoItem>("com.phototwix.components", 1, 0, "VideoItem");
     qmlRegisterType<Template>("com.phototwix.components", 1, 0, "Template");
     qmlRegisterType<TemplatePhotoPosition>("com.phototwix.components", 1, 0, "TemplatePhotoPosition");

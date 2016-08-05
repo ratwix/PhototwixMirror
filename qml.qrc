@@ -97,5 +97,6 @@
         <file>resources/controls/ChooseEffectControl.qml</file>
         <file>resources/controls/FilterElement.qml</file>
         <file>resources/controls/TwitterRobot.qml</file>
+        <file>ResultScreen.qml</file>
     </qresource>
 </RCC>

@@ -12,17 +12,19 @@ Item {
         anchors.fill: parent
     }
 
+    //Background image
+    Image {
+        id: backgroundImage
+        anchors.fill: parent
+        fillMode:Image.Stretch
+        source: parameters.backgroundImage
+    }
+
+
+    //Manual Control Item
     Item {
         id:chooseTemplateItem
         anchors.fill: parent
-
-        //Background image
-        Image {
-            id: backgroundImage
-            anchors.fill: parent
-            fillMode:Image.Stretch
-            source: parameters.backgroundImage
-        }
 
         ChooseTemplateControl {
             id:chooseTemplateListView
@@ -55,8 +57,6 @@ Item {
                 passScreen.state = "show"
             }
         }
-
-
     }
 
     Item {

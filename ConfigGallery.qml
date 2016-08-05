@@ -3,6 +3,8 @@ import QtQuick.Controls 1.4
 import QtQuick.Dialogs 1.2
 import QtMultimedia 5.4
 
+import com.phototwix.components 1.0
+
 
 import "./resources/controls"
 
@@ -18,6 +20,7 @@ Item {
     }
 
     Column {
+        id:controlConfigGallery
         spacing: 5
 
         Row {
@@ -66,7 +69,32 @@ Item {
             anchors.left: parent.left
             spacing: 10
 
+
+            Column {
+                anchors.leftMargin: 10
+                spacing: 5
+
+                CheckBox {
+                    id: copySingle
+                    text: "Sans visuel"
+                    checked: true
+                }
+
+                CheckBox {
+                    id: copyDeleted
+                    text: "Supprime"
+                    checked: true
+                }
+
+                CheckBox {
+                    id: copyDeletedSingle
+                    text: "Supprime sans visuel"
+                    checked: true
+                }
+            }
+
             Button {
+                id:saveGalleryButton
                 text:"Sauvegarder"
                 onClicked: {
                     console.debug("Save Gallery");
@@ -74,23 +102,7 @@ Item {
                 }
             }
 
-            CheckBox {
-                id: copySingle
-                text: "Sans visuel"
-                checked: true
-            }
 
-            CheckBox {
-                id: copyDeleted
-                text: "Supprime"
-                checked: true
-            }
-
-            CheckBox {
-                id: copyDeletedSingle
-                text: "Supprime sans visuel"
-                checked: true
-            }
 
             /*
                 function getReadableFileSizeString(fileSizeInBytes) {
@@ -133,10 +145,13 @@ Item {
       */
 
     ListView {
+        id:templateConfigGallery
         anchors.top: parent.top
         anchors.right: parent.right
+        anchors.rightMargin: parent.width * 0.1
         height: parent.height
         width: parent.width * 0.4
+        spacing: 30
 
 
         ExclusiveGroup { id: templateDefaultSwitchGroup }
@@ -147,10 +162,10 @@ Item {
             id: fileDelegate
 
             Row {
-                spacing : 30
+                spacing : 20
                 anchors.leftMargin: 20
                 Column {
-                    width: 250
+                    width: 150
                     spacing: 10
                     anchors.verticalCenter: parent.verticalCenter
 
@@ -163,7 +178,7 @@ Item {
                         id:templateImage
                         anchors.horizontalCenter: parent.horizontalCenter
                         source: model.modelData.url
-                        sourceSize.height: 200
+                        sourceSize.height: 100
                         cache: false
                         asynchronous: true
                         antialiasing: true
@@ -215,60 +230,17 @@ Item {
                                 checked = model.modelData.twitterDefault
                             }
                         }
-
-                        Label {
-                            height: 30
-                            text: "Cutter print"
-                            font.pixelSize: 15
-                        }
-
-                        Switch {
-                            id:templateCutterSwitch
-                            onCheckedChanged: {
-                                model.modelData.printcutter = checked
-                            }
-                            Component.onCompleted: {
-                                checked = model.modelData.printcutter
-                            }
-                        }
-
-                        Label {
-                            height: 30
-                            text: "Double print"
-                            font.pixelSize: 15
-                        }
-
-                        Switch {
-                            id:templateDoubleSwitch
-                            onCheckedChanged: {
-                                model.modelData.doubleprint = checked
-                            }
-                            Component.onCompleted: {
-                                checked = model.modelData.doubleprint
-                            }
-                        }
-
-                        Label {
-                            height: 30
-                            text: "Landscape"
-                            font.pixelSize: 15
-                        }
-
-                        Switch {
-                            id:landscapeSwitch
-                            onCheckedChanged: {
-                                model.modelData.landscape = checked
-                            }
-                            Component.onCompleted: {
-                                checked = model.modelData.landscape
-                            }
-                        }
                     }
 
                     Button {
                         text: "Config"
+
+                        property Template templateItem: model.modelData
                         onClicked: {
-                            configTemplate.currentTemplate = model.modelData
+                            configTemplate.currentTemplate = templateItem
+                            configTemplate.switchCutter = templateItem.printcutter
+                            configTemplate.switchDouble = templateItem.doubleprint
+                            configTemplate.switchLandscape = templateItem.landscape
                             configGalleryScreen.state = "CONFIG_TEMPLATE"
                         }
                     }

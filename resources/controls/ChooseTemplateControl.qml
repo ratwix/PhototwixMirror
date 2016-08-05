@@ -79,6 +79,10 @@ Item {
             focus: true
             onMovementEnded: {
                 last_template_index = currentIndex
+                globalVar.currentTemplate = parameters.activesTemplates[currentIndex]
+            }
+            Component.onCompleted: {
+                globalVar.currentTemplate = parameters.activesTemplates[currentIndex]
             }
     }
 

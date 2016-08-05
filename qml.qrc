@@ -96,5 +96,6 @@
         <file>resources/images/samplePhotobooth.jpg</file>
         <file>resources/controls/ChooseEffectControl.qml</file>
         <file>resources/controls/FilterElement.qml</file>
+        <file>resources/controls/TwitterRobot.qml</file>
     </qresource>
 </RCC>

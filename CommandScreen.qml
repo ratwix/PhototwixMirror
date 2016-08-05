@@ -27,7 +27,7 @@ Item {
         ChooseTemplateControl {
             id:chooseTemplateListView
             height: parent.height * 0.5
-            width: parent.width * 0.5
+            width: parent.width * 0.5 - 100
             anchors.left: parent.left
             anchors.top:parent.top
             anchors.topMargin: 20
@@ -36,8 +36,9 @@ Item {
         ChooseEffectControl {
             id:chooseEffectListView
             height: parent.height * 0.5
-            width: parent.width * 0.5
+            width: parent.width * 0.5 - 100
             anchors.left: chooseTemplateListView.right
+            anchors.leftMargin: 150
             anchors.top:parent.top
             anchors.topMargin: 20
         }
@@ -91,6 +92,13 @@ Item {
     ConfirmScreen {
         id:cbox
     }
+
+    //Robot tweeter
+    TwitterRobot {
+        id:tweeter
+        visible: false
+    }
+
 
     states: [
         State {

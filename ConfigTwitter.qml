@@ -39,6 +39,9 @@ Item {
                 Component.onCompleted: {
                     checked = parameters.twitterTwitterOnly;
                 }
+                onCheckedChanged: {
+                    parameters.twitterTwitterOnly = checked;
+                }
             }
         }
 
@@ -58,7 +61,11 @@ Item {
                 Component.onCompleted: {
                     checked = parameters.twitterListenTwitter;
                 }
+                onCheckedChanged: {
+                    parameters.twitterListenTwitter = checked;
+                }
             }
+
         }
 
         Row {

@@ -530,6 +530,43 @@ void Parameters::printThread(QUrl m_applicationDirPath, QUrl url, bool doublepri
     }
 }
 
+QString Parameters::getEffectDefault() const
+{
+    for (QList<QObject *>::const_iterator it = m_effects.begin(); it != m_effects.end(); it++) {
+        if (Effect *t = dynamic_cast<Effect*>(*it)) {
+            if (t->getEffectTwitterDefault()) {
+                return t->getEffectName();
+            }
+        }
+    }
+
+    return "Couleur";
+}
+
+void Parameters::setEffectDefault(const QString &effectDefault)
+{
+    m_effectDefault = effectDefault;
+}
+
+Template *Parameters::getTwitterDefaultTemplate() const
+{
+    for (QList<QObject *>::const_iterator it = m_templates.begin(); it != m_templates.end(); it++) {
+        if (Template *t = dynamic_cast<Template*>(*it)) {
+            if (t->getTwitterDefault()) {
+                return t;
+            }
+        }
+    }
+
+    return NULL;
+}
+
+void Parameters::setTwitterDefaultTemplate(Template *twitterDefaultTemplate)
+{
+    m_twitterDefaultTemplate = twitterDefaultTemplate;
+    emit twitterDefaultTemplateChanged();
+}
+
 void Parameters::updateEffect(QString name, bool active, bool twitterDefault)
 {
     CLog::Write(CLog::Debug, "Update Effect :" + name);

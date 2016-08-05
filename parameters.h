@@ -22,6 +22,7 @@ class Parameters : public QObject
     Q_PROPERTY(QList<QObject*> activesTemplates READ getActivesTemplates WRITE setActivesTemplates NOTIFY activeTemplatesChanged)
     Q_PROPERTY(QList<QObject*> effects READ getEffects WRITE setEffects NOTIFY effectsChanged)
     Q_PROPERTY(QList<QObject*> activeEffects READ getActivesEffects WRITE setActivesEffects NOTIFY effectsSelectedChanged)
+    Q_PROPERTY(QString  effectDefault READ getEffectDefault WRITE setEffectDefault NOTIFY effectDefaultChanged)
     Q_PROPERTY(PhotoGallery* photoGallery READ getPhotogallery WRITE setPhotogallery NOTIFY photoGalleryChanged)
     Q_PROPERTY(QUrl applicationDirPath READ getApplicationDirPath WRITE setApplicationDirPath NOTIFY applicationDirPathChanged)
     Q_PROPERTY(int nbprint READ getNbprint WRITE setNbprint NOTIFY nbPrintChanged)
@@ -56,6 +57,7 @@ class Parameters : public QObject
     Q_PROPERTY(QString twitterSecret READ getTwitterSecret WRITE setTwitterSecret NOTIFY twitterSecretChanged)
     Q_PROPERTY(QString twitterAccount READ getTwitterAccount WRITE setTwitterAccount NOTIFY twitterAccountChanged)
     Q_PROPERTY(QString twitterTag READ getTwitterTag WRITE setTwitterTag NOTIFY twitterTagChanged)
+    Q_PROPERTY(Template * twitterDefaultTemplate READ getTwitterDefaultTemplate WRITE setTwitterDefaultTemplate NOTIFY twitterDefaultTemplateChanged)
 public:
     Parameters(QUrl appDirPath);
     ~Parameters();
@@ -184,6 +186,12 @@ public:
     QList<QObject *> getActivesEffects() const;
     void setActivesEffects(const QList<QObject *> &activesEffects);
 
+    Template *getTwitterDefaultTemplate() const;
+    void setTwitterDefaultTemplate(Template *twitterDefaultTemplate);
+
+    QString getEffectDefault() const;
+    void setEffectDefault(const QString &effectDefault);
+
 private:
     void addTemplate(QString name);
     void addTemplate(Value const &value);
@@ -255,6 +263,8 @@ private:
     QString              m_twitterSecret;
     QString              m_twitterAccount;
     QString              m_twitterTag;
+    Template *           m_twitterDefaultTemplate;
+    QString              m_effectDefault;
 
 signals:
     void templatesChanged();
@@ -284,6 +294,8 @@ signals:
     void twitterTagChanged();
     void effectsChanged();
     void effectsSelectedChanged();
+    void twitterDefaultTemplateChanged();
+    void effectDefaultChanged();
 };
 
 #endif // PARAMETERS_H

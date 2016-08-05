@@ -11,7 +11,10 @@ Effect::Effect(QString effectName)
 {
     m_effectName = effectName;
     m_effectEnable = true;
-    m_effectTwitterDefault = false;
+    if (effectName == "Couleur")
+        m_effectTwitterDefault = true;
+    else
+        m_effectTwitterDefault = false;
 }
 
 void Effect::Serialize(PrettyWriter<StringBuffer> &writer, Parameters *p) const

@@ -156,11 +156,11 @@ void PhotoGallery::saveGalleryThread(QUrl d, bool saveSingle, bool saveDeleted, 
 
     for (it = m_photoList.begin(); it != m_photoList.end(); it++) {
         if (Photo *p = dynamic_cast<Photo*>(*it)) {
-            QFileInfo f(p->finalResultS());
-            QFile file(p->finalResultS());
+            QFileInfo f(p->finalResult().toDisplayString(QUrl::PreferLocalFile | QUrl::NormalizePathSegments));
+            QFile file(p->finalResult().toDisplayString(QUrl::PreferLocalFile | QUrl::NormalizePathSegments));
 
             if (!f.exists()) {
-                CLog::Write(CLog::Debug, "COPY : File do not exist" + p->finalResultS().toStdString());
+                CLog::Write(CLog::Debug, "COPY : File do not exist" + p->finalResult().toDisplayString(QUrl::PreferLocalFile | QUrl::NormalizePathSegments).toStdString());
                 continue ;
             }
 

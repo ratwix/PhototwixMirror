@@ -14,29 +14,6 @@ Item {
     Component {
         id: activeEffectDelegate
 
-        /*
-        Item {
-            id: activeEffectDelegateItem
-            height: parent.height * 0.9
-            width: height
-            scale: PathView.iconScale
-            opacity: PathView.iconOpacity
-            z: PathView.z
-            property real rotationAngle: PathView.angle
-            transform: Rotation {
-                    origin.x: activeEffectDelegateItem.width / 2
-                    origin.y: activeEffectDelegateItem.height / 2
-                    axis { x: 0; y: 1; z: 0 } // Rotate around y-axis.
-                    angle: rotationAngle
-            }
-
-            //Template last selection color
-            Rectangle {
-                color:"blue"
-                anchors.fill: parent
-            }
-        }
-        */
 
         FilterElement {
             id: activeEffectDelegateElement
@@ -67,7 +44,10 @@ Item {
             preferredHighlightEnd: 0.5
             pathItemCount : 5
             onMovementEnded: {
-
+                globalVar.currentEffect = parameters.activeEffects[currentIndex].effectName
+            }
+            Component.onCompleted: {
+                globalVar.currentEffect = parameters.activeEffects[currentIndex].effectName
             }
     }
 

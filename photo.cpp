@@ -63,20 +63,10 @@ QUrl Photo::finalResult() const
     return m_finalResult;
 }
 
-QString Photo::finalResultS() const
-{
-    return m_finalResult.toString();
-}
-
 void Photo::setFinalResult(const QUrl &finalResult)
 {
     m_finalResult = finalResult;
     emit finalResultChanged();
-}
-
-void Photo::setFinalResultS(const QString &finalResult)
-{
-    setFinalResult(QUrl(finalResult));
 }
 
 QString Photo::name() const
@@ -131,16 +121,6 @@ void Photo::setFinalResultSD(const QUrl &finalResultSD)
 {
     m_finalResultSD = finalResultSD;
     emit finalResultSDChanged();
-}
-
-QString Photo::finalResultSDS() const
-{
-    return m_finalResultSD.toString();
-}
-
-void Photo::setFinalResultSDS(const QString &finalResultSD)
-{
-    setFinalResultSD(QUrl(finalResultSD));
 }
 
 void Photo::Serialize(PrettyWriter<StringBuffer> &writer) const

@@ -1,6 +1,5 @@
-
 import QtQuick 2.4
-import QtQuick.Controls 1.3
+import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.2
 
@@ -18,12 +17,25 @@ Rectangle {
     property int currentFrameNumber : 0
     property Template currentTemplate
 
+    property alias switchCutter : templateCutterSwitch.checked
+    property alias switchDouble : templateDoubleSwitch.checked
+    property alias switchLandscape : templateLandscapeSwitch.checked
+
     function updateTemplatePhotoPositionsRepeater() {
         if (currentTemplate) {
             templatePhotoPositionsRepeater.model = currentTemplate.templatePhotoPositions;
         }
     }
 
+    /*
+    onCurrentTemplateChanged: {
+        if (currentTemplate) {
+            landscapeSwitch.checked = currentTemplate.landscape
+            templateCutterSwitch.checked = currentTemplate.printcutter
+            templateDoubleSwitch.checked = currentTemplate.doubleprint
+        }
+    }
+*/
     MouseArea {
         anchors.fill: parent
     }
@@ -64,6 +76,70 @@ Rectangle {
             }
 
             Button {
+                id: updateTemplate;
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: "Changer image";
+                onClicked:
+                {
+                    updateTemplateFileDialog.open();
+                }
+            }
+
+            Grid {
+                columns: 2
+                columnSpacing: 10
+                Label {
+                    height: 30
+                    text: "Cutter print"
+                    font.pixelSize: 15
+                }
+
+
+                Switch {
+                    id:templateCutterSwitch
+                    onCheckedChanged: {
+                        currentTemplate.printcutter = checked
+                    }
+                    Component.onCompleted: {
+                        //checked = currentTemplate.printcutter
+                    }
+                }
+
+                Label {
+                    height: 30
+                    text: "Double print"
+                    font.pixelSize: 15
+                }
+
+                Switch {
+                    id:templateDoubleSwitch
+                    onCheckedChanged: {
+                        currentTemplate.doubleprint = templateDoubleSwitch.checked
+                    }
+                    Component.onCompleted: {
+                        //checked = currentTemplate.doubleprint
+                    }
+                }
+
+                Label {
+                    height: 30
+                    text: "Landscape"
+                    font.pixelSize: 15
+                }
+
+
+                Switch {
+                    id:templateLandscapeSwitch
+                    onCheckedChanged: {
+                        currentTemplate.landscape = checked
+                    }
+                    Component.onCompleted: {
+                        //checked = currentTemplate.printcutter
+                    }
+                }
+            }
+
+            Button {
                 id: saveTemplate;
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "Sauvegarder";
@@ -71,16 +147,6 @@ Rectangle {
                 {
                     parameters.Serialize();
                     configGalleryScreen.state = ""
-                }
-            }
-
-            Button {
-                id: updateTemplate;
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: "Changer image";
-                onClicked:
-                {
-                    updateTemplateFileDialog.open();
                 }
             }
 
@@ -118,7 +184,7 @@ Rectangle {
             cache: false
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
-            height: parent.height * 0.95
+            height: parent.height * 0.80
             width: sourceSize.width / sourceSize.height * height //conserv aspect ratio. Can't use native fonction, coords incorect
 
             onSourceChanged: {

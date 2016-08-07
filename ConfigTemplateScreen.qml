@@ -2,6 +2,7 @@ import QtQuick 2.4
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.2
+import QtQuick.Dialogs 1.0
 
 import com.phototwix.components 1.0
 
@@ -30,6 +31,8 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
     }
+
+
 
     Rectangle {
         id: configTemplateScreenButtons
@@ -131,6 +134,15 @@ Rectangle {
             }
 
             Button {
+                id: textColorButton;
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: "Txt couleur"
+                onClicked: {
+                    textColorDialog.visible = true
+                }
+            }
+
+            Button {
                 id: saveTemplate;
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: "Sauvegarder";
@@ -151,6 +163,18 @@ Rectangle {
                 nameFilters: [ "Images (*.jpg *.png)" ]
                 onAccepted: {
                     currentTemplate.updateImageFromUrl(updateTemplateFileDialog.fileUrl);
+                }
+            }
+
+            ColorDialog {
+                id: textColorDialog
+                title: "Choisissez la couleur du texte"
+                onAccepted: {
+                    console.log("You chose: " + textColorDialog.color)
+                    textColorDialog.visible = false;
+                }
+                onRejected: {
+                    console.log("Canceled")
                 }
             }
         }

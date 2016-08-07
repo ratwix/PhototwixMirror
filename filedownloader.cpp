@@ -52,7 +52,7 @@ void FileDownloader::fileDownloaded(QNetworkReply* pReply) {
     //emit a signal
     pReply->deleteLater();
     emit m_photo->tweeterLoadingComplete();
-    emit downloaded();
+    emit downloaded(m_photo);
 }
 
 QUrl FileDownloader::applicationDirPath() const

@@ -130,8 +130,8 @@ Item {
 
             console.log("Date:" + date + "\nid:" + id + "\ntext:" + text +
                         "\nname:" + profile_name + "\navatar:" + profile_image + "\nmedia:" + media_url + "\n\n")
-
-            parameters.photoGallery.addPhoto("photo1_tweet", globalVar.currentTemplate, text, profile_name, media_url)
+            //TODO : Modifier le nom du fichier
+            parameters.photoGallery.addPhoto("photo1_tweet", parameters.twitterDefaultTemplate, text, profile_name, media_url)
         }
     }
 

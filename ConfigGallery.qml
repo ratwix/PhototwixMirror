@@ -55,7 +55,6 @@ Item {
                     console.debug("Reset photos & delete");
                     cbox.message = "Vider la gallerie et supprimer les photos et mails ?"
                     cbox.acceptFunction = function () {
-                        mail.resetMail();
                         parameters.clearGalleryDeleteImages();
                         mbox.message = "La gallerie les photos et mes mailsont étés effacés"
                         mbox.state = "show"

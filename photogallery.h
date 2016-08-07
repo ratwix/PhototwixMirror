@@ -66,8 +66,10 @@ signals:
     void copyProgress(int current, int total);
     void copyStart();
     void copyEnd();
+    void showPhoto(Photo *photo);
+
 public slots:
-    void            imageDownloaded();
+    void            imageDownloaded(Photo *photo);
 };
 
 #endif // GALLERY_H

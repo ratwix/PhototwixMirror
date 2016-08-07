@@ -122,7 +122,6 @@ void Photo::setCurrentTemplate(Template *currentTemplate)
 }
 QUrl Photo::finalResultSD() const
 {
-    CLog::Write(CLog::Debug, "Get Photo SD : " + m_finalResultSD.toString().toStdString());
     return m_finalResultSD;
 }
 

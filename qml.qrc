@@ -98,5 +98,8 @@
         <file>resources/controls/FilterElement.qml</file>
         <file>resources/controls/TwitterRobot.qml</file>
         <file>ResultScreen.qml</file>
+        <file>resources/controls/TemplatePreview.qml</file>
+        <file>resources/controls/PhotoShootRenderer.qml</file>
+        <file>resources/font/ActoniaHand_PERSONAL.ttf</file>
     </qresource>
 </RCC>

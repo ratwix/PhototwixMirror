@@ -124,6 +124,13 @@ Item {
         visible: false
     }
 
+    Connections {
+        target: parameters.photoGallery
+        onShowPhoto : {
+            viewResultScreen.currentPhoto = photo
+            commandScreenItem.state = "RESULT_PHOTO"
+        }
+    }
 
     states: [
         State {

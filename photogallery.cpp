@@ -59,13 +59,12 @@ Photo *PhotoGallery::addPhoto(QString name, Template *t, QString twitterMessage,
     p->setPhotoTweeter(true);
     p->setPhotoTweeterMessage(twitterMessage);
     p->setPhotoTweeterProfileName(twitterProfileName);
-    m_photoList.prepend(p);
 
     //Download image from URL and attach it to first gallery item
     CLog::Write(CLog::Debug, QString("Try to download ") + twitterPhotoSource.toDisplayString() + " to folder" + QString(PHOTOSS_FOLDER));
     FileDownloader *imageDownloader = new FileDownloader(twitterPhotoSource, PHOTOSS_FOLDER, p, m_applicationDirPath, this);
 
-    connect(imageDownloader, SIGNAL (downloaded()), this, SLOT (imageDownloaded()));
+    QObject::connect(imageDownloader, &FileDownloader::downloaded, this, &PhotoGallery::imageDownloaded);
 
     QQmlEngine::setObjectOwnership(p, QQmlEngine::CppOwnership);
     return p;
@@ -75,12 +74,18 @@ Photo *PhotoGallery::addPhoto(QString name, Template *t, QString twitterMessage,
  * Image is downloaded and attached, Serialize and delete FileDownloader
  * @brief PhotoGallery::imageDownloaded
  */
-void PhotoGallery::imageDownloaded() {
+void PhotoGallery::imageDownloaded(Photo *photo) {
+    CLog::Write(CLog::Debug, "Image has been downladed");
+
+    m_photoList.prepend(photo);
     Serialize();
     QObject* downloader = sender();
     delete downloader;
 
+    //Message pour mettre a jour la gallerie
     emit photoListChanged();
+    //Message pour afficher le résultat
+    emit showPhoto(photo);
 }
 
 void PhotoGallery::removePhoto(QString name)
@@ -344,6 +349,8 @@ void PhotoGallery::setCurrentCopy(int currentCopy)
 
 void PhotoGallery::Serialize()
 {
+    CLog::Write(CLog::Debug, "Serialize Gallery");
+
     m_t = std::thread(&PhotoGallery::SerializeThread, this);
     m_t.join();  //TODO: bad thread management. Have to terminate later
 }
@@ -358,12 +365,12 @@ void PhotoGallery::SerializeThread()
     writer.StartArray();
     for (QList<QObject*>::const_iterator it = m_photoList.begin(); it != m_photoList.end(); it++) {
         if (Photo *p = dynamic_cast<Photo*>(*it)) {
-            if (p->finalResult().toString() == "") {
+            //if (p->finalResult().toString() == "") {
                 //TODO: Bug template with no final result, no serialisation, delete it
-                m_photoList.removeOne(*it);
-            } else {
+            //    m_photoList.removeOne(*it);
+            //} else {
                 p->Serialize(writer);
-            }
+            //}
         } else {
             CLog::Write(CLog::Fatal, "Bad type QObject -> Photo");
         }

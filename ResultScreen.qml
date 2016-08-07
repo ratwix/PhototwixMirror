@@ -8,23 +8,42 @@ import "./resources/controls"
 
 Item {
     //Template view
+    property Photo currentPhoto
+
 
     Item {
-        id:templatePreview
-
+        id:templatePreviewItem
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         width: parent.width * 0.80
 
-        Rectangle {
-            anchors.fill: parent
-            color: "blue"
+        TemplatePreview {
+            id:resultPhoto
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            height: parent.height * 0.8
+            //width: parent.width * 0.8
+            photo: currentPhoto
+            visible: currentPhoto ? (currentPhoto.finalResult == "" ? true : false) : false
+        }
+
+        Image {
+            id:resultPhotoImage
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            height: parent.height * 0.8
+            fillMode: Image.PreserveAspectFit
+            visible: !resultPhoto.visible
+            source: currentPhoto ? currentPhoto.finalResult : ""
         }
     }
 
+    //Button home / Print / Delete / Mail
+
     Item {
-        anchors.left: templatePreview.right
+        id:actionButtonItem
+        anchors.left: templatePreviewItem.right
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
@@ -83,6 +102,6 @@ Item {
         }
     }
 
-    //Button print and delete
+
     //Timeline to auto disepear
 }

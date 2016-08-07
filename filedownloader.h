@@ -21,7 +21,7 @@ class FileDownloader : public QObject
   void setApplicationDirPath(const QUrl &applicationDirPath);
 
 signals:
-  void downloaded();
+  void downloaded(Photo *p);
 
 private slots:
   void fileDownloaded(QNetworkReply* pReply);

@@ -27,15 +27,6 @@ Rectangle {
         }
     }
 
-    /*
-    onCurrentTemplateChanged: {
-        if (currentTemplate) {
-            landscapeSwitch.checked = currentTemplate.landscape
-            templateCutterSwitch.checked = currentTemplate.printcutter
-            templateDoubleSwitch.checked = currentTemplate.doubleprint
-        }
-    }
-*/
     MouseArea {
         anchors.fill: parent
     }

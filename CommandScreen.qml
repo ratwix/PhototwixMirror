@@ -57,7 +57,32 @@ Item {
                 passScreen.state = "show"
             }
         }
+
+        ButtonAwesome {
+            id:testButton
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.topMargin: 10
+            anchors.rightMargin: 70
+            size:40
+            code:"\uf085"
+            onClicked: {
+                commandScreenItem.state = "RESULT_PHOTO"
+            }
+        }
     }
+
+    Item {
+        id:viewResultPhoto
+        anchors.fill: parent
+        visible: false
+
+        ResultScreen {
+            id:viewResultScreen
+            anchors.fill: parent
+        }
+    }
+
 
     Item {
          id:configItem
@@ -108,6 +133,12 @@ Item {
             name: "CONFIG"
             PropertyChanges { target: configScreen; visible:true}
             PropertyChanges { target: chooseTemplateItem; visible: false}
+        },
+        State {
+            name: "RESULT_PHOTO"
+            PropertyChanges {target: chooseTemplateItem; visible: false}
+            PropertyChanges {target: viewResultPhoto; visible: true}
         }
+
     ]
 }

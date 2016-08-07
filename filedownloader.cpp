@@ -21,6 +21,12 @@ FileDownloader::FileDownloader(QUrl imageUrl, QString distPath, Photo *photo, QU
 
 FileDownloader::~FileDownloader() { }
 
+/**
+ * @brief FileDownloader::fileDownloaded
+ * @param pReply
+ * Quand l'image a fini d'être uploader, on la sauvegarde, on l'ajoute a la photo actuelle, et on serialise
+ */
+
 void FileDownloader::fileDownloaded(QNetworkReply* pReply) {
     CLog::Write(CLog::Debug, "Fin du download de l'image");
     m_downloadedData = pReply->readAll();
@@ -35,6 +41,7 @@ void FileDownloader::fileDownloaded(QNetworkReply* pReply) {
                 QFileInfo fi(file);
                 QUrl destPath(QString("file:///") + m_applicationDirPath.toDisplayString() + "/" + m_distDir + "/" + fi.fileName());
                 photoPart->setPath(destPath);
+                emit m_photo->photoPartListChange();
             } else {
                 CLog::Write(CLog::Warning, "[Warning]Pas assez de partie pour l'image tweeter");
             }

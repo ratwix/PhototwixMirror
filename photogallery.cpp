@@ -52,7 +52,7 @@ Photo* PhotoGallery::addPhoto(QString name, Template *t)
  */
 Photo *PhotoGallery::addPhoto(QString name, Template *t, QString twitterMessage, QString twitterProfileName, QUrl twitterPhotoSource)
 {
-    //Download and create the photo
+    //Download and creasete the photo
     CLog::Write(CLog::Debug, "Add a new twitter Photo");
 
     Photo *p = new Photo(name, t);
@@ -68,17 +68,19 @@ Photo *PhotoGallery::addPhoto(QString name, Template *t, QString twitterMessage,
     connect(imageDownloader, SIGNAL (downloaded()), this, SLOT (imageDownloaded()));
 
     QQmlEngine::setObjectOwnership(p, QQmlEngine::CppOwnership);
-    emit photoListChanged();
     return p;
 }
 
 /**
- * Image is downloaded and attached, delete FileDownloader
+ * Image is downloaded and attached, Serialize and delete FileDownloader
  * @brief PhotoGallery::imageDownloaded
  */
 void PhotoGallery::imageDownloaded() {
+    Serialize();
     QObject* downloader = sender();
     delete downloader;
+
+    emit photoListChanged();
 }
 
 void PhotoGallery::removePhoto(QString name)

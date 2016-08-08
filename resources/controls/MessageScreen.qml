@@ -4,7 +4,7 @@ Rectangle {
     id:messageScreen
     anchors.fill: parent
     property string message: "message"
-    property string imageSource: ""
+    property string imageTag: ""
     property bool   show: false
     property int    timeoutInterval: 3000
     color:"#C0212126"
@@ -31,13 +31,16 @@ Rectangle {
         font.pixelSize: 80
     }
 
-    Image {
+    Text {
+        color: "white"
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top : parent.top
         anchors.topMargin: 20
-        fillMode: Image.PreserveAspectFit
         height: parent.height * 0.3
-        source: imageSource
+        font.family: "FontAwesome"
+        fontSizeMode: Text.Fit
+        font.pixelSize: height
+        text: imageTag
     }
 
     states: [
@@ -81,7 +84,7 @@ Rectangle {
         interval: timeoutInterval; running: false; repeat: false
         onTriggered: {
             timeoutInterval = 3000
-            imageSource = ""
+            imageTag = ""
             messageScreen.state = "hide"
         }
     }

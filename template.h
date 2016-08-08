@@ -29,6 +29,7 @@ class Template : public QObject
     Q_PROPERTY(bool doubleprint READ getDoubleprint WRITE setDoubleprint NOTIFY templateChanged)
     Q_PROPERTY(bool landscape READ getLandscape WRITE setLandscape NOTIFY templateChanged)
     Q_PROPERTY(bool twitterDefault READ getTwitterDefault WRITE setTwitterDefault NOTIFY templateChanged)
+    Q_PROPERTY(QString twitterMessageColor READ getTwitterMessageColor WRITE setTwitterMessageColor NOTIFY templateChanged)
 
 public:
     Template();
@@ -70,6 +71,9 @@ public:
     bool getTwitterDefault() const;
     void setTwitterDefault(bool twitterDefault);
 
+    QString getTwitterMessageColor() const;
+    void setTwitterMessageColor(const QString &twitterMessageColor);
+
 signals:
     void templateChanged();
     void activeChanged();
@@ -84,6 +88,7 @@ private:
     bool            m_doubleprint;
     bool            m_landscape;
     bool            m_twitterDefault;
+    QString         m_twitterMessageColor;
 };
 
 #endif // TEMPLATE_H

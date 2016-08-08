@@ -111,19 +111,13 @@ void PhotoGallery::removePhoto(QString name)
                                dest.c_str());
                     }
                 }
-                delete p;
                 emit photoListChanged();
+                //delete p; //TODO: memory leak but crash in QML
                 break;
             }
         }
     }
     Serialize();
-}
-
-void PhotoGallery::removeFirstPhoto()
-{
-    m_photoList.removeFirst();
-    emit photoListChanged();
 }
 
 static qint64 getDirectoryFileSize(QString s, int &nb) {

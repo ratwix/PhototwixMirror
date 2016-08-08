@@ -170,6 +170,7 @@ Rectangle {
                 id: textColorDialog
                 title: "Choisissez la couleur du texte"
                 onAccepted: {
+                    currentTemplate.twitterMessageColor = textColorDialog.color
                     console.log("You chose: " + textColorDialog.color)
                     textColorDialog.visible = false;
                 }

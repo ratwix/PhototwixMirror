@@ -16,7 +16,7 @@ Item {
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        width: parent.width * 0.80
+        width: parent.width * 0.90
 
         TemplatePreview {
             id:resultPhoto
@@ -75,7 +75,30 @@ Item {
                 code:"\uf02f"
 
                 onClicked: {
-
+                    if (parameters.blockPrint && parameters.nbprint >= parameters.blockPrintNb) {
+                        mbox.message = "Plus d'impressions disponibles..."
+                        mbox.imageTag = "\uf02f"
+                        mbox.state = "show"
+                    } else {
+                        parameters.updatePaperPrint();
+                        if (parameters.paperprint < 15) { //Warning if paper become low
+                            mbox.message = "Impression en cours.\nPlus que " + parameters.paperprint + " feuilles"
+                            mbox.imageTag = "\uf02f"
+                            mbox.state = "show"
+                            printPhoto()
+                        } else {
+                            if (parameters.paperprint < 2) {
+                                mbox.message = "Plus de papier"
+                                mbox.imageTag = "\uf02f"
+                                mbox.state = "show"
+                            } else {
+                                mbox.message = "Impression en cours"
+                                mbox.imageTag = "\uf02f"
+                                mbox.state = "show"
+                                printPhoto()
+                            }
+                        }
+                    }
                 }
             }
 
@@ -85,7 +108,11 @@ Item {
                 code:"\uf1f8"
 
                 onClicked: {
-
+                    if (currentPhoto) {
+                        cbox.message = "Supprimer la photo ?"
+                        cbox.acceptFunction = deletePhoto
+                        cbox.state = "show"
+                    }
                 }
             }
 
@@ -100,6 +127,18 @@ Item {
                 }
             }
         }
+    }
+
+    function deletePhoto() {
+        commandScreenItem.state = "CHOOSE_TEMPLATE"
+        parameters.photoGallery.removePhoto(currentPhoto.name);
+    }
+
+    function printPhoto() {
+        parameters.printPhoto(currentPhoto.finalResult,
+                              currentPhoto.currentTemplate.doubleprint,
+                              currentPhoto.currentTemplate.printcutter,
+                              currentPhoto.currentTemplate.landscape)
     }
 
 

@@ -4,7 +4,7 @@ import "./resources/controls"
 
 Item {
     id:commandScreenItem
-
+    property alias viewResultScreenPhoto :viewResultScreen.currentPhoto
     state:"CHOOSE_TEMPLATE"
 
     // To be sure that an unwanted click do something
@@ -45,6 +45,14 @@ Item {
             anchors.topMargin: 20
         }
 
+        ChoosePhotoControl {
+            id:choosePhotoView
+            height: parent.height * 0.4
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+        }
+
         ButtonAwesome {
             id:configButton
             anchors.top: parent.top
@@ -55,19 +63,6 @@ Item {
             code:"\uf085"
             onClicked: {
                 passScreen.state = "show"
-            }
-        }
-
-        ButtonAwesome {
-            id:testButton
-            anchors.top: parent.top
-            anchors.right: parent.right
-            anchors.topMargin: 10
-            anchors.rightMargin: 70
-            size:40
-            code:"\uf085"
-            onClicked: {
-                commandScreenItem.state = "RESULT_PHOTO"
             }
         }
     }

@@ -15,10 +15,9 @@ Item {
     property string effectSource : globalVar.currentEffect
 
 
-    Rectangle {
+    Item {
         anchors.fill: parent
         id: photoResult
-        color:"blue"
 
         Image {
             id: photoPreview

@@ -13,6 +13,7 @@ Template::Template()
     m_doubleprint = false;
     m_landscape = true;
     m_twitterDefault = false;
+    m_twitterMessageColor = "#000000";
 }
 
 Template::Template(QString name, Parameters *parameters)
@@ -24,6 +25,7 @@ Template::Template(QString name, Parameters *parameters)
     m_doubleprint = false;
     m_landscape = true;
     m_twitterDefault = false;
+    m_twitterMessageColor = "#000000";
     QString path = QString("file:///") + parameters->getApplicationDirPath().toString() + "/" + TEMPLATE_FOLDER + "/" + name;
 
     setUrl(QUrl(path));
@@ -111,6 +113,9 @@ void Template::Serialize(PrettyWriter<StringBuffer> &writer) const {
     writer.Key("twitterDefault");
     writer.Bool(m_twitterDefault);
 
+    writer.Key("twitterMessageColor");
+    writer.String(m_twitterMessageColor.toStdString().c_str());
+
     //Serialisation des TemplatePhotoPosition
     QList<QObject*>::const_iterator it;
 
@@ -157,6 +162,9 @@ void Template::Unserialize(Value const &value) {
 
     if (value.HasMember("twitterDefault")) {
         m_twitterDefault = value["twitterDefault"].GetBool();
+    }
+    if (value.HasMember("twitterMessageColor")) {
+        m_twitterMessageColor = QString(value["twitterMessageColor"].GetString());
     }
 
     if (value.HasMember("templatesPhotoPositions")) {
@@ -276,6 +284,18 @@ bool Template::getTwitterDefault() const
 void Template::setTwitterDefault(bool twitterDefault)
 {
     m_twitterDefault = twitterDefault;
+    m_parameters->Serialize();
+    emit templateChanged();
+}
+
+QString Template::getTwitterMessageColor() const
+{
+    return m_twitterMessageColor;
+}
+
+void Template::setTwitterMessageColor(const QString &twitterMessageColor)
+{
+    m_twitterMessageColor = twitterMessageColor;
     m_parameters->Serialize();
     emit templateChanged();
 }

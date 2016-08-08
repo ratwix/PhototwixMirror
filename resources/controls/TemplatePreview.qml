@@ -44,7 +44,7 @@ Item {
     }
 
     Text {
-        color: "black"
+        color: photo ? photo.currentTemplate.twitterMessageColor : "#000000"
         anchors.bottom: photoTemplate.bottom
         anchors.bottomMargin: 10
         anchors.right: photoTemplate.right
@@ -52,14 +52,14 @@ Item {
         //fontSizeMode: Text.Fit
         font.pixelSize: photoTemplate.height * 0.1
         horizontalAlignment: Text.AlignRight
-        font.family: "Actonia Hand PERSONAL USE"
+        font.family: "Gabrielle"
         text: photo ? cleanTwitterMessage(photo.tweeterMessage) : ""
     }
 
 
     FontLoader {
         id:textFont
-        source: "../font/ActoniaHand_PERSONAL.ttf"
+        source: "../font/Gabrielle.ttf"
     }
 
 
@@ -75,9 +75,10 @@ Item {
 
     Timer {
         id:waitLoadingTimer
-        interval: 500
+        interval: 1000
         running: false
         repeat: false
+        triggeredOnStart: false
         onTriggered: {
             if (photoTemplate.sourceSize.width > 0) {
                 waitLoadingTimer.stop()

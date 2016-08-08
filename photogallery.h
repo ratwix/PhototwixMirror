@@ -21,7 +21,6 @@ public:
     Q_INVOKABLE Photo* addPhoto(QString name, Template *t, QString twitterMessage, QString twitterProfileName, QUrl twitterPhotoSource);
 
     Q_INVOKABLE void   removePhoto(QString name);
-    Q_INVOKABLE void   removeFirstPhoto();
 
     Q_INVOKABLE void   saveGallery(QUrl destPath, bool saveSingle, bool saveDeleted, bool saveDeletedSingle);
     Q_INVOKABLE void   updateGalleryDiskSize(bool saveSingle, bool saveDeleted, bool saveDeletedSingle);

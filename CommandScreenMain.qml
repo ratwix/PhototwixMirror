@@ -17,16 +17,6 @@ Window {
         property color      backColorTemplateLast:   "#F2AF32"
         property Template   currentTemplate;
         property string     currentEffect;
-
-        onCurrentTemplateChanged: {
-            console.debug("CTemplate:" + currentTemplate.name)
-            console.debug("CTemplateTwitter:" + parameters.twitterDefaultTemplate.name)
-        }
-
-        onCurrentEffectChanged: {
-            console.debug("CEffect:" + currentEffect)
-            console.debug("CEffectChange:" + parameters.effectDefault)
-        }
     }
 
     CommandScreen {

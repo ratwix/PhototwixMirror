@@ -137,6 +137,48 @@ Item {
                 }
             }
         }
+
+        Row {
+            anchors.left: parent.left
+            spacing: 10
+
+            Label {
+                height: 30
+                text: "Delais Voir Photo (s)"
+                font.pixelSize: 15
+            }
+
+            Row {
+                id:showPhotoDelay
+                height: 30
+                spacing: 0
+
+                Button {
+                    height: parent.height
+                    width: parent.height
+                    text: "-"
+                    onClicked: {
+                        parameters.showPhotoDelay = parameters.showPhotoDelay > 5 ? parameters.showPhotoDelay - 5 : 0
+                    }
+                }
+                Text {
+                    anchors.leftMargin: 30
+                    height: parent.height
+                    width: parent.height * 3
+                    font.pixelSize: parent.height * 0.9
+                    text: parameters.showPhotoDelay
+                }
+                Button {
+                    height: parent.height
+                    width: parent.height
+                    text: "+"
+                    visible: admin
+                    onClicked: {
+                        parameters.showPhotoDelay = parameters.showPhotoDelay + 5
+                    }
+                }
+            }
+        }
     }
 
     /**

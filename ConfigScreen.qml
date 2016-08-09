@@ -20,10 +20,6 @@ Rectangle {
         anchors.fill: parent
     }
 
-    FontLoader {
-        source: "/resources/font/FontAwesome.otf"
-    }
-
     state: "FULL"
 
     TabView {

@@ -19,6 +19,14 @@ Window {
         property string     currentEffect;
     }
 
+    FontLoader {
+        source: "resources/font/Gabrielle.ttf"
+    }
+
+    FontLoader {
+        source: "resources/font/FontAwesome.otf"
+    }
+
     CommandScreen {
         anchors.fill: parent
     }

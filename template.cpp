@@ -297,8 +297,5 @@ void Template::setTwitterMessageColor(const QString &twitterMessageColor)
 {
     m_twitterMessageColor = twitterMessageColor;
     m_parameters->Serialize();
-    emit templateChanged();
+    emit twitterMessageColorChanged();
 }
-
-
-

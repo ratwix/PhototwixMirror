@@ -131,14 +131,28 @@ Rectangle {
                         //checked = currentTemplate.printcutter
                     }
                 }
-            }
 
-            Button {
-                id: textColorButton;
-                anchors.horizontalCenter: parent.horizontalCenter
-                text: "Txt couleur"
-                onClicked: {
-                    textColorDialog.visible = true
+                Label {
+                    height: 30
+                    text: "Txt color"
+                    font.pixelSize: 15
+                }
+
+                Rectangle {
+                    id:templateTextColor
+                    height: 30
+                    width: 30
+                    border.color: "black"
+                    border.width: 2
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            textColorDialog.visible = true
+                        }
+                    }
+                    Component.onCompleted: {
+                        color = currentTemplate.twitterMessageColor
+                    }
                 }
             }
 
@@ -170,12 +184,12 @@ Rectangle {
                 id: textColorDialog
                 title: "Choisissez la couleur du texte"
                 onAccepted: {
+                    templateTextColor.color = textColorDialog.color
                     currentTemplate.twitterMessageColor = textColorDialog.color
-                    console.log("You chose: " + textColorDialog.color)
                     textColorDialog.visible = false;
                 }
                 onRejected: {
-                    console.log("Canceled")
+
                 }
             }
         }

@@ -100,7 +100,6 @@
         <file>ResultScreen.qml</file>
         <file>resources/controls/TemplatePreview.qml</file>
         <file>resources/controls/PhotoShootRenderer.qml</file>
-        <file>resources/font/ActoniaHand_PERSONAL.ttf</file>
         <file>resources/controls/PhotoPreviewItem.qml</file>
         <file>resources/controls/ChoosePhotoControl.qml</file>
         <file>resources/font/Gabrielle.ttf</file>

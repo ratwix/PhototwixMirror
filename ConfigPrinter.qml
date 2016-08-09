@@ -134,5 +134,58 @@ Item {
            step:10
            admin:configScreen.admin
        }
+
+       Label {
+           height: 30
+           text: "Auto Print"
+           font.pixelSize: 15
+       }
+
+       Switch {
+           id:autoPrintSwitch
+           onCheckedChanged: {
+               parameters.autoPrint = checked
+           }
+           Component.onCompleted: {
+               checked = parameters.autoPrint
+           }
+       }
+
+       Label {
+           height: 30
+           text: "Auto Print Delay (s)"
+           font.pixelSize: 15
+       }
+
+       Row {
+           id:autoPrintDelay
+           height: 30
+           spacing: 0
+
+           Button {
+               height: parent.height
+               width: parent.height
+               text: "-"
+               onClicked: {
+                   parameters.autoPrintDelay = parameters.autoPrintDelay > 0 ? parameters.autoPrintDelay - 1 : 0
+               }
+           }
+           Text {
+               anchors.leftMargin: 30
+               height: parent.height
+               width: parent.height * 3
+               font.pixelSize: parent.height * 0.9
+               text: parameters.autoPrintDelay
+           }
+           Button {
+               height: parent.height
+               width: parent.height
+               text: "+"
+               visible: admin
+               onClicked: {
+                   parameters.autoPrintDelay = parameters.autoPrintDelay + 1
+               }
+           }
+       }
     }
 }

@@ -56,13 +56,6 @@ Item {
         text: photo ? cleanTwitterMessage(photo.tweeterMessage) : ""
     }
 
-
-    FontLoader {
-        id:textFont
-        source: "../font/Gabrielle.ttf"
-    }
-
-
     //Quand on change la photo, regarder si l'image a déjà été gérérée. Si non, générer l'image, mettre à jour, et serialiser
     //Lance un timer car l'image peut ne pas être chargée
     onPhotoChanged: {

@@ -89,6 +89,13 @@ void Parameters::init() {
     m_twitterKey = "";
     m_twitterSecret = "";
     m_twitterTag = "";
+    m_twitterLastRetrieved = "";
+    m_twitterMessage = "";
+    m_twitterMessageColor = "#00ACED";
+    m_autoPrintDelay = 5;
+    m_autoPrint = false;
+    m_showPhotoDelay = 15;
+
 
     m_waitVideo = new VideoItem(this, VIDEO_WAIT);
     m_startGlobalPhotoProcessVideo = new VideoItem(this, VIDEO_STARTGLOBALPHOTOPROCESS);
@@ -158,6 +165,15 @@ void Parameters::Serialize() {
         writer.Key("paperprint");
         writer.Int(m_paperprint);
 
+        writer.Key("autoPrint");
+        writer.Bool(m_autoPrint);
+
+        writer.Key("autoPrintDelay");
+        writer.Int(m_autoPrintDelay);
+
+        writer.Key("showPhotoDelay");
+        writer.Int(m_showPhotoDelay);
+
         writer.Key("backgroundImage");
         writer.String(m_backgroundImage.toStdString().c_str());
 
@@ -208,6 +224,15 @@ void Parameters::Serialize() {
 
         writer.Key("twitterTag");
         writer.String(m_twitterTag.toStdString().c_str());
+
+        writer.Key("twitterLastRetrieved");
+        writer.String(m_twitterLastRetrieved.toStdString().c_str());
+
+        writer.Key("twitterMessage");
+        writer.String(m_twitterMessage.toStdString().c_str());
+
+        writer.Key("twitterMessageColor");
+        writer.String(m_twitterMessageColor.toStdString().c_str());
 
         writer.Key("templates");
         writer.StartArray();
@@ -322,6 +347,18 @@ void Parameters::Unserialize() {
         m_paperprint = document["paperprint"].GetInt();
     }
 
+    if (document.HasMember("autoPrint")) {
+       m_autoPrint = document["autoPrint"].GetBool();
+    }
+
+    if (document.HasMember("autoPrintDelay")) {
+        m_autoPrintDelay = document["autoPrintDelay"].GetInt();
+    }
+
+    if (document.HasMember("showPhotoDelay")) {
+        m_showPhotoDelay = document["showPhotoDelay"].GetInt();
+    }
+
     if (document.HasMember("mailActive")) {
         m_mailActive = document["mailActive"].GetBool();
     }
@@ -384,6 +421,18 @@ void Parameters::Unserialize() {
 
     if (document.HasMember("twitterTag")) {
         m_twitterTag = QString(document["twitterTag"].GetString());
+    }
+
+    if (document.HasMember("twitterLastRetrieved")) {
+        m_twitterLastRetrieved = QString(document["twitterLastRetrieved"].GetString());
+    }
+
+    if (document.HasMember("twitterMessage")) {
+        m_twitterMessage = QString(document["twitterMessage"].GetString());
+    }
+
+    if (document.HasMember("twitterMessageColor")) {
+        m_twitterMessageColor = QString(document["twitterMessageColor"].GetString());
     }
 
     if (document.HasMember("templates")) {
@@ -528,6 +577,77 @@ void Parameters::printThread(QUrl m_applicationDirPath, QUrl url, bool doublepri
         CLog::Write(CLog::Debug, "Print cmd :" + cmd);
         system(cmd.c_str());
     }
+}
+
+QString Parameters::getTwitterMessageColor() const
+{
+    return m_twitterMessageColor;
+}
+
+void Parameters::setTwitterMessageColor(const QString &twitterMessageColor)
+{
+    m_twitterMessageColor = twitterMessageColor;
+    emit twitterMessageColorChanged();
+}
+
+QString Parameters::getTwitterMessage() const
+{
+    QString tmp(m_twitterMessage);
+    return tmp.replace("\\n", "\n");
+}
+
+void Parameters::setTwitterMessage(const QString &twitterMessage)
+{
+    m_twitterMessage = twitterMessage;
+    emit twitterMessageChanged();
+}
+
+int Parameters::getShowPhotoDelay() const
+{
+    return m_showPhotoDelay;
+}
+
+void Parameters::setShowPhotoDelay(int showPhotoDelay)
+{
+    m_showPhotoDelay = showPhotoDelay;
+    emit showPhotoDelayChanged();
+    Serialize();
+}
+
+int Parameters::getAutoPrintDelay() const
+{
+    return m_autoPrintDelay;
+}
+
+void Parameters::setAutoPrintDelay(int autoPrintDelay)
+{
+    m_autoPrintDelay = autoPrintDelay;
+    emit autoPrintDelayChanged();
+    Serialize();
+}
+
+QString Parameters::getTwitterLastRetrieved() const
+{
+    return m_twitterLastRetrieved;
+}
+
+void Parameters::setTwitterLastRetrieved(const QString &twitterLastRetrieved)
+{
+    m_twitterLastRetrieved = twitterLastRetrieved;
+    emit twitterLastRetrievedChanged();
+    Serialize();
+}
+
+bool Parameters::getAutoPrint() const
+{
+    return m_autoPrint;
+}
+
+void Parameters::setAutoPrint(bool autoPrint)
+{
+    m_autoPrint = autoPrint;
+    emit autoPrintChanged();
+    Serialize();
 }
 
 QString Parameters::getEffectDefault() const
@@ -881,6 +1001,7 @@ void Parameters::clearGallery(bool del)
         delAllFileInDirectory(PHOTOSDS_PATH);
     }
 
+    m_twitterLastRetrieved = "";
     Serialize();
     m_photogallery->Serialize();
     emit photoGalleryChanged();

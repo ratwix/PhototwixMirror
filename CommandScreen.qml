@@ -33,6 +33,7 @@ Item {
             anchors.left: parent.left
             anchors.top:parent.top
             anchors.topMargin: 20
+            visible:!parameters.twitterTwitterOnly
         }
 
         ChooseEffectControl {
@@ -43,6 +44,54 @@ Item {
             anchors.leftMargin: 150
             anchors.top:parent.top
             anchors.topMargin: 20
+            visible:!parameters.twitterTwitterOnly
+        }
+        //Twitter message if twitter box only
+        Item {
+            id: tweeterText
+            height: parent.height * 0.5
+            width: parent.width * 0.5
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            visible:parameters.twitterTwitterOnly
+
+
+            Text {
+                anchors.fill: parent
+                horizontalAlignment:Text.AlignHCenter
+                verticalAlignment:Text.AlignVCenter
+                font.pixelSize:height / 6
+                elide: Text.ElideMiddle
+                color:parameters.twitterMessageColor
+                text: qsTr(parameters.twitterMessage).arg(parameters.twitterAccount).arg(parameters.twitterTag)
+            }
+        }
+
+        //Twitter message if not twitter box and twitter active
+
+        Item {
+            id: tweeterTextSmall
+            height: parent.height * 0.1
+            width: parent.width
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: choosePhotoView.top
+            anchors.bottomMargin: 5
+            visible:!parameters.twitterTwitterOnly && parameters.twitterListenTwitter
+
+
+            Text {
+                anchors.fill: parent
+                horizontalAlignment:Text.AlignHCenter
+                verticalAlignment:Text.AlignVCenter
+                fontSizeMode:Text.HorizontalFit
+                elide: Text.ElideMiddle
+                minimumPixelSize: 5
+                font.pixelSize: height / 2
+                color:parameters.twitterMessageColor
+                text: qsTr(parameters.twitterMessage.replace(/\n/g, " ")).arg(parameters.twitterAccount).arg(parameters.twitterTag)
+            }
         }
 
         ChoosePhotoControl {
@@ -119,11 +168,23 @@ Item {
         visible: false
     }
 
+    //Affiche une photo qui a été ajoutée a la gallerie
+    //Démarage de l'auto print, qui imprimera la photo si autoprint actif
     Connections {
         target: parameters.photoGallery
         onShowPhoto : {
             viewResultScreen.currentPhoto = photo
             commandScreenItem.state = "RESULT_PHOTO"
+            viewResultScreen.timerPrint.start()
+        }
+    }
+
+    //Quand on passe a la vision d'une photo, si le timer pour voir une photo est > a 0, alors on enclanche le timer
+    onStateChanged: {
+        if (state == "RESULT_PHOTO") {
+            if (parameters.showPhotoDelay > 0) {
+                viewResultScreen.timerShow.start()
+            }
         }
     }
 

@@ -36,6 +36,9 @@ class Parameters : public QObject
     Q_PROPERTY(bool blockPrint READ getBlockPrint WRITE setBlockPrint NOTIFY blockPrintChanged)
     Q_PROPERTY(int blockPrintNb READ getBlockPrintNb WRITE setBlockPrintNb NOTIFY blockPrintNbChanged)
     Q_PROPERTY(int paperprint READ paperprint WRITE setPaperprint NOTIFY paperprintChanged)
+    Q_PROPERTY(bool autoPrint READ getAutoPrint WRITE setAutoPrint NOTIFY autoPrintChanged)
+    Q_PROPERTY(int autoPrintDelay READ getAutoPrintDelay WRITE setAutoPrintDelay NOTIFY autoPrintDelayChanged)
+    Q_PROPERTY(int showPhotoDelay READ getShowPhotoDelay WRITE setShowPhotoDelay NOTIFY showPhotoDelayChanged)
     Q_PROPERTY(bool mailActive READ getMailActive WRITE setMailActive NOTIFY mailChange)
     Q_PROPERTY(QString mailFrom READ getMailFrom WRITE setMailFrom NOTIFY mailChange)
     Q_PROPERTY(QString mailCc READ getMailCc WRITE setMailCc NOTIFY mailChange)
@@ -58,6 +61,9 @@ class Parameters : public QObject
     Q_PROPERTY(QString twitterAccount READ getTwitterAccount WRITE setTwitterAccount NOTIFY twitterAccountChanged)
     Q_PROPERTY(QString twitterTag READ getTwitterTag WRITE setTwitterTag NOTIFY twitterTagChanged)
     Q_PROPERTY(Template * twitterDefaultTemplate READ getTwitterDefaultTemplate WRITE setTwitterDefaultTemplate NOTIFY twitterDefaultTemplateChanged)
+    Q_PROPERTY(QString twitterLastRetrieved READ getTwitterLastRetrieved WRITE setTwitterLastRetrieved NOTIFY twitterLastRetrievedChanged)
+    Q_PROPERTY(QString twitterMessage READ getTwitterMessage WRITE setTwitterMessage NOTIFY twitterMessageChanged)
+    Q_PROPERTY(QString twitterMessageColor READ getTwitterMessageColor WRITE setTwitterMessageColor NOTIFY twitterMessageColorChanged)
 public:
     Parameters(QUrl appDirPath);
     ~Parameters();
@@ -192,6 +198,24 @@ public:
     QString getEffectDefault() const;
     void setEffectDefault(const QString &effectDefault);
 
+    bool getAutoPrint() const;
+    void setAutoPrint(bool autoPrint);
+
+    QString getTwitterLastRetrieved() const;
+    void setTwitterLastRetrieved(const QString &twitterLastRetrieved);
+
+    int getAutoPrintDelay() const;
+    void setAutoPrintDelay(int autoPrintDelay);
+
+    int getShowPhotoDelay() const;
+    void setShowPhotoDelay(int showPhotoDelay);
+
+    QString getTwitterMessage() const;
+    void setTwitterMessage(const QString &twitterMessage);
+
+    QString getTwitterMessageColor() const;
+    void setTwitterMessageColor(const QString &twitterMessageColor);
+
 private:
     void addTemplate(QString name);
     void addTemplate(Value const &value);
@@ -237,6 +261,9 @@ private:
     bool                 m_blockPrint;
     int                  m_blockPrintNb;
     float                m_pricephoto;
+    bool                 m_autoPrint;
+    int                  m_autoPrintDelay;
+    int                  m_showPhotoDelay;
     bool                 m_flipcamera;
     bool                 m_flipresult;
     int                  m_cameraHight;
@@ -264,7 +291,11 @@ private:
     QString              m_twitterAccount;
     QString              m_twitterTag;
     Template *           m_twitterDefaultTemplate;
+    QString              m_twitterLastRetrieved;
+    QString              m_twitterMessage;
+    QString              m_twitterMessageColor;
     QString              m_effectDefault;
+
 
 signals:
     void templatesChanged();
@@ -296,6 +327,12 @@ signals:
     void effectsSelectedChanged();
     void twitterDefaultTemplateChanged();
     void effectDefaultChanged();
+    void twitterLastRetrievedChanged();
+    void autoPrintChanged();
+    void autoPrintDelayChanged();
+    void showPhotoDelayChanged();
+    void twitterMessageColorChanged();
+    void twitterMessageChanged();
 };
 
 #endif // PARAMETERS_H

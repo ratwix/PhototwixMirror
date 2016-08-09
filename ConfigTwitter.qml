@@ -154,6 +154,56 @@ Item {
             }
         }
 
+        Row {
+            anchors.left: parent.left
+            spacing: 10
+
+            Label {
+                height: 30
+                width: 200
+                text: "Twitter Message :"
+                font.pixelSize: 15
+            }
+
+            TextField {
+                id:twitterMessage
+                width: 400
+                placeholderText: qsTr("%1 %2 Mon message")
+                Component.onCompleted: {
+                    text = parameters.twitterMessage;
+                }
+            }
+        }
+
+        Row {
+            anchors.left: parent.left
+            spacing: 10
+
+            Label {
+                height: 30
+                width: 200
+                text: "Twitter Message Color :"
+                font.pixelSize: 15
+            }
+
+            Rectangle {
+                id:twitterMessageColor
+                height: 30
+                width: 30
+                border.color: "black"
+                border.width: 2
+                Component.onCompleted: {
+                    color = parameters.twitterMessageColor
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        textColorTwitterDialog.open();
+                    }
+                }
+            }
+        }
+
         Button {
             text:"Sauvegarder parametres Twitter"
             onClicked: {
@@ -163,8 +213,19 @@ Item {
                 parameters.twitterSecret = twitterSecret.text;
                 parameters.twitterAccount = twitterAccount.text;
                 parameters.twitterTag = twitterTag.text;
+                parameters.twitterMessage = twitterMessage.text;
+                parameters.twitterMessageColor = twitterMessageColor.color;
                 parameters.Serialize();
             }
+        }
+    }
+
+    ColorDialog {
+        id: textColorTwitterDialog
+        title: "Choisissez la couleur du texte twitter"
+        onAccepted: {
+            twitterMessageColor.color = textColorTwitterDialog.color
+            textColorTwitterDialog.visible = false
         }
     }
 

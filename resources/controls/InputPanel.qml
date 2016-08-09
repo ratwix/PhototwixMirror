@@ -23,10 +23,6 @@ Item {
         id:keyModel
     }
 
-    FontLoader {
-        source: "../font/FontAwesome.otf"
-    }
-
     QtObject {
         id:pimpl
         property bool shiftModifier: false

@@ -16,11 +16,6 @@ Rectangle {
     signal successAdmin()
     signal failed()
 
-    FontLoader {
-        source: "../font/FontAwesome.otf"
-    }
-
-
     MouseArea {
         anchors.fill: parent
     }

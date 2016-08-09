@@ -14,9 +14,6 @@ Rectangle {
     anchors.topMargin: 15
     color: "transparent"
     width: 500
-    FontLoader {
-        source: "/resources/font/FontAwesome.otf"
-    }
 
     Row {
         anchors.left: parent.left

@@ -9,7 +9,8 @@ import "./resources/controls"
 Item {
     //Template view
     property Photo currentPhoto
-
+    property alias timerShow : timerClosePhoto
+    property alias timerPrint: timerAutoPrint
 
     Item {
         id:templatePreviewItem
@@ -65,6 +66,8 @@ Item {
                 code:"\uf015"
 
                 onClicked: {
+                    timerClosePhoto.stop();
+                    timerAutoPrint.stop();
                     commandScreenItem.state = "CHOOSE_TEMPLATE"
                 }
             }
@@ -75,30 +78,11 @@ Item {
                 code:"\uf02f"
 
                 onClicked: {
-                    if (parameters.blockPrint && parameters.nbprint >= parameters.blockPrintNb) {
-                        mbox.message = "Plus d'impressions disponibles..."
-                        mbox.imageTag = "\uf02f"
-                        mbox.state = "show"
-                    } else {
-                        parameters.updatePaperPrint();
-                        if (parameters.paperprint < 15) { //Warning if paper become low
-                            mbox.message = "Impression en cours.\nPlus que " + parameters.paperprint + " feuilles"
-                            mbox.imageTag = "\uf02f"
-                            mbox.state = "show"
-                            printPhoto()
-                        } else {
-                            if (parameters.paperprint < 2) {
-                                mbox.message = "Plus de papier"
-                                mbox.imageTag = "\uf02f"
-                                mbox.state = "show"
-                            } else {
-                                mbox.message = "Impression en cours"
-                                mbox.imageTag = "\uf02f"
-                                mbox.state = "show"
-                                printPhoto()
-                            }
-                        }
+                    timerAutoPrint.stop();
+                    if (parameters.showPhotoDelay > 0) {
+                        timerClosePhoto.restart();
                     }
+                    testPrintPhoto();
                 }
             }
 
@@ -108,6 +92,10 @@ Item {
                 code:"\uf1f8"
 
                 onClicked: {
+                    timerAutoPrint.stop();
+                    if (parameters.showPhotoDelay > 0) {
+                        timerClosePhoto.restart();
+                    }
                     if (currentPhoto) {
                         cbox.message = "Supprimer la photo ?"
                         cbox.acceptFunction = deletePhoto
@@ -130,8 +118,36 @@ Item {
     }
 
     function deletePhoto() {
+        timerClosePhoto.stop();
         commandScreenItem.state = "CHOOSE_TEMPLATE"
         parameters.photoGallery.removePhoto(currentPhoto.name);
+    }
+
+    function testPrintPhoto() {
+        if (parameters.blockPrint && parameters.nbprint >= parameters.blockPrintNb) {
+            mbox.message = "Plus d'impressions disponibles..."
+            mbox.imageTag = "\uf02f"
+            mbox.state = "show"
+        } else {
+            parameters.updatePaperPrint();
+            if (parameters.paperprint < 15) { //Warning if paper become low
+                mbox.message = "Impression en cours.\nPlus que " + parameters.paperprint + " feuilles"
+                mbox.imageTag = "\uf02f"
+                mbox.state = "show"
+                printPhoto()
+            } else {
+                if (parameters.paperprint < 2) {
+                    mbox.message = "Plus de papier"
+                    mbox.imageTag = "\uf02f"
+                    mbox.state = "show"
+                } else {
+                    mbox.message = "Impression en cours"
+                    mbox.imageTag = "\uf02f"
+                    mbox.state = "show"
+                    printPhoto()
+                }
+            }
+        }
     }
 
     function printPhoto() {
@@ -141,6 +157,34 @@ Item {
                               currentPhoto.currentTemplate.landscape)
     }
 
+    Timer {
+        id:timerClosePhoto
+        interval: parameters.showPhotoDelay * 1000
+        running: false
+        repeat: false
+        triggeredOnStart: false
+
+        onTriggered: {
+            timerClosePhoto.stop();
+            commandScreenItem.state = "CHOOSE_TEMPLATE"
+        }
+    }
+
+    //Auto print
+    Timer {
+        id:timerAutoPrint
+        interval: parameters.autoPrintDelay * 1000
+        running: false
+        repeat: false
+        triggeredOnStart: false
+
+        onTriggered: {
+            timerAutoPrint.stop();
+            if (parameters.autoPrint) {
+                testPrintPhoto();
+            }
+        }
+    }
 
     //Timeline to auto disepear
 }

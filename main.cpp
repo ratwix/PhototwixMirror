@@ -7,6 +7,7 @@
 #include "videoitem.h"
 #include "clog.h"
 #include "mail.h"
+#include "photoqueuemanager.h"
 
 int main(int argc, char *argv[])
 {
@@ -26,6 +27,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<PhotoPart>("com.phototwix.components", 1, 0, "PhotoPart");
     qmlRegisterType<Mail>("com.phototwix.components", 1, 0, "Mail");
     qmlRegisterType<KeyEmitter>("com.phototwix.components", 1, 0, "KeyEmitter");
+    qmlRegisterType<PhotoQueueManager>("com.phototwix.components", 1, 0, "PhotoQueueManager");
+
 
     engine.rootContext()->setContextProperty("parameters", &parameters);
     engine.rootContext()->setContextProperty("applicationDirPath", QGuiApplication::applicationDirPath());

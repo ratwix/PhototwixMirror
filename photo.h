@@ -22,6 +22,7 @@ class Photo : public QObject
     Q_PROPERTY(bool tweeter READ photoTweeter WRITE setPhotoTweeter NOTIFY tweeterChanged)
     Q_PROPERTY(QString tweeterMessage READ photoTweeterMessage WRITE setPhotoTweeterMessage NOTIFY photoTweeterMessageChanged)
     Q_PROPERTY(QString photoTweeterProfileName READ photoTweeterProfileName WRITE setPhotoTweeterProfileName NOTIFY photoTweeterProfileNameChanged)
+    Q_PROPERTY(QString effectName READ effectName WRITE setEffectName NOTIFY effectNameChanged)
 public:
     Photo();
     Photo(QString name, Template *t);
@@ -59,11 +60,15 @@ public:
     QString photoTweeterProfileName() const;
     void setPhotoTweeterProfileName(const QString &photoTweeterProfileName);
 
+    QString effectName() const;
+    void setEffectName(const QString &effectName);
+
 private:
     int                 m_nbPrint;
     QUrl                m_finalResult;
     QUrl                m_finalResultSD;
     QString             m_name;
+    QString             m_effectName;
     bool                m_photoTweeter;
     QString             m_photoTweeterMessage;
     QString             m_photoTweeterProfileName;
@@ -83,6 +88,7 @@ signals:
     void photoTweeterMessageChanged();
     void photoTweeterProfileNameChanged();
     void tweeterLoadingComplete();
+    void effectNameChanged();
 };
 
 #endif // PHOTO_H

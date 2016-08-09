@@ -71,7 +71,7 @@ void Parameters::init() {
     m_blockPrintNb = 700;
     m_paperprint = 0;
     createFolders();
-    m_photogallery = new PhotoGallery();
+    m_photogallery = new PhotoGallery(this);
     m_photogallery->setApplicationDirPath(m_applicationDirPath);
     m_mailActive = false;
     m_mailFrom = "";
@@ -101,6 +101,8 @@ void Parameters::init() {
     m_startGlobalPhotoProcessVideo = new VideoItem(this, VIDEO_STARTGLOBALPHOTOPROCESS);
     m_startPhotoProcessVideo = new VideoItem(this, VIDEO_STARTPHOTOPROCESS);
     m_endGlobalPhotoProcessVideo = new VideoItem(this, VIDEO_ENDGLOBALPHOTOPROCESS);
+
+    m_photoQueueManager = new PhotoQueueManager(this);
 
     initEffects();
 
@@ -579,6 +581,16 @@ void Parameters::printThread(QUrl m_applicationDirPath, QUrl url, bool doublepri
     }
 }
 
+PhotoQueueManager *Parameters::getPhotoQueueManager() const
+{
+    return m_photoQueueManager;
+}
+
+void Parameters::setPhotoQueueManager(PhotoQueueManager *photoQueueManager)
+{
+    m_photoQueueManager = photoQueueManager;
+}
+
 QString Parameters::getTwitterMessageColor() const
 {
     return m_twitterMessageColor;
@@ -689,8 +701,6 @@ void Parameters::setTwitterDefaultTemplate(Template *twitterDefaultTemplate)
 
 void Parameters::updateEffect(QString name, bool active, bool twitterDefault)
 {
-    CLog::Write(CLog::Debug, "Update Effect :" + name);
-
     //Parcour de tout les effects jusqu'a trouver celui avec le même nom
     for (QList<QObject*>::iterator it = m_effects.begin(); it != m_effects.end(); it++) {
         if (Effect *t = dynamic_cast<Effect*>(*it)) {
@@ -989,7 +999,7 @@ static void delAllFileInDirectory(const char* p) {
 void Parameters::clearGallery(bool del)
 {
     delete m_photogallery;
-    m_photogallery = new PhotoGallery();
+    m_photogallery = new PhotoGallery(this);
     m_photogallery->setApplicationDirPath(m_applicationDirPath);
 
 

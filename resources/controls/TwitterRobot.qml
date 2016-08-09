@@ -131,7 +131,9 @@ Item {
             console.log("Date:" + date + "\nid:" + id + "\ntext:" + text +
                         "\nname:" + profile_name + "\navatar:" + profile_image + "\nmedia:" + media_url + "\n\n")
             //TODO : Modifier le nom du fichier
-            parameters.photoGallery.addPhoto("photo1_tweet", parameters.twitterDefaultTemplate, text, profile_name, media_url)
+            //TODO : ajouter un nouveau tweet au photoQueueManager
+            parameters.photoGallery.addPhotoTwitter("photo1_tweet", parameters.twitterDefaultTemplate, parameters.effectDefault, text, profile_name, media_url)//TODO a enlever
+            parameters.photoQueueManager.pushTwitter("photo1_tweet", parameters.twitterDefaultTemplate, parameters.effectDefault, date, id, text, profile_name, profile_image, media_url);
         }
     }
 

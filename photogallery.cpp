@@ -24,6 +24,11 @@ PhotoGallery::PhotoGallery()
 
 }
 
+PhotoGallery::PhotoGallery(Parameters *parameter)
+{
+    m_parameter = parameter;
+}
+
 PhotoGallery::~PhotoGallery()
 {
     //Free photos
@@ -50,7 +55,7 @@ Photo* PhotoGallery::addPhoto(QString name, Template *t)
  * @brief PhotoGallery::addPhoto Ajoute une photo depuis tweeter
  * @return La nouvelle photo crée, vide de ses images
  */
-Photo *PhotoGallery::addPhoto(QString name, Template *t, QString twitterMessage, QString twitterProfileName, QUrl twitterPhotoSource)
+Photo *PhotoGallery::addPhotoTwitter(QString name, Template *t, QString effectName, QString twitterMessage, QString twitterProfileName, QUrl twitterPhotoSource)
 {
     //Download and creasete the photo
     CLog::Write(CLog::Debug, "Add a new twitter Photo");
@@ -59,6 +64,7 @@ Photo *PhotoGallery::addPhoto(QString name, Template *t, QString twitterMessage,
     p->setPhotoTweeter(true);
     p->setPhotoTweeterMessage(twitterMessage);
     p->setPhotoTweeterProfileName(twitterProfileName);
+    p->setEffectName(effectName);
 
     //Download image from URL and attach it to first gallery item
     CLog::Write(CLog::Debug, QString("Try to download ") + twitterPhotoSource.toDisplayString() + " to folder" + QString(PHOTOSS_FOLDER));
@@ -86,6 +92,8 @@ void PhotoGallery::imageDownloaded(Photo *photo) {
     emit photoListChanged();
     //Message pour afficher le résultat
     emit showPhoto(photo);
+    //Unlock pop : image is downloaded
+    m_parameter->getPhotoQueueManager()->setCanPop(true);
 }
 
 void PhotoGallery::removePhoto(QString name)

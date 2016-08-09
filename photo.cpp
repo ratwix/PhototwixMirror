@@ -9,7 +9,8 @@ Photo::Photo():
     m_nbPrint(0),
     m_photoTweeter(false),
     m_photoTweeterMessage(""),
-    m_photoTweeterProfileName("")
+    m_photoTweeterProfileName(""),
+    m_effectName("")
 {
 
 }
@@ -20,7 +21,8 @@ Photo::Photo(QString name, Template *t):
     m_nbPrint(0),
     m_photoTweeter(false),
     m_photoTweeterMessage(""),
-    m_photoTweeterProfileName("")
+    m_photoTweeterProfileName(""),
+    m_effectName("")
 {
     m_name = name;
     m_currentTemplate = t;
@@ -159,6 +161,9 @@ void Photo::Serialize(PrettyWriter<StringBuffer> &writer) const
     writer.Key("photoTweeterProfileName");
     writer.String(m_photoTweeterProfileName.toStdString().c_str());
 
+    writer.Key("photoEffectName");
+    writer.String(m_effectName.toStdString().c_str());
+
     QList<QObject*>::const_iterator it;
     writer.Key("photosPart");
     writer.StartArray();
@@ -205,6 +210,16 @@ void Photo::setPhotoTweeterProfileName(const QString &photoTweeterProfileName)
     m_photoTweeterProfileName = photoTweeterProfileName;
 }
 
+QString Photo::effectName() const
+{
+    return m_effectName;
+}
+
+void Photo::setEffectName(const QString &effectName)
+{
+    m_effectName = effectName;
+}
+
 void Photo::Unserialize(const Value &value, Template *t)
 {
     if (value.HasMember("finalResult")) {
@@ -229,6 +244,10 @@ void Photo::Unserialize(const Value &value, Template *t)
 
     if (value.HasMember("photoTweeterMessage")) {
         m_photoTweeterMessage = QString(value["photoTweeterMessage"].GetString());
+    }
+
+    if (value.HasMember("photoEffectName")) {
+        m_effectName = QString(value["photoEffectName"].GetString());
     }
 
     if (value.HasMember("photoTweeterProfileName")) {

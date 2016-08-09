@@ -5,6 +5,7 @@
 #include <thread>
 #include "template.h"
 #include "photo.h"
+#include "parameters.h"
 
 class Photo;
 class PhotoGallery : public QObject
@@ -16,9 +17,15 @@ class PhotoGallery : public QObject
     Q_PROPERTY(qint64 totalFileSize READ totalFileSize WRITE setTotalFileSize NOTIFY totalFileSizeChanged)
 public:
     PhotoGallery();
+    PhotoGallery(Parameters *parameter);
     ~PhotoGallery();
     Q_INVOKABLE Photo* addPhoto(QString name, Template *t);
-    Q_INVOKABLE Photo* addPhoto(QString name, Template *t, QString twitterMessage, QString twitterProfileName, QUrl twitterPhotoSource);
+    Q_INVOKABLE Photo* addPhotoTwitter(QString name,
+                                Template *t,
+                                QString effectName,
+                                QString twitterMessage,
+                                QString twitterProfileName,
+                                QUrl twitterPhotoSource);
 
     Q_INVOKABLE void   removePhoto(QString name);
 
@@ -55,7 +62,7 @@ private:
     int             m_totalFileNumber;
     std::thread     m_t;
 
-
+    Parameters      *m_parameter;
 
 signals:
     void photoListChanged();

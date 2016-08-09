@@ -15,7 +15,10 @@ SOURCES += main.cpp \
     mail.cpp \
     keyemitter.cpp \
     effect.cpp \
-    filedownloader.cpp
+    filedownloader.cpp \
+    photoqueue.cpp \
+    photoqueuetwitter.cpp \
+    photoqueuemanager.cpp
 
 RESOURCES += qml.qrc
 
@@ -38,4 +41,7 @@ HEADERS += \
     mail.h \
     keyemitter.h \
     effect.h \
-    filedownloader.h
+    filedownloader.h \
+    photoqueue.h \
+    photoqueuetwitter.h \
+    photoqueuemanager.h

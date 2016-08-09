@@ -11,9 +11,11 @@
 #include "photogallery.h"
 #include "common.h"
 #include "parameters.h"
+#include "photoqueuemanager.h"
 
 class PhotoGallery;
 class VideoItem;
+class PhotoQueueManager;
 class Parameters : public QObject
 {
     Q_OBJECT
@@ -53,7 +55,6 @@ class Parameters : public QObject
     Q_PROPERTY(VideoItem* startGlobalPhotoProcessVideo READ startGlobalPhotoProcessVideo WRITE setStartGlobalPhotoProcessVideo NOTIFY parameterVideoChanged)
     Q_PROPERTY(VideoItem* endGlobalPhotoProcessVideo READ endGlobalPhotoProcessVideo WRITE setEndGlobalPhotoProcessVideo NOTIFY parameterVideoChanged)
     Q_PROPERTY(VideoItem* startPhotoProcessVideo READ startPhotoProcessVideo WRITE setStartPhotoProcessVideo NOTIFY parameterVideoChanged)
-
     Q_PROPERTY(bool twitterTwitterOnly READ getTwitterTwitterOnly WRITE setTwitterTwitterOnly NOTIFY twitterTwitterOnlyChanged)
     Q_PROPERTY(bool twitterListenTwitter READ getTwitterListenTwitter WRITE setTwitterListenTwitter NOTIFY twitterListenTwitterChanged)
     Q_PROPERTY(QString twitterKey READ getTwitterKey WRITE setTwitterKey NOTIFY twitterKeyChanged)
@@ -64,6 +65,7 @@ class Parameters : public QObject
     Q_PROPERTY(QString twitterLastRetrieved READ getTwitterLastRetrieved WRITE setTwitterLastRetrieved NOTIFY twitterLastRetrievedChanged)
     Q_PROPERTY(QString twitterMessage READ getTwitterMessage WRITE setTwitterMessage NOTIFY twitterMessageChanged)
     Q_PROPERTY(QString twitterMessageColor READ getTwitterMessageColor WRITE setTwitterMessageColor NOTIFY twitterMessageColorChanged)
+    Q_PROPERTY(PhotoQueueManager * photoQueueManager READ getPhotoQueueManager WRITE setPhotoQueueManager NOTIFY photoQueueManagerChanged)
 public:
     Parameters(QUrl appDirPath);
     ~Parameters();
@@ -216,6 +218,9 @@ public:
     QString getTwitterMessageColor() const;
     void setTwitterMessageColor(const QString &twitterMessageColor);
 
+    PhotoQueueManager *getPhotoQueueManager() const;
+    void setPhotoQueueManager(PhotoQueueManager *photoQueueManager);
+
 private:
     void addTemplate(QString name);
     void addTemplate(Value const &value);
@@ -296,6 +301,8 @@ private:
     QString              m_twitterMessageColor;
     QString              m_effectDefault;
 
+    PhotoQueueManager *  m_photoQueueManager;
+
 
 signals:
     void templatesChanged();
@@ -333,6 +340,7 @@ signals:
     void showPhotoDelayChanged();
     void twitterMessageColorChanged();
     void twitterMessageChanged();
+    void photoQueueManagerChanged();
 };
 
 #endif // PARAMETERS_H

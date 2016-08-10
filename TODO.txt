@@ -1,7 +1,8 @@
-* Changer police twitter et template parmis une liste de police installée
-* Cache de gestion des messages : Quand reçoit la photo en QML, push dans une file en c++ (twitter et photo normale).
-	Dans QML, quand dans écran principal, dépile les message les un après les autres dans un timer de 2s
-	QUand un element est depiler, signal traitement en cour (animation dans le front)
-	Traitement dans C++, ajout a la gallerie, envoie d'un signal showPhoto
-	Envoie d'un signal fin de traitement
-	Si traitement plus de 10 seconde, arret du traitement
+* Modifier la taille pour le raspberry pi (1)
+* Gérer la connection wifi (1)
+* Compilation sur raspberry pi (1)
+* Led quand nouvel affichage (2)
+* Bouton pour declancher un processus de photo (3)
+* Changer police twitter et template parmis une liste de police installée (3)
+* Twitter en portrait (4)
+* Message prive twitter (4)

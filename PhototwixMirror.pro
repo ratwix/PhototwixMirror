@@ -18,7 +18,9 @@ SOURCES += main.cpp \
     filedownloader.cpp \
     photoqueue.cpp \
     photoqueuetwitter.cpp \
-    photoqueuemanager.cpp
+    photoqueuemanager.cpp \
+    wifimanager.cpp \
+    wifiitem.cpp
 
 RESOURCES += qml.qrc
 
@@ -44,4 +46,6 @@ HEADERS += \
     filedownloader.h \
     photoqueue.h \
     photoqueuetwitter.h \
-    photoqueuemanager.h
+    photoqueuemanager.h \
+    wifimanager.h \
+    wifiitem.h

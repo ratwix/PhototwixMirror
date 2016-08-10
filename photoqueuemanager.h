@@ -21,6 +21,8 @@ class PhotoQueue;
 class PhotoQueueManager : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(int nbPhotoInQueue READ nbPhotoInQueue WRITE setNbPhotoInQueue NOTIFY nbPhotoInQueueChanged)
+    Q_PROPERTY(int canPop READ canPop WRITE setCanPop NOTIFY canPopChanged)
 public:
     explicit PhotoQueueManager(QObject *parent = 0);
     PhotoQueueManager(Parameters *parameter, QObject *parent = 0);
@@ -42,15 +44,21 @@ public:
     bool canPop() const;
     void setCanPop(bool canPop);
 
+    int nbPhotoInQueue() const;
+    void setNbPhotoInQueue(int nbPhotoInQueue);
+
 private:
     QList<PhotoQueue *>     m_photoQueueList;
     Parameters *            m_parameter;
     bool                    m_canPop;
     QTimer *                m_canPopTimeout;
+    int                     m_nbPhotoInQueue;
 signals:
-
+    void nbPhotoInQueueChanged();
+    void canPopChanged();
 public slots:
     void setCanPopTrue();
+
 };
 
 #endif // PHOTOQUEUEMANAGER_H

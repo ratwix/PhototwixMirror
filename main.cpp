@@ -8,6 +8,7 @@
 #include "clog.h"
 #include "mail.h"
 #include "photoqueuemanager.h"
+#include "wifimanager.h"
 
 int main(int argc, char *argv[])
 {
@@ -28,7 +29,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<Mail>("com.phototwix.components", 1, 0, "Mail");
     qmlRegisterType<KeyEmitter>("com.phototwix.components", 1, 0, "KeyEmitter");
     qmlRegisterType<PhotoQueueManager>("com.phototwix.components", 1, 0, "PhotoQueueManager");
-
+    qmlRegisterType<WifiManager>("com.phototwix.components", 1, 0, "WifiManager");
+    qmlRegisterType<WifiItem>("com.phototwix.components", 1, 0, "WifiItem");
 
     engine.rootContext()->setContextProperty("parameters", &parameters);
     engine.rootContext()->setContextProperty("applicationDirPath", QGuiApplication::applicationDirPath());

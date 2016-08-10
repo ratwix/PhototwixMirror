@@ -108,10 +108,33 @@ Item {
             anchors.right: parent.right
             anchors.topMargin: 10
             anchors.rightMargin: 10
-            size:40
+            size:parent.height * 0.05
             code:"\uf085"
             onClicked: {
                 passScreen.state = "show"
+            }
+        }
+
+        Rectangle {
+            id:queueNumber
+            visible: parameters.twitterListenTwitter
+            anchors.top: parent.top
+            anchors.right: configButton.left
+            anchors.topMargin: 10
+            anchors.rightMargin: 10
+            height: parent.height * 0.05
+            width: height
+            radius: parent.height * 0.01
+            color: parameters.photoQueueManager.canPop ? "#97BF41" : "#A60311"
+            border.color: "black"
+            border.width: 2
+
+            Text {
+                anchors.fill: parent
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                fontSizeMode: Text.Fit
+                text: parameters.photoQueueManager.nbPhotoInQueue
             }
         }
     }
@@ -166,6 +189,19 @@ Item {
     TwitterRobot {
         id:tweeter
         visible: false
+    }
+
+    //Timer pour depiler toute les PhotoShootRenderer
+    Timer {
+        id:timerPopPhoto
+        interval: 2000
+        running: commandScreenItem.state == "CHOOSE_TEMPLATE"
+        repeat: true
+        triggeredOnStart: false
+
+        onTriggered: {
+            parameters.photoQueueManager.pop()
+        }
     }
 
     //Affiche une photo qui a été ajoutée a la gallerie

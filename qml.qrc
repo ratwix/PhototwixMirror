@@ -103,5 +103,6 @@
         <file>resources/controls/PhotoPreviewItem.qml</file>
         <file>resources/controls/ChoosePhotoControl.qml</file>
         <file>resources/font/Gabrielle.ttf</file>
+        <file>ConfigWifi.qml</file>
     </qresource>
 </RCC>

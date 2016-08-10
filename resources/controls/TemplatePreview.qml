@@ -43,6 +43,7 @@ Item {
         antialiasing: true
     }
 
+    /*
     Text {
         color: photo ? photo.currentTemplate.twitterMessageColor : "#000000"
         anchors.bottom: photoTemplate.bottom
@@ -55,6 +56,43 @@ Item {
         font.family: "Gabrielle"
         text: photo ? cleanTwitterMessage(photo.tweeterMessage) : ""
     }
+    */
+
+    Text {
+        id:twitterTextMessage
+        anchors.bottom: photoTemplate.bottom
+        anchors.bottomMargin: 10
+        anchors.right: photoTemplate.right
+        anchors.rightMargin: 10
+        color: photo ? photo.currentTemplate.twitterMessageColor : "#000000"
+        width: parent.width * 0.6
+        height: parent.height * 0.15
+        horizontalAlignment: Text.AlignRight
+        fontSizeMode: Text.Fit
+        minimumPixelSize: 10
+        font.pixelSize: 72
+        wrapMode: Text.WordWrap
+        font.family: "Gabrielle"
+        text: photo ? cleanTwitterMessage(photo.tweeterMessage) : ""
+    }
+
+    Text {
+        id:twitterTextId
+        anchors.bottom: twitterTextMessage.top
+        anchors.bottomMargin: 5
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+        color: photo ? photo.currentTemplate.twitterMessageColor : "#000000"
+        width: parent.width * 0.6
+        height: parent.height * 0.04
+        horizontalAlignment: Text.AlignRight
+        fontSizeMode: Text.Fit
+        minimumPixelSize: 5
+        font.pixelSize: 72
+        text:photo ? "@" + photo.photoTweeterProfileName : "" //TODO
+    }
+
+
 
     //Quand on change la photo, regarder si l'image a déjà été gérérée. Si non, générer l'image, mettre à jour, et serialiser
     //Lance un timer car l'image peut ne pas être chargée

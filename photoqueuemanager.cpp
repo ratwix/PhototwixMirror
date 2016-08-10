@@ -10,6 +10,7 @@ PhotoQueueManager::PhotoQueueManager(QObject *parent) : QObject(parent)
 
 PhotoQueueManager::PhotoQueueManager(Parameters *parameter, QObject *parent)  : QObject(parent)
 {
+    m_nbPhotoInQueue = 0;
     m_parameter = parameter;
     m_canPopTimeout = new QTimer(this);
     m_canPopTimeout->setSingleShot(true);
@@ -43,6 +44,7 @@ void PhotoQueueManager::pushTwitter(QString name,
     photo->setTwitMediaUrl(twitterPhotoSource);
 
     m_photoQueueList.push_back(photo);
+    setNbPhotoInQueue(m_photoQueueList.length());
 }
 
 
@@ -70,7 +72,7 @@ void PhotoQueueManager::pop()
                             photoTwitter->twitMediaUrl()
                 );
             }
-
+            setNbPhotoInQueue(m_photoQueueList.length());
             delete photo;
         }
     }
@@ -91,6 +93,18 @@ void PhotoQueueManager::setCanPop(bool canPop)
    }
 
    m_canPop = canPop;
+   emit canPopChanged();
+}
+
+int PhotoQueueManager::nbPhotoInQueue() const
+{
+    return m_nbPhotoInQueue;
+}
+
+void PhotoQueueManager::setNbPhotoInQueue(int nbPhotoInQueue)
+{
+    m_nbPhotoInQueue = nbPhotoInQueue;
+    emit nbPhotoInQueueChanged();
 }
 
 void PhotoQueueManager::setCanPopTrue()

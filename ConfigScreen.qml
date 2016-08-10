@@ -84,6 +84,14 @@ Rectangle {
                 anchors.fill: parent
             }
         }
+
+        Tab {
+            title: "Wifi"
+            ConfigWifi {
+                id:configWifi
+                anchors.fill: parent
+            }
+        }
     }
 
     Column {

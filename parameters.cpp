@@ -103,6 +103,7 @@ void Parameters::init() {
     m_endGlobalPhotoProcessVideo = new VideoItem(this, VIDEO_ENDGLOBALPHOTOPROCESS);
 
     m_photoQueueManager = new PhotoQueueManager(this);
+    m_wifiManager = new WifiManager(this);
 
     initEffects();
 
@@ -264,6 +265,11 @@ void Parameters::Serialize() {
         m_startGlobalPhotoProcessVideo->serialize(writer);
         m_startPhotoProcessVideo->serialize(writer);
         m_endGlobalPhotoProcessVideo->serialize(writer);
+        writer.EndArray();
+
+        writer.Key("wifis");
+        writer.StartArray();
+        m_wifiManager->serialize(writer);
         writer.EndArray();
 
     writer.EndObject();
@@ -497,6 +503,14 @@ void Parameters::Unserialize() {
             }
         }
     }
+
+    //Restore known wifi password with at least one connection
+    if (document.HasMember("wifis")) {
+        const Value& wifis = document["wifis"];
+        if (wifis.IsArray()) {
+            m_wifiManager->unserialize(wifis);
+        }
+    }
 }
 
 
@@ -579,6 +593,16 @@ void Parameters::printThread(QUrl m_applicationDirPath, QUrl url, bool doublepri
         CLog::Write(CLog::Debug, "Print cmd :" + cmd);
         system(cmd.c_str());
     }
+}
+
+WifiManager *Parameters::getWifiManager() const
+{
+    return m_wifiManager;
+}
+
+void Parameters::setWifiManager(WifiManager *wifiManager)
+{
+    m_wifiManager = wifiManager;
 }
 
 PhotoQueueManager *Parameters::getPhotoQueueManager() const

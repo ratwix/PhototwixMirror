@@ -12,10 +12,12 @@
 #include "common.h"
 #include "parameters.h"
 #include "photoqueuemanager.h"
+#include "wifimanager.h"
 
 class PhotoGallery;
 class VideoItem;
 class PhotoQueueManager;
+class WifiManager;
 class Parameters : public QObject
 {
     Q_OBJECT
@@ -66,6 +68,7 @@ class Parameters : public QObject
     Q_PROPERTY(QString twitterMessage READ getTwitterMessage WRITE setTwitterMessage NOTIFY twitterMessageChanged)
     Q_PROPERTY(QString twitterMessageColor READ getTwitterMessageColor WRITE setTwitterMessageColor NOTIFY twitterMessageColorChanged)
     Q_PROPERTY(PhotoQueueManager * photoQueueManager READ getPhotoQueueManager WRITE setPhotoQueueManager NOTIFY photoQueueManagerChanged)
+    Q_PROPERTY(WifiManager * wifiManager READ getWifiManager WRITE setWifiManager NOTIFY wifiManagerChanged)
 public:
     Parameters(QUrl appDirPath);
     ~Parameters();
@@ -221,6 +224,9 @@ public:
     PhotoQueueManager *getPhotoQueueManager() const;
     void setPhotoQueueManager(PhotoQueueManager *photoQueueManager);
 
+    WifiManager *getWifiManager() const;
+    void setWifiManager(WifiManager *wifiManager);
+
 private:
     void addTemplate(QString name);
     void addTemplate(Value const &value);
@@ -302,6 +308,7 @@ private:
     QString              m_effectDefault;
 
     PhotoQueueManager *  m_photoQueueManager;
+    WifiManager *        m_wifiManager;
 
 
 signals:
@@ -341,6 +348,7 @@ signals:
     void twitterMessageColorChanged();
     void twitterMessageChanged();
     void photoQueueManagerChanged();
+    void wifiManagerChanged();
 };
 
 #endif // PARAMETERS_H

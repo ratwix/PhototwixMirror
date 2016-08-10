@@ -20,7 +20,7 @@ Item {
     property string tweeterAccount : parameters.twitterAccount
     property string tweeterTag : parameters.twitterTag
 
-    property int maxTwitterCount:1
+    property int maxTwitterCount:10
 
     property int status: XMLHttpRequest.UNSENT
     property bool isLoading: status === XMLHttpRequest.LOADING
@@ -81,9 +81,16 @@ Item {
         //Ne recherche que les photos
         query += encodeURIComponent(" filter:images")
 
+        //TODO : remove this
         if (lastTweetRetrieved != "") {
             query += "&since_id=" + lastTweetRetrieved
         }
+
+        /*
+        if (parameters.twitterLastRetrieved != "") {
+            query += "&since_id=" + parameters.twitterLastRetrieved
+        }
+        */
 
         console.debug("Twitter Query : " + query);
         //return;
@@ -120,7 +127,7 @@ Item {
     onTweetsLoaded: {
         console.debug("Number of new tweets : " + tweets.count);
 
-        for (var i = 0; i < tweets.count; i++) {
+        for (var i = tweets.count - 1; i >= 0; i--) {
             var date = tweets.get(i).created_at
             var id = tweets.get(i).id
             var text = tweets.get(i).text
@@ -130,9 +137,8 @@ Item {
 
             console.log("Date:" + date + "\nid:" + id + "\ntext:" + text +
                         "\nname:" + profile_name + "\navatar:" + profile_image + "\nmedia:" + media_url + "\n\n")
-            //TODO : Modifier le nom du fichier
-            //TODO : ajouter un nouveau tweet au photoQueueManager
-            parameters.photoGallery.addPhotoTwitter("photo1_tweet", parameters.twitterDefaultTemplate, parameters.effectDefault, text, profile_name, media_url)//TODO a enlever
+
+            //parameters.photoGallery.addPhotoTwitter("photo1_tweet", parameters.twitterDefaultTemplate, parameters.effectDefault, text, profile_name, media_url)//TODO a enlever
             parameters.photoQueueManager.pushTwitter("photo1_tweet", parameters.twitterDefaultTemplate, parameters.effectDefault, date, id, text, profile_name, profile_image, media_url);
         }
     }

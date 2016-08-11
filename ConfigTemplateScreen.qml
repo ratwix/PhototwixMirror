@@ -38,7 +38,7 @@ Rectangle {
         id: configTemplateScreenButtons
         anchors.left: parent.left
         height: parent.height
-        width: parent.width * 0.15
+        width: parent.width * 0.20
 
         Column {
             anchors.verticalCenter: parent.verticalCenter

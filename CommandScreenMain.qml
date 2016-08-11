@@ -7,9 +7,12 @@ import "./resources/controls"
 Window {
     title: "Phototwix V5"
     visible: true
+    height: 480
+    width: 800
+    /*
     height: 800
     width: 1200
-    
+    */
     QtObject {
         id:globalVar
         property color      backColor:               "#6C6F70"

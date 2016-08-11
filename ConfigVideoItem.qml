@@ -15,6 +15,13 @@ Rectangle {
     color: "transparent"
     width: 500
 
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+
+        }
+    }
+
     Row {
         anchors.left: parent.left
         spacing: 5

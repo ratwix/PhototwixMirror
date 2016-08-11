@@ -30,6 +30,7 @@ Rectangle {
         width:parent.width * 0.9
 
         Tab {
+            visible: terminalType === "command"
             title: "Impression"
             ConfigPrinter {
                 id:configPrinter
@@ -46,6 +47,7 @@ Rectangle {
         }
 
         Tab {
+            visible: terminalType === "command"
             title: "Gallerie & Visuels"
             ConfigGallery {
                 id:configGallery
@@ -54,6 +56,7 @@ Rectangle {
         }
 
         Tab {
+            visible: terminalType === "command"
             title: "Twitter"
             ConfigTwitter {
                 id:configTwitter
@@ -62,6 +65,7 @@ Rectangle {
         }
 
         Tab {
+            visible: terminalType === "command"
             title: "Mail"
             ConfigMail {
                 id:configMail
@@ -70,6 +74,7 @@ Rectangle {
         }
 
         Tab {
+            visible: terminalType === "mirror"
             title: "Videos"
             ConfigVideo {
                 id:configVideo
@@ -78,6 +83,7 @@ Rectangle {
         }
 
         Tab {
+            visible: terminalType === "command"
             title: "Effets"
             ConfigEffects {
                 id:configEffets
@@ -86,6 +92,7 @@ Rectangle {
         }
 
         Tab {
+            visible: terminalType === "command"
             title: "Wifi"
             ConfigWifi {
                 id:configWifi

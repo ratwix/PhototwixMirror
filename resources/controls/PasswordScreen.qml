@@ -26,7 +26,7 @@ Rectangle {
         anchors.top : parent.top
         anchors.topMargin: 20
         height: parent.height * 0.3
-        font.pixelSize: 200
+        font.pixelSize: 100
         color:"white"
         font.family: "FontAwesome"
         text: "\uf023"
@@ -37,7 +37,7 @@ Rectangle {
         width: 300
         //height: parent.height * 0.4
         anchors.top: parent.top
-        anchors.topMargin: 250
+        anchors.topMargin: 150
         anchors.horizontalCenter: parent.horizontalCenter
         fontSizeMode :  Text.Fit
         horizontalAlignment: Text.AlignHCenter

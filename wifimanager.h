@@ -13,7 +13,7 @@ using namespace rapidjson;
 class WifiManager : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QList<WifiItem *> currentWifiList READ getCurrentWifiList WRITE setCurrentWifiList NOTIFY currentWifiListChanged)
+    Q_PROPERTY(QList<QObject *> currentWifiList READ getCurrentWifiList WRITE setCurrentWifiList NOTIFY currentWifiListChanged)
 public:
     explicit WifiManager(QObject *parent = 0);
     WifiManager(Parameters *parameters);
@@ -30,17 +30,20 @@ public:
     WifiItem *getCurrentWifi() const;
     void setCurrentWifi(WifiItem *value);
 
-    QList<WifiItem *> getKnownWifi() const;
-    void setKnownWifi(const QList<WifiItem *> &value);
+    QList<QObject *> getKnownWifi() const;
+    void setKnownWifi(const QList<QObject *> &value);
 
-    QList<WifiItem *> getCurrentWifiList() const;
-    void setCurrentWifiList(const QList<WifiItem *> &value);
+    QList<QObject *> getCurrentWifiList() const;
+    void setCurrentWifiList(const QList<QObject *> &value);
 
 private:
     WifiItem *          m_currentWifi;
-    QList<WifiItem *>   m_knownWifi;
-    QList<WifiItem *>   m_currentWifiList;
+    QList<QObject *>   m_knownWifi;
+    QList<QObject *>   m_currentWifiList;
     Parameters  *       m_parameters;
+
+    void                createWifiMokup();
+
 signals:
     void currentWifiListChanged();
 public slots:

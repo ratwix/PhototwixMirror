@@ -38,6 +38,9 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("photoGallery", parameters.getPhotogallery());
     engine.rootContext()->setContextProperty("keyEmitter", &keyEmitter);
 
+    engine.rootContext()->setContextProperty("terminalType", "command");
+    //engine.rootContext()->setContextProperty("terminalType", "mirror");
+
     CLog::Write(CLog::Debug, ("Application dir path "  + QGuiApplication::applicationDirPath()).toStdString());
 
     engine.load(QUrl(QStringLiteral("qrc:/CommandScreenMain.qml")));

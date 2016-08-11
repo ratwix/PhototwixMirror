@@ -19,14 +19,35 @@ Item {
         anchors.bottom: parent.bottom
         width: parent.width * 0.90
 
+        /*
         TemplatePreview {
             id:resultPhoto
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             height: parent.height * 0.8
-            //width: parent.width * 0.8
             photo: currentPhoto
             visible: currentPhoto ? (currentPhoto.finalResult == "" ? true : false) : false
+        }
+        */
+
+        TemplatePreview {
+            id:resultPhoto
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            height: 1800
+            photo: currentPhoto
+            visible: currentPhoto ? (currentPhoto.finalResult == "" ? true : false) : false
+        }
+
+        ShaderEffectSource {
+            id:resultPhotoShader
+            height: parent.height * 0.8
+            width: resultPhoto.width / resultPhoto.height * resultPhotoShader.height
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            visible: currentPhoto ? (currentPhoto.finalResult == "" ? true : false) : false
+            sourceItem: resultPhoto
+            hideSource: true
         }
 
         Image {

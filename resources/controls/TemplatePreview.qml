@@ -7,7 +7,7 @@ import com.phototwix.components 1.0
 
 Item {
     id:templatePreview
-    width: photoTemplate.sourceSize.width / photoTemplate.sourceSize.height * templatePreview.height
+    width: photoTemplate.width
     property Photo photo
 
 
@@ -33,30 +33,14 @@ Item {
 
     Image { //Back template
         id: photoTemplate
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.horizontalCenter: parent.horizontalCenter
-        fillMode: Image.PreserveAspectFit
+        fillMode: Image.PreserveAspectCrop
         source: photo ? photo.currentTemplate.url : ""
-        height: parent.height
+        height: templatePreview.height
+        width: photoTemplate.sourceSize.width / photoTemplate.sourceSize.height * templatePreview.height  //TODO : add for test
         cache: true
         asynchronous: false
         antialiasing: true
     }
-
-    /*
-    Text {
-        color: photo ? photo.currentTemplate.twitterMessageColor : "#000000"
-        anchors.bottom: photoTemplate.bottom
-        anchors.bottomMargin: 10
-        anchors.right: photoTemplate.right
-        anchors.rightMargin: 10
-        //fontSizeMode: Text.Fit
-        font.pixelSize: photoTemplate.height * 0.1
-        horizontalAlignment: Text.AlignRight
-        font.family: "Gabrielle"
-        text: photo ? cleanTwitterMessage(photo.tweeterMessage) : ""
-    }
-    */
 
     Text {
         id:twitterTextMessage
@@ -79,7 +63,6 @@ Item {
     Text {
         id:twitterTextId
         anchors.bottom: twitterTextMessage.top
-        anchors.bottomMargin: 5
         anchors.right: parent.right
         anchors.rightMargin: 10
         color: photo ? photo.currentTemplate.twitterMessageColor : "#000000"
@@ -172,8 +155,12 @@ Item {
         }
 
         //HQ
+        templatePreview.grabToImage(saveImage, Qt.size(templatePreview.width, templatePreview.height));
+        templatePreview.grabToImage(saveImageSD, Qt.size(templatePreview.width / 10, templatePreview.height / 10));
+        /*
         templatePreview.grabToImage(saveImage, Qt.size(photoTemplate.sourceSize.width, photoTemplate.sourceSize.height));
         templatePreview.grabToImage(saveImageSD, Qt.size(photoTemplate.sourceSize.width / 5, photoTemplate.sourceSize.height / 5));
+        */
     }
 
 

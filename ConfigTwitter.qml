@@ -43,16 +43,17 @@ Item {
                     parameters.twitterTwitterOnly = checked;
                 }
             }
+            /*
         }
 
         Row {
             anchors.left: parent.left
             spacing: 10
-
+*/
             Label {
                 height: 30
-                width: 200
-                text: "Ecouter Twitter :"
+                //width: 120
+                text: "Ecouter Twitter :  "
                 font.pixelSize: 15
             }
 
@@ -125,28 +126,29 @@ Item {
 
             TextField {
                 id:twitterAccount
-                width: 400
+                width: 150
                 placeholderText: qsTr("@phototwix")
                 Component.onCompleted: {
                     text = parameters.twitterAccount;
                 }
             }
+            /*
         }
 
         Row {
             anchors.left: parent.left
             spacing: 10
-
+*/
             Label {
                 height: 30
-                width: 200
-                text: "Twitter Tag :"
+                //width: 100
+                text: "Twitter Tag :  "
                 font.pixelSize: 15
             }
 
             TextField {
                 id:twitterTag
-                width: 400
+                width: 150
                 placeholderText: qsTr("#party")
                 Component.onCompleted: {
                     text = parameters.twitterTag;

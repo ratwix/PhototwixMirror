@@ -26,6 +26,7 @@ public:
                                 QString twitterMessage,
                                 QString twitterProfileName,
                                 QUrl twitterPhotoSource);
+    Q_INVOKABLE void    prependPhoto(Photo *photo);
 
     Q_INVOKABLE void   removePhoto(QString name);
 
@@ -60,7 +61,7 @@ private:
     int             m_currentCopy;
     qint64          m_totalFileSize;
     int             m_totalFileNumber;
-    std::thread     m_t;
+    //std::thread     m_t;
 
     Parameters      *m_parameter;
 

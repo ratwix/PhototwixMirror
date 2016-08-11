@@ -21,12 +21,13 @@
 
 PhotoGallery::PhotoGallery()
 {
-
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
 PhotoGallery::PhotoGallery(Parameters *parameter)
 {
     m_parameter = parameter;
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
 PhotoGallery::~PhotoGallery()
@@ -45,8 +46,8 @@ PhotoGallery::~PhotoGallery()
 Photo* PhotoGallery::addPhoto(QString name, Template *t)
 {
     Photo *p = new Photo(name, t);
-    m_photoList.prepend(p);
     QQmlEngine::setObjectOwnership(p, QQmlEngine::CppOwnership);
+    m_photoList.prepend(p);
     emit photoListChanged();
     return p;
 }
@@ -61,6 +62,7 @@ Photo *PhotoGallery::addPhotoTwitter(QString name, Template *t, QString effectNa
     CLog::Write(CLog::Debug, "Add a new twitter Photo");
 
     Photo *p = new Photo(name, t);
+    QQmlEngine::setObjectOwnership(p, QQmlEngine::CppOwnership);
     p->setPhotoTweeter(true);
     p->setPhotoTweeterMessage(twitterMessage);
     p->setPhotoTweeterProfileName(twitterProfileName);
@@ -69,6 +71,7 @@ Photo *PhotoGallery::addPhotoTwitter(QString name, Template *t, QString effectNa
     //Download image from URL and attach it to first gallery item
     CLog::Write(CLog::Debug, QString("Try to download ") + twitterPhotoSource.toDisplayString() + " to folder" + QString(PHOTOSS_FOLDER));
     FileDownloader *imageDownloader = new FileDownloader(twitterPhotoSource, PHOTOSS_FOLDER, p, m_applicationDirPath, this);
+    QQmlEngine::setObjectOwnership(imageDownloader, QQmlEngine::CppOwnership);
 
     QObject::connect(imageDownloader, &FileDownloader::downloaded, this, &PhotoGallery::imageDownloaded);
 
@@ -76,24 +79,30 @@ Photo *PhotoGallery::addPhotoTwitter(QString name, Template *t, QString effectNa
     return p;
 }
 
+void PhotoGallery::prependPhoto(Photo *photo)
+{
+    m_photoList.prepend(photo);
+    Serialize();
+        //Message pour mettre a jour la gallerie
+    emit photoListChanged();
+    //Unlock pop : image is downloaded and saved
+    m_parameter->getPhotoQueueManager()->setCanPop(true);
+}
+
 /**
- * Image is downloaded and attached, Serialize and delete FileDownloader
+ * Image is downloaded send showPhoto. Delete file downloader
  * @brief PhotoGallery::imageDownloaded
  */
 void PhotoGallery::imageDownloaded(Photo *photo) {
     CLog::Write(CLog::Debug, "Image has been downladed");
 
-    m_photoList.prepend(photo);
-    Serialize();
+    //m_photoList.prepend(photo); //Pourquoi on l'ajoute ici alors qu'il y a pas encore le nom ?
     QObject* downloader = sender();
     delete downloader;
 
-    //Message pour mettre a jour la gallerie
-    emit photoListChanged();
     //Message pour afficher le résultat
     emit showPhoto(photo);
-    //Unlock pop : image is downloaded
-    m_parameter->getPhotoQueueManager()->setCanPop(true);
+
 }
 
 void PhotoGallery::removePhoto(QString name)
@@ -301,8 +310,8 @@ void PhotoGallery::addPhoto(const Value &value, QList<QObject*> &templates)
 
         if (tmp_dest != 0) {
             Photo *photo = new Photo(value, tmp_dest);
-            m_photoList.append(photo);
             QQmlEngine::setObjectOwnership(photo, QQmlEngine::CppOwnership);
+            m_photoList.append(photo);
         } else {
             CLog::Write(CLog::Debug, "No dest template found");
         }
@@ -352,9 +361,9 @@ void PhotoGallery::setCurrentCopy(int currentCopy)
 void PhotoGallery::Serialize()
 {
     CLog::Write(CLog::Debug, "Serialize Gallery");
-
-    m_t = std::thread(&PhotoGallery::SerializeThread, this);
-    m_t.join();  //TODO: bad thread management. Have to terminate later
+    SerializeThread();
+    //m_t = std::thread(&PhotoGallery::SerializeThread, this);
+    //m_t.join();  //TODO: bad thread management. Have to terminate later
 }
 
 void PhotoGallery::SerializeThread()

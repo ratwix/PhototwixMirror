@@ -27,7 +27,7 @@ public:
     Photo();
     Photo(QString name, Template *t);
     Photo(const Value &value, Template *t);
-    ~Photo();
+    virtual ~Photo();
 
     QUrl finalResult() const;
     void setFinalResult(const QUrl &finalResult);

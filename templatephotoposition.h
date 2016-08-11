@@ -30,7 +30,7 @@ class TemplatePhotoPosition : public QObject
 public:
     TemplatePhotoPosition();
     TemplatePhotoPosition(const Value &value);
-    ~TemplatePhotoPosition();
+    virtual ~TemplatePhotoPosition();
     //Accessors
     qreal x() const;
     void setX(const qreal &x);

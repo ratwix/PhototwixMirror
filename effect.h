@@ -26,6 +26,7 @@ class Effect : public QObject
 public:
     Effect();
     Effect(QString effectName);
+    virtual ~Effect();
 
     void Serialize(PrettyWriter<StringBuffer>& writer, Parameters *p) const;
     void Unserialize(Value const &value);

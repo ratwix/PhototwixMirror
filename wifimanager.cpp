@@ -86,7 +86,7 @@ void WifiManager::unserialize(const Value &values)
     for (SizeType i = 0; i < values.Size(); i++) {
         Value const &value = values[i];
         WifiItem *wi = new WifiItem();
-
+        QQmlEngine::setObjectOwnership(wi, QQmlEngine::CppOwnership);
         if (value.HasMember("wifiESSID")) {
             wi->setWifiESSID(QString(value["wifiESSID"].GetString()));
         }
@@ -138,6 +138,7 @@ void WifiManager::setCurrentWifiList(const QList<QObject *> &value)
 void WifiManager::createWifiMokup()
 {
     WifiItem *w1 = new WifiItem();
+    QQmlEngine::setObjectOwnership(w1, QQmlEngine::CppOwnership);
     w1->setWifiESSID("Wifi1ESSID");
     w1->setWifiAddress("11:11:11:11:11");
     w1->setWifiHasPassword(true);
@@ -146,6 +147,7 @@ void WifiManager::createWifiMokup()
     m_currentWifiList.append(w1);
 
     WifiItem *w2 = new WifiItem();
+    QQmlEngine::setObjectOwnership(w2, QQmlEngine::CppOwnership);
     w2->setWifiESSID("Wifi2ESSID");
     w2->setWifiAddress("22:22:22:22:22");
     w2->setWifiHasPassword(true);
@@ -154,6 +156,7 @@ void WifiManager::createWifiMokup()
     m_currentWifiList.append(w2);
 
     WifiItem *w3 = new WifiItem();
+    QQmlEngine::setObjectOwnership(w3, QQmlEngine::CppOwnership);
     w3->setWifiESSID("Wifi3ESSID");
     w3->setWifiAddress("33:33:33:33:33");
     w3->setWifiHasPassword(true);

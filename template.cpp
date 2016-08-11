@@ -14,6 +14,7 @@ Template::Template()
     m_landscape = true;
     m_twitterDefault = false;
     m_twitterMessageColor = "#000000";
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
 Template::Template(QString name, Parameters *parameters)
@@ -27,13 +28,20 @@ Template::Template(QString name, Parameters *parameters)
     m_twitterDefault = false;
     m_twitterMessageColor = "#000000";
     QString path = QString("file:///") + parameters->getApplicationDirPath().toString() + "/" + TEMPLATE_FOLDER + "/" + name;
-
     setUrl(QUrl(path));
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
 Template::Template(Value const &value, Parameters *parameters) {
+    m_active = false;
+    m_printcutter = false;
+    m_doubleprint = false;
+    m_landscape = true;
+    m_twitterDefault = false;
+    m_twitterMessageColor = "#000000";
     m_parameters = parameters;
     Unserialize(value);
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
 Template::~Template()
@@ -110,7 +118,7 @@ void Template::Serialize(PrettyWriter<StringBuffer> &writer) const {
     writer.Key("landscape");
     writer.Bool(m_landscape);
 
-    writer.Key("twitterDefault");
+    writer.Key("twitterDefaultTemplate");
     writer.Bool(m_twitterDefault);
 
     writer.Key("twitterMessageColor");
@@ -160,9 +168,15 @@ void Template::Unserialize(Value const &value) {
         m_landscape = value["landscape"].GetBool();
     }
 
-    if (value.HasMember("twitterDefault")) {
-        m_twitterDefault = value["twitterDefault"].GetBool();
+    if (value.HasMember("twitterDefaultTemplate")) {
+        bool tmp = value["twitterDefaultTemplate"].GetBool();
+        m_twitterDefault = tmp;
+        CLog::Write(CLog::Info, "Template " + m_name + " twitter default:" + QString::number(m_twitterDefault));
+        if (m_twitterDefault) {
+            m_parameters->setTwitterDefaultTemplate(this);
+        }
     }
+
     if (value.HasMember("twitterMessageColor")) {
         m_twitterMessageColor = QString(value["twitterMessageColor"].GetString());
     }
@@ -284,6 +298,9 @@ bool Template::getTwitterDefault() const
 void Template::setTwitterDefault(bool twitterDefault)
 {
     m_twitterDefault = twitterDefault;
+    if (twitterDefault) {
+        m_parameters->setTwitterDefaultTemplate(this);
+    }
     m_parameters->Serialize();
     emit templateChanged();
 }

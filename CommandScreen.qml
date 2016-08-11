@@ -31,6 +31,7 @@ Item {
             height: parent.height * 0.5
             width: parent.width * 0.5 - 100
             anchors.left: parent.left
+            anchors.leftMargin: 50
             anchors.top:parent.top
             anchors.topMargin: 20
             visible:!parameters.twitterTwitterOnly
@@ -41,7 +42,7 @@ Item {
             height: parent.height * 0.5
             width: parent.width * 0.5 - 100
             anchors.left: chooseTemplateListView.right
-            anchors.leftMargin: 150
+            anchors.leftMargin: 100
             anchors.top:parent.top
             anchors.topMargin: 20
             visible:!parameters.twitterTwitterOnly

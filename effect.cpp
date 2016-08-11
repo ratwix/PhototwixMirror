@@ -1,7 +1,9 @@
+#include <QQmlEngine>
 #include "effect.h"
 
 Effect::Effect()
 {
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
     m_effectName = "";
     m_effectEnable = true;
     m_effectTwitterDefault = false;
@@ -9,12 +11,18 @@ Effect::Effect()
 
 Effect::Effect(QString effectName)
 {
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
     m_effectName = effectName;
     m_effectEnable = true;
     if (effectName == "Couleur")
         m_effectTwitterDefault = true;
     else
         m_effectTwitterDefault = false;
+}
+
+Effect::~Effect()
+{
+    CLog::Write(CLog::Debug, "Delete effect");
 }
 
 void Effect::Serialize(PrettyWriter<StringBuffer> &writer, Parameters *p) const

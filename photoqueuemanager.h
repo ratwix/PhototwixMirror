@@ -26,6 +26,7 @@ class PhotoQueueManager : public QObject
 public:
     explicit PhotoQueueManager(QObject *parent = 0);
     PhotoQueueManager(Parameters *parameter, QObject *parent = 0);
+    virtual ~PhotoQueueManager();
 
     Q_INVOKABLE void pushTwitter(QString name,
                             Template *t,

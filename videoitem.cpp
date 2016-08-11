@@ -6,6 +6,7 @@ VideoItem::VideoItem(QObject *parent) : QObject(parent)
 {
     m_videoName = "";
     m_videoPath = "";
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
 VideoItem::VideoItem(Parameters *parameters, VideoType type)
@@ -13,6 +14,7 @@ VideoItem::VideoItem(Parameters *parameters, VideoType type)
     m_parameters = parameters;
     m_videoType = type;
     m_videoPath = "";
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
 void VideoItem::serialize(PrettyWriter<StringBuffer> &writer)

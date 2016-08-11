@@ -13,6 +13,7 @@ class Mail : public QObject
 public:
     explicit Mail(QObject *parent = 0);
     Mail(Parameters *p);
+    virtual ~Mail();
 
     Parameters *parameters() const;
     void setParameters(Parameters *parameters);

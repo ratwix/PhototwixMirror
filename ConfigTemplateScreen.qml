@@ -151,7 +151,9 @@ Rectangle {
                         }
                     }
                     Component.onCompleted: {
-                        color = currentTemplate.twitterMessageColor
+                        if (currentTemplate) {
+                            color = currentTemplate.twitterMessageColor
+                        }
                     }
                 }
             }

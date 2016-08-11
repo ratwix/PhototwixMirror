@@ -20,6 +20,7 @@ TemplatePhotoPosition::TemplatePhotoPosition()
     setWidth(0.35);
     setRotate(0);
     setXphoto(0);
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
 TemplatePhotoPosition::~TemplatePhotoPosition()
@@ -30,6 +31,7 @@ TemplatePhotoPosition::~TemplatePhotoPosition()
 TemplatePhotoPosition::TemplatePhotoPosition(const Value &value)
 {
     Unserialize(value);
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
 void TemplatePhotoPosition::Serialize(PrettyWriter<StringBuffer> &writer) const {

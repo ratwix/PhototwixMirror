@@ -85,7 +85,7 @@ Item {
                 id:homeesultButton
                 size: actionButton.width
                 code:"\uf015"
-
+                visible: resultPhotoImage.visible
                 onClicked: {
                     timerClosePhoto.stop();
                     timerAutoPrint.stop();
@@ -97,7 +97,7 @@ Item {
                 id:printResultButton
                 size: actionButton.width
                 code:"\uf02f"
-
+                visible: resultPhotoImage.visible
                 onClicked: {
                     timerAutoPrint.stop();
                     if (parameters.showPhotoDelay > 0) {
@@ -111,7 +111,7 @@ Item {
                 id:deleteResultButton
                 size: actionButton.width
                 code:"\uf1f8"
-
+                visible: resultPhotoImage.visible
                 onClicked: {
                     timerAutoPrint.stop();
                     if (parameters.showPhotoDelay > 0) {
@@ -187,6 +187,7 @@ Item {
 
         onTriggered: {
             timerClosePhoto.stop();
+            timerAutoPrint.stop();
             commandScreenItem.state = "CHOOSE_TEMPLATE"
         }
     }

@@ -3,6 +3,7 @@
 FileDownloader::FileDownloader(QUrl imageUrl, QString distPath, Photo *photo, QUrl applicationDirPath, QObject *parent) :
  QObject(parent)
 {
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
     m_applicationDirPath = applicationDirPath;
     m_distDir = distPath;
     m_photo = photo;
@@ -19,7 +20,9 @@ FileDownloader::FileDownloader(QUrl imageUrl, QString distPath, Photo *photo, QU
     m_webCtrl.get(request);
 }
 
-FileDownloader::~FileDownloader() { }
+FileDownloader::~FileDownloader() {
+    CLog::Write(CLog::Debug, "Delete FileDownloader");
+}
 
 /**
  * @brief FileDownloader::fileDownloaded

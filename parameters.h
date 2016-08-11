@@ -71,7 +71,7 @@ class Parameters : public QObject
     Q_PROPERTY(WifiManager * wifiManager READ getWifiManager WRITE setWifiManager NOTIFY wifiManagerChanged)
 public:
     Parameters(QUrl appDirPath);
-    ~Parameters();
+    virtual ~Parameters();
 
     Q_INVOKABLE void    Serialize();
     //Q_INVOKABLE Photo*  addPhotoToGallerie(QString name, QObject *temp);

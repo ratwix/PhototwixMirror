@@ -6,6 +6,7 @@
 PhotoQueueManager::PhotoQueueManager(QObject *parent) : QObject(parent)
 {
     m_canPop = true;
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
 PhotoQueueManager::PhotoQueueManager(Parameters *parameter, QObject *parent)  : QObject(parent)
@@ -13,9 +14,16 @@ PhotoQueueManager::PhotoQueueManager(Parameters *parameter, QObject *parent)  : 
     m_nbPhotoInQueue = 0;
     m_parameter = parameter;
     m_canPopTimeout = new QTimer(this);
+    QQmlEngine::setObjectOwnership(m_canPopTimeout, QQmlEngine::CppOwnership);
     m_canPopTimeout->setSingleShot(true);
     connect(m_canPopTimeout, SIGNAL(timeout()), this, SLOT(setCanPopTrue()));
     m_canPop = true;
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+}
+
+PhotoQueueManager::~PhotoQueueManager()
+{
+    CLog::Write(CLog::Debug, "Delete PhotoQueueManager");
 }
 
 /**
@@ -33,6 +41,7 @@ void PhotoQueueManager::pushTwitter(QString name,
                                QUrl twitterPhotoSource)
 {
     PhotoQueueTwitter *photo = new PhotoQueueTwitter();
+
     photo->setName(name);
     photo->setUsedTemplate(t);
     photo->setEffect(effectName);

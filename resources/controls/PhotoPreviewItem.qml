@@ -44,7 +44,7 @@ Item {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
         text: "\uf081"
-        visible: photo.tweeter
+        visible: photo ? photo.tweeter : false
     }
 
 }

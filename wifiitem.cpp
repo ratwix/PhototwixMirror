@@ -1,8 +1,10 @@
+#include <QQmlEngine>
 #include "wifiitem.h"
 
 WifiItem::WifiItem(QObject *parent) : QObject(parent)
 {
     m_wifiHasPassword = true;
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
 QString WifiItem::wifiESSID() const

@@ -7,16 +7,22 @@
 
 Mail::Mail(QObject *parent) : QObject(parent)
 {
-
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
 Mail::Mail(Parameters *p)
 {
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
     m_parameters = p;
     m_mail_path = m_parameters->getApplicationDirPath().toString() + "/contact_mails.csv";
 /*
     m_session = vmime::make_shared <vmime::net::session>();
 */
+}
+
+Mail::~Mail()
+{
+    CLog::Write(CLog::Debug, "Mail");
 }
 
 Parameters *Mail::parameters() const

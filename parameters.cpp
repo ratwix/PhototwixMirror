@@ -44,18 +44,14 @@ static bool is_number(const std::string& s)
 
 Parameters::Parameters(QUrl appDirPath)
 {
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
     m_applicationDirPath = appDirPath;
     init();
 }
 
 Parameters::~Parameters()
 {
-    //Free templates
-    QList<QObject*>::iterator it;
-
-    for (it = m_templates.begin(); it != m_templates.end(); it++) {
-        delete *it;
-    }
+    CLog::Write(CLog::Debug, "Delete parameters");
 }
 
 void Parameters::init() {
@@ -72,6 +68,7 @@ void Parameters::init() {
     m_paperprint = 0;
     createFolders();
     m_photogallery = new PhotoGallery(this);
+    QQmlEngine::setObjectOwnership(m_photogallery, QQmlEngine::CppOwnership);
     m_photogallery->setApplicationDirPath(m_applicationDirPath);
     m_mailActive = false;
     m_mailFrom = "";
@@ -98,12 +95,18 @@ void Parameters::init() {
 
 
     m_waitVideo = new VideoItem(this, VIDEO_WAIT);
+    QQmlEngine::setObjectOwnership(m_waitVideo, QQmlEngine::CppOwnership);
     m_startGlobalPhotoProcessVideo = new VideoItem(this, VIDEO_STARTGLOBALPHOTOPROCESS);
+    QQmlEngine::setObjectOwnership(m_startGlobalPhotoProcessVideo, QQmlEngine::CppOwnership);
     m_startPhotoProcessVideo = new VideoItem(this, VIDEO_STARTPHOTOPROCESS);
+    QQmlEngine::setObjectOwnership(m_startPhotoProcessVideo, QQmlEngine::CppOwnership);
     m_endGlobalPhotoProcessVideo = new VideoItem(this, VIDEO_ENDGLOBALPHOTOPROCESS);
+    QQmlEngine::setObjectOwnership(m_endGlobalPhotoProcessVideo, QQmlEngine::CppOwnership);
 
     m_photoQueueManager = new PhotoQueueManager(this);
+    QQmlEngine::setObjectOwnership(m_photoQueueManager, QQmlEngine::CppOwnership);
     m_wifiManager = new WifiManager(this);
+    QQmlEngine::setObjectOwnership(m_wifiManager, QQmlEngine::CppOwnership);
 
     initEffects();
 
@@ -122,6 +125,7 @@ void Parameters::initEffects()
     for (unsigned int i = 0; i < m_effectNameList.size(); i++) {
         QString effectName = m_effectNameList[i];
         Effect *effect = new Effect(effectName);
+        QQmlEngine::setObjectOwnership(effect, QQmlEngine::CppOwnership);
         m_effects.append(effect);
     }
 }
@@ -719,6 +723,7 @@ Template *Parameters::getTwitterDefaultTemplate() const
 
 void Parameters::setTwitterDefaultTemplate(Template *twitterDefaultTemplate)
 {
+    CLog::Write(CLog::Debug, "Set default template:" + twitterDefaultTemplate->getName());
     m_twitterDefaultTemplate = twitterDefaultTemplate;
     emit twitterDefaultTemplateChanged();
 }
@@ -1024,6 +1029,7 @@ void Parameters::clearGallery(bool del)
 {
     delete m_photogallery;
     m_photogallery = new PhotoGallery(this);
+    QQmlEngine::setObjectOwnership(m_photogallery, QQmlEngine::CppOwnership);
     m_photogallery->setApplicationDirPath(m_applicationDirPath);
 
 

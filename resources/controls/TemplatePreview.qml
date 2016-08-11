@@ -135,7 +135,9 @@ Item {
             if (firstsave == 0) {
                 firstsave = 1;
             } else {
-                parameters.photoGallery.Serialize();
+                //La photo est finalisée, on l'ajoute a la gallerie
+                parameters.photoGallery.prependPhoto(photo);
+                //parameters.photoGallery.Serialize();
             }
         }
 
@@ -150,7 +152,8 @@ Item {
             if (firstsave == 0) {
                 firstsave = 1;
             } else {    
-                parameters.photoGallery.Serialize();
+                parameters.photoGallery.prependPhoto(photo);
+                //parameters.photoGallery.Serialize();
             }
         }
 

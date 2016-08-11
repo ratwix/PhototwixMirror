@@ -54,6 +54,7 @@ Photo::Photo(const Value &value, Template *t):
     m_photoTweeterMessage(""),
     m_photoTweeterProfileName("")
 {
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
     m_currentTemplate = t;
     Unserialize(value, t);
 }

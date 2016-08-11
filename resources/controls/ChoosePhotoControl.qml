@@ -6,7 +6,7 @@ Item {
     Component {
         id: photoPreviewItemDelegate
         PhotoPreviewItem {
-            photo:model.modelData
+            photo:modelData
         }
     }
 

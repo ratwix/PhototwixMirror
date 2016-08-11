@@ -3,7 +3,7 @@
 PhotoPart::PhotoPart():
     m_path("")
 {
-
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
 PhotoPart::PhotoPart(TemplatePhotoPosition *tpp):
@@ -11,6 +11,7 @@ PhotoPart::PhotoPart(TemplatePhotoPosition *tpp):
 {
     CLog::Write(CLog::Debug, "Add new photo part to photo");
     m_photoPosition = tpp;
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
 PhotoPart::~PhotoPart() {

@@ -2,7 +2,6 @@
 #define PHOTOGALLERY_H
 
 #include <QObject>
-#include <thread>
 #include "template.h"
 #include "photo.h"
 #include "parameters.h"
@@ -51,7 +50,6 @@ public:
     void setTotalFileNumber(int totalFileNumber);
 
 private:
-    void            SerializeThread();
     void            addPhoto(Value const &value, QList<QObject*> &templates);
 
     void            saveGalleryThread(QUrl destPath, bool saveSingle, bool saveDeleted, bool saveDeletedSingle);

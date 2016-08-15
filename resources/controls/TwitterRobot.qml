@@ -81,7 +81,7 @@ Item {
         //Ne recherche que les photos
         query += encodeURIComponent(" filter:images")
 
-        //TODO : remove this
+        //TODO : remove this after debug
         if (lastTweetRetrieved != "") {
             query += "&since_id=" + lastTweetRetrieved
         }
@@ -138,7 +138,6 @@ Item {
             console.log("Date:" + date + "\nid:" + id + "\ntext:" + text +
                         "\nname:" + profile_name + "\navatar:" + profile_image + "\nmedia:" + media_url + "\n\n")
 
-            //parameters.photoGallery.addPhotoTwitter("photo1_tweet", parameters.twitterDefaultTemplate, parameters.effectDefault, text, profile_name, media_url)//TODO a enlever
             parameters.photoQueueManager.pushTwitter("photo1_tweet", parameters.twitterDefaultTemplate, parameters.effectDefault, date, id, text, profile_name, profile_image, media_url);
         }
     }

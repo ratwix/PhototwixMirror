@@ -21,7 +21,8 @@ SOURCES += main.cpp \
     photoqueuemanager.cpp \
     wifimanager.cpp \
     wifiitem.cpp \
-    raspigpio.cpp
+    raspigpio.cpp \
+    printermanager.cpp
 
 RESOURCES += qml.qrc
 
@@ -59,7 +60,11 @@ HEADERS += \
     photoqueuemanager.h \
     wifimanager.h \
     wifiitem.h \
-    raspigpio.h
+    raspigpio.h \
+    printermanager.h
 
 DISTFILES += \
-    scripts/connectWifi.sh
+    scripts/connectWifi.sh \
+    scripts/get_paper.sh \
+    scripts/print.sh \
+    scripts/dnpds40

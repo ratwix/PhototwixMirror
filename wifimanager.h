@@ -16,6 +16,7 @@ class WifiManager : public QObject
     Q_PROPERTY(QList<QObject *> currentWifiList READ getCurrentWifiList WRITE setCurrentWifiList NOTIFY currentWifiListChanged)
     Q_PROPERTY(QString connectedWifi READ getConnectedWifi WRITE setConnectedWifi NOTIFY connectedWifiChanged)
     Q_PROPERTY(int connectWifiQuality READ getConnectWifiQuality WRITE setConnectWifiQuality NOTIFY connectWifiQualityChanged)
+    Q_PROPERTY(QString connectWifiIP READ getConnectWifiIP WRITE setConnectWifiIP NOTIFY connectWifiIPChanged)
 public:
     explicit WifiManager(QObject *parent = 0);
     WifiManager(Parameters *parameters);
@@ -44,6 +45,9 @@ public:
     int getConnectWifiQuality() const;
     void setConnectWifiQuality(int connectWifiQuality);
 
+    QString getConnectWifiIP() const;
+    void setConnectWifiIP(const QString &connectWifiIP);
+
 private:
     WifiItem *          m_currentWifi;
     QList<QObject *>    m_knownWifi;
@@ -53,16 +57,20 @@ private:
 
     QString             m_connectedWifi;
     int                 m_connectWifiQuality;
+    QString             m_connectWifiIP;
     QProcess *          m_connectedWifiCheckProcess;
+    QProcess *          m_connectedWifiCheckIP;
 
 signals:
     void    currentWifiListChanged();
     void    wifiTryConnect(QString wifiName);
     void    connectedWifiChanged();
     void    connectWifiQualityChanged();
+    void    connectWifiIPChanged();
 public slots:
     void    checkWifiConnectedTerminate(int exitCode, QProcess::ExitStatus exitStatus);
     void    checkWifiConnected();
+    void    checkIPTerminate(int exitCode, QProcess::ExitStatus exitStatus);
 };
 
 #endif // WIFIMANAGER_H

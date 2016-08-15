@@ -220,6 +220,7 @@ Item {
                         anchors.horizontalCenter: parent.horizontalCenter
                         source: model.modelData.url
                         height: 100
+                        fillMode: Image.PreserveAspectFit
                         cache: false
                         asynchronous: true
                         antialiasing: true

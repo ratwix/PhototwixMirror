@@ -42,7 +42,7 @@ Item {
         ShaderEffectSource {
             id:resultPhotoShader
             height: parent.height * 0.8
-            width: resultPhoto.width / resultPhoto.height * resultPhotoShader.height
+            width: resultPhoto.height > 0 ? resultPhoto.width / resultPhoto.height * resultPhotoShader.height : 0
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             visible: currentPhoto ? (currentPhoto.finalResult == "" ? true : false) : false
@@ -160,14 +160,14 @@ Item {
             mbox.imageTag = "\uf02f"
             mbox.state = "show"
         } else {
-            parameters.updatePaperPrint();
-            if (parameters.paperprint < 15) { //Warning if paper become low
-                mbox.message = "Impression en cours.\nPlus que " + parameters.paperprint + " feuilles"
+            parameters.printerManager.updatePaperPrint();
+            if (parameters.printerManager.paperprint < 15) { //Warning if paper become low
+                mbox.message = "Impression en cours.\nPlus que " + parameters.printerManager.paperprint + " feuilles"
                 mbox.imageTag = "\uf02f"
                 mbox.state = "show"
                 printPhoto()
             } else {
-                if (parameters.paperprint < 2) {
+                if (parameters.printerManager.paperprint < 2) {
                     mbox.message = "Plus de papier"
                     mbox.imageTag = "\uf02f"
                     mbox.state = "show"
@@ -182,7 +182,7 @@ Item {
     }
 
     function printPhoto() {
-        parameters.printPhoto(currentPhoto.finalResult,
+        parameters.printerManager.printPhoto(currentPhoto.finalResult,
                               currentPhoto.currentTemplate.doubleprint,
                               currentPhoto.currentTemplate.printcutter,
                               currentPhoto.currentTemplate.landscape)

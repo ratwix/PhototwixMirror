@@ -64,7 +64,7 @@ Item {
                id:tpaperprint
                height: 30
                font.pixelSize: 30 * 0.9
-               text: parameters.paperprint
+               text: parameters.printerManager.paperprint
            }
 
            Button {
@@ -73,7 +73,7 @@ Item {
                height: 30
                text: "Remise à jour"
                onClicked: {
-                   parameters.updatePaperPrint();
+                   parameters.printerManager.updatePaperPrint();
                }
            }
        }

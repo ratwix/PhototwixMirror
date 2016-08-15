@@ -213,7 +213,6 @@ Item {
                     width: pimpl.buttonWidth
                     height: pimpl.rowHeight
                     text: ","
-                    //onClicked: {}//TODO: InputEngine.sendKeyToFocusItem(text)
                     inputPanel: root
                 }
                 KeyButton {

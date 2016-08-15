@@ -51,7 +51,7 @@ Template::~Template()
     QList<QObject*>::iterator it;
 
     for (it = m_templatePhotoPositions.begin(); it != m_templatePhotoPositions.end(); it++) {
-        delete *it;
+        delete *it; //TODO test delete OK
     }
 }
 

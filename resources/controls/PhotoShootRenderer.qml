@@ -38,116 +38,117 @@ Item {
                                0,
                                photoPreview.width - photoPreview.width * xphoto * 2,
                                photoPreview.height);
+            visible: photoPreview.status === Image.Ready
         }
 
         EffectGrayscale {
             id:filter_black_white
-            visible: effectSource === "Noir et Blanc"
+            visible: photoPreview.status === Image.Ready && effectSource === "Noir et Blanc"
             itemSource: photoPreviewShader
             anchors.fill: parent
         }
 
         EffectSepia {
             id:filter_sepia
-            visible: effectSource === "Sepia"
+            visible: photoPreview.status === Image.Ready && effectSource === "Sepia"
             itemSource: photoPreviewShader
             anchors.fill: parent
         }
 
         EffectEdge {
             id:filter_edge
-            visible: effectSource === "Edge"
+            visible: photoPreview.status === Image.Ready && effectSource === "Edge"
             itemSource: photoPreviewShader
             anchors.fill: parent
         }
 
         Effect1977 {
             id:filter_1977
-            visible: effectSource === "1977"
+            visible: photoPreview.status === Image.Ready && effectSource === "1977"
             itemSource: photoPreviewShader
             anchors.fill: parent
         }
 
         EffectAmaro {
             id:filter_amaro
-            visible: effectSource === "Amaro"
+            visible: photoPreview.status === Image.Ready && effectSource === "Amaro"
             itemSource: photoPreviewShader
             anchors.fill: parent
         }
 
         EffectBranna {
             id:filter_branna
-            visible: effectSource === "Branna"
+            visible: photoPreview.status === Image.Ready && effectSource === "Branna"
             itemSource: photoPreviewShader
             anchors.fill: parent
         }
 
         EffectEarlyBird {
             id:filter_earlyBird
-            visible: effectSource === "Early Bird"
+            visible: photoPreview.status === Image.Ready && effectSource === "Early Bird"
             itemSource: photoPreviewShader
             anchors.fill: parent
         }
 
         EffectHefe {
             id:filter_hefe
-            visible: effectSource === "Hefe"
+            visible: photoPreview.status === Image.Ready && effectSource === "Hefe"
             itemSource: photoPreviewShader
             anchors.fill: parent
         }
 
         EffectHudson {
             id:filter_hudson
-            visible: effectSource === "Hudson"
+            visible: photoPreview.status === Image.Ready && effectSource === "Hudson"
             itemSource: photoPreviewShader
             anchors.fill: parent
         }
 
         EffectInkwell {
             id:filter_inkwell
-            visible: effectSource === "Inkwell"
+            visible: photoPreview.status === Image.Ready && effectSource === "Inkwell"
             itemSource: photoPreviewShader
             anchors.fill: parent
         }
 
         EffectLomo {
             id:filter_lomo
-            visible: effectSource === "Lomo"
+            visible: photoPreview.status === Image.Ready && effectSource === "Lomo"
             itemSource: photoPreviewShader
             anchors.fill: parent
         }
 
         EffectLordKelvin {
             id:filter_lordKelvin
-            visible: effectSource === "Lord Kelvin"
+            visible: photoPreview.status === Image.Ready && effectSource === "Lord Kelvin"
             itemSource: photoPreviewShader
             anchors.fill: parent
         }
 
         EffectNashville {
             id:filter_nashville
-            visible: effectSource === "Nashville"
+            visible: photoPreview.status === Image.Ready && effectSource === "Nashville"
             itemSource: photoPreviewShader
             anchors.fill: parent
         }
 
         EffectPixel {
             id:filter_pixel
-            visible: effectSource == "Pixel"
+            visible: photoPreview.status === Image.Ready && effectSource == "Pixel"
             itemSource: photoPreviewShader
             anchors.fill: parent
         }
 
         EffectRise {
             id:filter_rise
-            visible: effectSource === "Rise"
+            visible: photoPreview.status === Image.Ready && effectSource === "Rise"
             itemSource: photoPreviewShader
             anchors.fill: parent
         }
 
         EffectSierra {
             id:filter_sierra
-            visible: effectSource == "Sierra"
+            visible: photoPreview.status === Image.Ready && effectSource == "Sierra"
             itemSource: photoPreviewShader
             anchors.fill: parent
         }
@@ -155,35 +156,35 @@ Item {
 
         EffectSutro {
             id:filter_sutro
-            visible: effectSource === "Sutro"
+            visible: photoPreview.status === Image.Ready && effectSource === "Sutro"
             itemSource: photoPreviewShader
             anchors.fill: parent
         }
 
         EffectToaster {
             id:filter_toaster
-            visible: effectSource === "Toaster"
+            visible: photoPreview.status === Image.Ready && effectSource === "Toaster"
             itemSource: photoPreviewShader
             anchors.fill: parent
         }
 
         EffectValancia {
             id:filter_valancia
-            visible: effectSource === "Valancia"
+            visible: photoPreview.status === Image.Ready && effectSource === "Valancia"
             itemSource: photoPreviewShader
             anchors.fill: parent
         }
 
         EffectWalden {
             id:filter_walden
-            visible: effectSource === "Walden"
+            visible: photoPreview.status === Image.Ready && effectSource === "Walden"
             itemSource: photoPreviewShader
             anchors.fill: parent
         }
 
         EffectXpro {
             id:filter_xpro
-            visible: effectSource === "XPro"
+            visible: photoPreview.status === Image.Ready && effectSource === "XPro"
             itemSource: photoPreviewShader
             anchors.fill: parent
         }

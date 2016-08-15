@@ -13,6 +13,8 @@
 #define BACKGROUND_FOLDER   "background"
 
 #define SCRIPT_CONNECT_WIFI "scripts/connectWifi.sh"
+#define SCRIPT_GET_PAPER    "scripts/dnpds40"
+#define SCRIPT_PRINT        "scripts/print.sh"
 
 #define VIDEO_PATH          string(m_applicationDirPath.toString().toStdString() + "/video").c_str()
 #define PHOTOS_PATH         string(m_applicationDirPath.toString().toStdString() + "/photos").c_str()

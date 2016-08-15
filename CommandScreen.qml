@@ -245,6 +245,12 @@ Item {
 
     //Quand on passe a la vision d'une photo, si le timer pour voir une photo est > a 0, alors on enclanche le timer
     onStateChanged: {
+        if (state == "CONFIG") {
+            parameters.showCursor();
+        } else {
+            parameters.hideCursor();
+        }
+
         if (state == "RESULT_PHOTO") {
             if (parameters.showPhotoDelay > 0) {
                 viewResultScreen.timerShow.start()

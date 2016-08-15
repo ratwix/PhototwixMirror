@@ -217,7 +217,7 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
             height: parent.height * 0.80
-            width: sourceSize.width / sourceSize.height * height //conserv aspect ratio. Can't use native fonction, coords incorect
+            width: sourceSize.height > 0 ? sourceSize.width / sourceSize.height * height : 0 //conserv aspect ratio. Can't use native fonction, coords incorect
 
             onSourceChanged: {
                 updateTemplatePhotoPositionsRepeater();

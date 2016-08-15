@@ -2,6 +2,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QtQml>
+#include <QCursor>
 #include "parameters.h"
 #include "keyemitter.h"
 #include "videoitem.h"
@@ -10,6 +11,7 @@
 #include "photoqueuemanager.h"
 #include "wifimanager.h"
 #include "raspigpio.h"
+#include "printermanager.h"
 
 int main(int argc, char *argv[])
 {
@@ -32,7 +34,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<PhotoQueueManager>("com.phototwix.components", 1, 0, "PhotoQueueManager");
     qmlRegisterType<WifiManager>("com.phototwix.components", 1, 0, "WifiManager");
     qmlRegisterType<WifiItem>("com.phototwix.components", 1, 0, "WifiItem");
-    qmlRegisterType<RaspiGPIO>("com.phototwix.components", 1, 0, "WifiItem");
+    qmlRegisterType<RaspiGPIO>("com.phototwix.components", 1, 0, "RaspiGPIO");
+    qmlRegisterType<PrinterManager>("com.phototwix.components", 1, 0, "PrinterManager");
 
     engine.rootContext()->setContextProperty("applicationDirPath", QGuiApplication::applicationDirPath());
     engine.rootContext()->setContextProperty("parameters", &parameters);
@@ -45,6 +48,7 @@ int main(int argc, char *argv[])
     CLog::Write(CLog::Debug, ("Application dir path "  + QGuiApplication::applicationDirPath()).toStdString());
 
     engine.load(QUrl(QStringLiteral("qrc:/CommandScreenMain.qml")));
+    parameters.hideCursor();
 
     return app.exec();
 }

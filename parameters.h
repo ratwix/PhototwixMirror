@@ -13,12 +13,14 @@
 #include "parameters.h"
 #include "photoqueuemanager.h"
 #include "wifimanager.h"
+#include "printermanager.h"
 #include "raspigpio.h"
 
 class PhotoGallery;
 class VideoItem;
 class PhotoQueueManager;
 class WifiManager;
+class PrinterManager;
 class Parameters : public QObject
 {
     Q_OBJECT
@@ -40,7 +42,6 @@ class Parameters : public QObject
     Q_PROPERTY(int cameraWidth READ getCameraWidth WRITE setCameraWidth NOTIFY cameraWidthChange)
     Q_PROPERTY(bool blockPrint READ getBlockPrint WRITE setBlockPrint NOTIFY blockPrintChanged)
     Q_PROPERTY(int blockPrintNb READ getBlockPrintNb WRITE setBlockPrintNb NOTIFY blockPrintNbChanged)
-    Q_PROPERTY(int paperprint READ paperprint WRITE setPaperprint NOTIFY paperprintChanged)
     Q_PROPERTY(bool autoPrint READ getAutoPrint WRITE setAutoPrint NOTIFY autoPrintChanged)
     Q_PROPERTY(int autoPrintDelay READ getAutoPrintDelay WRITE setAutoPrintDelay NOTIFY autoPrintDelayChanged)
     Q_PROPERTY(int showPhotoDelay READ getShowPhotoDelay WRITE setShowPhotoDelay NOTIFY showPhotoDelayChanged)
@@ -71,21 +72,21 @@ class Parameters : public QObject
     Q_PROPERTY(PhotoQueueManager * photoQueueManager READ getPhotoQueueManager WRITE setPhotoQueueManager NOTIFY photoQueueManagerChanged)
     Q_PROPERTY(WifiManager * wifiManager READ getWifiManager WRITE setWifiManager NOTIFY wifiManagerChanged)
     Q_PROPERTY(RaspiGPIO * raspiGPIO READ getRaspiGPIO WRITE setRaspiGPIO NOTIFY raspiGPIOChanged)
+    Q_PROPERTY(PrinterManager * printerManager READ getPrinterManager WRITE setPrinterManager NOTIFY printerManagerChanged)
 public:
     Parameters(QUrl appDirPath);
     virtual ~Parameters();
 
     Q_INVOKABLE void    Serialize();
-    //Q_INVOKABLE Photo*  addPhotoToGallerie(QString name, QObject *temp);
-    Q_INVOKABLE void    printPhoto(QUrl url, bool doubleprint, bool cutprint, bool landscape);
     Q_INVOKABLE void    clearGallery();
     Q_INVOKABLE void    clearGalleryDeleteImages();
     Q_INVOKABLE void    addTemplateFromUrl(QUrl url);
     Q_INVOKABLE void    deleteTemplateFromName(QString name);
     Q_INVOKABLE void    changeBackground(QUrl url);
-    Q_INVOKABLE void    updatePaperPrint();
     Q_INVOKABLE void    haltSystem();
     Q_INVOKABLE void    updateEffect(QString name, bool active, bool twitterDefault);
+    Q_INVOKABLE void    showCursor();
+    Q_INVOKABLE void    hideCursor();
 
     QList<QObject*> getTemplates();
     void setTemplates(QList<QObject*> templates);
@@ -129,9 +130,6 @@ public:
 
     int getBlockPrintNb() const;
     void setBlockPrintNb(int blockPrintNb);
-
-    int paperprint() const;
-    void setPaperprint(int paperprint);
 
     bool getMailActive() const;
     void setMailActive(bool mailActive);
@@ -232,6 +230,9 @@ public:
     RaspiGPIO *getRaspiGPIO() const;
     void setRaspiGPIO(RaspiGPIO *raspiGPIO);
 
+    PrinterManager *getPrinterManager() const;
+    void setPrinterManager(PrinterManager *printerManager);
+
 private:
     void addTemplate(QString name);
     void addTemplate(Value const &value);
@@ -241,7 +242,6 @@ private:
     void Unserialize();
     void createFolders();
     void clearGallery(bool del);
-    void printThread(QUrl m_applicationDirPath, QUrl url, bool doubleprint, bool cutprint, bool landscape);
 
 
     std::vector<QString> m_effectNameList = {   "Couleur",
@@ -284,7 +284,6 @@ private:
     bool                 m_flipresult;
     int                  m_cameraHight;
     int                  m_cameraWidth;
-    int                  m_paperprint;
     QString              m_backgroundImage;
     bool                 m_mailActive;
     QString              m_mailFrom;
@@ -315,6 +314,7 @@ private:
     PhotoQueueManager *  m_photoQueueManager;
     WifiManager *        m_wifiManager;
     RaspiGPIO   *        m_raspiGPIO;
+    PrinterManager *     m_printerManager;
 
 
 signals:
@@ -333,7 +333,6 @@ signals:
     void cameraWidthChange();
     void blockPrintChanged();
     void blockPrintNbChanged();
-    void paperprintChanged();
     void mailChange();
     void countdownDelayChange();
     void parameterVideoChanged();
@@ -356,6 +355,7 @@ signals:
     void photoQueueManagerChanged();
     void wifiManagerChanged();
     void raspiGPIOChanged();
+    void printerManagerChanged();
 };
 
 #endif // PARAMETERS_H

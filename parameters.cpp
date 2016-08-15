@@ -1,11 +1,13 @@
-#include "parameters.h"
-
+#include <QApplication>
+#include <QCursor>
 #include <QQmlEngine>
 #include <QDir>
 #include <QtConcurrent>
 #include <QFile>
+#include <QProcess>
 #include <iostream>
 #include <fstream>
+#include "parameters.h"
 #include "effect.h"
 
 #include "rapidjson/document.h"
@@ -13,30 +15,6 @@
 
 using namespace std;
 using namespace rapidjson;
-
-/**
- * Static useful functions
- */
-
-static std::string pexec(const char* cmd) {
-    FILE* pipe = popen(cmd, "r");
-    if (!pipe) return "ERROR";
-    char buffer[128];
-    std::string result = "";
-    while (!feof(pipe)) {
-        if (fgets(buffer, 128, pipe) != NULL)
-            result += buffer;
-    }
-    pclose(pipe);
-    return result;
-}
-
-static bool is_number(const std::string& s)
-{
-    std::string::const_iterator it = s.begin();
-    while (it != s.end() && std::isdigit(*it)) ++it;
-    return !s.empty() && it == s.end();
-}
 
 /**
  * Constructor / Destructor / init
@@ -65,7 +43,6 @@ void Parameters::init() {
     m_cameraWidth = 2592;
     m_blockPrint = false;
     m_blockPrintNb = 700;
-    m_paperprint = 0;
     createFolders();
     m_photogallery = new PhotoGallery(this);
     QQmlEngine::setObjectOwnership(m_photogallery, QQmlEngine::CppOwnership);
@@ -109,6 +86,8 @@ void Parameters::init() {
     QQmlEngine::setObjectOwnership(m_wifiManager, QQmlEngine::CppOwnership);
     m_raspiGPIO = new RaspiGPIO();
 
+    m_printerManager = new PrinterManager(this);
+    QQmlEngine::setObjectOwnership(m_printerManager, QQmlEngine::CppOwnership);
 
     initEffects();
 
@@ -117,7 +96,7 @@ void Parameters::init() {
 
     //Read all .png and .jpg files in tempalte directory
     readTemplateDir();
-    updatePaperPrint();
+    m_printerManager->updatePaperPrint();
     Serialize();
     rebuildActivesTemplates();
 }
@@ -170,9 +149,6 @@ void Parameters::Serialize() {
 
         writer.Key("blockPrintNb");
         writer.Int(m_blockPrintNb);
-
-        writer.Key("paperprint");
-        writer.Int(m_paperprint);
 
         writer.Key("autoPrint");
         writer.Bool(m_autoPrint);
@@ -355,10 +331,6 @@ void Parameters::Unserialize() {
 
     if (document.HasMember("blockPrintNb")) {
        m_blockPrintNb = document["blockPrintNb"].GetInt();
-    }
-
-    if (document.HasMember("paperprint")) {
-        m_paperprint = document["paperprint"].GetInt();
     }
 
     if (document.HasMember("autoPrint")) {
@@ -551,54 +523,25 @@ void Parameters::changeBackground(QUrl url) {
     }
 }
 
-void Parameters::updatePaperPrint()
-{
-    if (system(NULL)) {
-        string result;
-
-        string cmd = m_applicationDirPath.toString().toStdString() + "/print/get_paper.sh";
-        CLog::Write(CLog::Debug, "Paper cmd :" + cmd);
-        result = pexec(cmd.c_str());
-        CLog::Write(CLog::Debug, "Paper result :" + result);
-        if (is_number(result)) {
-            setPaperprint(atoi(result.c_str()));
-        } else {
-            setPaperprint(699);
-        }
-    }
-}
-
 void Parameters::haltSystem()
 {
-    if (system(NULL)) {
-        string cmd = m_applicationDirPath.toString().toStdString() + "/scripts/halt.sh";
-        pexec(cmd.c_str());
-    }
+    QProcess haltProcess;
+
+    QString program = "sudo";
+    QStringList arguments;
+    arguments << "halt";
+    haltProcess.start(program, arguments);
+    haltProcess.waitForFinished();
 }
 
-/**
- * Print management
- */
-
-void Parameters::printPhoto(QUrl url, bool doubleprint, bool cutprint, bool landscape)
+PrinterManager *Parameters::getPrinterManager() const
 {
-    CLog::Write(CLog::Debug, "Print file : " + url.toString().toStdString() + " double:" + (doubleprint ? "true":"false") + " cut:" + (cutprint?"true":"false") + " landscape:" + (landscape?"true":"false"));
-    QtConcurrent::run(this, &Parameters::printThread, m_applicationDirPath, url, doubleprint, cutprint, landscape);
-    setNbprint(m_nbprint + 1);
+    return m_printerManager;
 }
 
-void Parameters::printThread(QUrl m_applicationDirPath, QUrl url, bool doubleprint, bool cutprint, bool landscape) {
-    if (system(NULL)) {
-        string cmd = m_applicationDirPath.toString().toStdString() + "/print/print.sh" +
-                " duplicate:" + (doubleprint ? "true":"false") +
-                " portrait:" + (landscape?"false":"true") +
-                " cutter:" + (cutprint?"true":"false") +
-                " " + url.toString().toStdString();
-        //std::replace(cmd.begin(), cmd.end(), '/', '\\'); //TODO: uncomment on windows
-        cmd = cmd;
-        CLog::Write(CLog::Debug, "Print cmd :" + cmd);
-        system(cmd.c_str());
-    }
+void Parameters::setPrinterManager(PrinterManager *printerManager)
+{
+    m_printerManager = printerManager;
 }
 
 RaspiGPIO *Parameters::getRaspiGPIO() const
@@ -780,6 +723,16 @@ void Parameters::updateEffect(QString name, bool active, bool twitterDefault)
     }
 }
 
+void Parameters::showCursor()
+{
+    QApplication::setOverrideCursor(QCursor(Qt::ArrowCursor));
+}
+
+void Parameters::hideCursor()
+{
+    QApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
+}
+
 QList<QObject *> Parameters::getActivesEffects() const
 {
     return m_activesEffects;
@@ -899,7 +852,7 @@ void Parameters::addTemplate(Value const &value) {
         if (fileInf.exists()) {
             m_templates.append(t);
         } else {
-            delete t;
+            delete t; //TODO test delete : OK
         }
     } else {
         CLog::Write(CLog::Info, "Template file not found " + string(value["template_name"].GetString()));
@@ -1039,7 +992,7 @@ static void delAllFileInDirectory(const char* p) {
 
 void Parameters::clearGallery(bool del)
 {
-    delete m_photogallery;
+    delete m_photogallery; //TODO test delete OK
     m_photogallery = new PhotoGallery(this);
     QQmlEngine::setObjectOwnership(m_photogallery, QQmlEngine::CppOwnership);
     m_photogallery->setApplicationDirPath(m_applicationDirPath);
@@ -1233,18 +1186,6 @@ void Parameters::setBlockPrintNb(int blockPrintNb)
     m_blockPrintNb = blockPrintNb;
     Serialize();
     emit blockPrintNbChanged();
-}
-
-int Parameters::paperprint() const
-{
-    return m_paperprint;
-}
-
-void Parameters::setPaperprint(int paperprint)
-{
-    m_paperprint = paperprint;
-    Serialize();
-    emit paperprintChanged();
 }
 
 

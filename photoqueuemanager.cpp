@@ -66,7 +66,7 @@ void PhotoQueueManager::pop()
 {
     if (canPop()) {
         if (!m_photoQueueList.isEmpty()) {
-            setCanPop(false); //TODO: add timer to setPop to true again after timeout
+            setCanPop(false);
             PhotoQueue *photo = m_photoQueueList.first();
             m_photoQueueList.pop_front();
 
@@ -82,7 +82,7 @@ void PhotoQueueManager::pop()
                 );
             }
             setNbPhotoInQueue(m_photoQueueList.length());
-            delete photo;
+            delete photo; //TODO test delete OK ???
         }
     }
 }

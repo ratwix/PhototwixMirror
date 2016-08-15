@@ -29,6 +29,7 @@ Item {
         id:photoPartRepeater
         anchors.fill: parent
         model:photoPartModel
+        visible: photoTemplate.status === Image.Ready
     }
 
 
@@ -37,8 +38,8 @@ Item {
         fillMode: Image.PreserveAspectCrop
         source: photo ? photo.currentTemplate.url : ""
         height: templatePreview.height
-        width: templatePreview.height * 1.5 //TODO for test
-        //width: photoTemplate.sourceSize.width / photoTemplate.sourceSize.height * templatePreview.height
+        //width: templatePreview.height * 1.5 //TODO for test
+        width:  photoTemplate.sourceSize.height > 0 ? photoTemplate.sourceSize.width / photoTemplate.sourceSize.height * templatePreview.height : templatePreview.height * 1.5
         cache: true
         asynchronous: false
         smooth: true
@@ -59,14 +60,14 @@ Item {
         font.pixelSize: 72
         wrapMode: Text.WordWrap
         font.family: "Gabrielle"
-        text: photo ? cleanTwitterMessage(photo.tweeterMessage) : ""
+        text: photo && photo.tweeter ? cleanTwitterMessage(photo.tweeterMessage) : ""
     }
 
     Text {
         id:twitterTextId
         anchors.bottom: twitterTextMessage.top
         anchors.right: parent.right
-        anchors.rightMargin: 10
+        anchors.rightMargin: 15
         color: photo ? photo.currentTemplate.twitterMessageColor : "#000000"
         width: parent.width * 0.6
         height: parent.height * 0.04
@@ -74,7 +75,7 @@ Item {
         fontSizeMode: Text.Fit
         minimumPixelSize: 5
         font.pixelSize: 72
-        text:photo ? "@" + photo.photoTweeterProfileName : "" //TODO
+        text:photo && photo.tweeter ? "@" + photo.photoTweeterProfileName : ""
     }
 
 
@@ -99,13 +100,13 @@ Item {
             console.log("Test image ready");
             if (photoTemplate.status === Image.Ready) {
                 var ready = true;
-
+/*
                 for (var i = 0; i < photoPartRepeater.count; i++) {
                     if (photoPartRepeater.itemAt(i).photoBase.status !== Image.Ready) {
                         ready = false;
                     }
                 }
-
+*/
                 if (ready) {
                     waitLoadingTimer.stop()
                     saveImageToFile();
@@ -176,7 +177,4 @@ Item {
         templatePreview.grabToImage(saveImage, Qt.size(templatePreview.width, templatePreview.height));
         templatePreview.grabToImage(saveImageSD, Qt.size(templatePreview.width / 10, templatePreview.height / 10));
     }
-
-
-
 }

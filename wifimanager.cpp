@@ -15,10 +15,15 @@ WifiManager::WifiManager(Parameters *parameters)
     m_parameters = parameters;
     m_connectedWifi = "";
     m_connectWifiQuality = 0;
+    m_connectWifiIP = "";
 
     m_connectedWifiCheckProcess = new QProcess(this);
     connect(m_connectedWifiCheckProcess, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
             [=](int exitCode, QProcess::ExitStatus exitStatus){ checkWifiConnectedTerminate(exitCode, exitStatus);});
+
+    m_connectedWifiCheckIP = new QProcess(this);
+    connect(m_connectedWifiCheckIP, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+            [=](int exitCode, QProcess::ExitStatus exitStatus){ checkIPTerminate(exitCode, exitStatus);});
 
 
     connect(&m_checkWifiConnected, SIGNAL(timeout()), this, SLOT(checkWifiConnected()));
@@ -29,7 +34,7 @@ WifiManager::WifiManager(Parameters *parameters)
 void WifiManager::refreshWifiList()
 {
     for (QList<QObject *>::const_iterator it = m_currentWifiList.begin(); it != m_currentWifiList.end(); it++) {
-        delete (*it);
+        delete (*it); //TODO test delete OK
     }
     m_currentWifiList.clear();
 
@@ -155,7 +160,7 @@ void WifiManager::unserialize(const Value &values)
 {
     //clean m_knownWifi
     for (QList<QObject *>::const_iterator it = m_knownWifi.begin(); it != m_knownWifi.end(); it++) {
-        delete (*it);
+        delete (*it); //TODO test delete OK
     }
     m_knownWifi.clear();
 
@@ -234,6 +239,17 @@ void WifiManager::setConnectWifiQuality(int connectWifiQuality)
     emit connectWifiQualityChanged();
 }
 
+QString WifiManager::getConnectWifiIP() const
+{
+    return m_connectWifiIP;
+}
+
+void WifiManager::setConnectWifiIP(const QString &connectWifiIP)
+{
+    m_connectWifiIP = connectWifiIP;
+    emit connectWifiIPChanged();
+}
+
 void WifiManager::checkWifiConnectedTerminate(int exitCode, QProcess::ExitStatus exitStatus)
 {
     bool        connected = false;
@@ -274,6 +290,7 @@ void WifiManager::checkWifiConnectedTerminate(int exitCode, QProcess::ExitStatus
 
 void WifiManager::checkWifiConnected()
 {
+    //Regarde si on est connecté a un wifi
     if (m_connectedWifiCheckProcess->state() == QProcess::Running) {
         m_connectedWifiCheckProcess->terminate();
     }
@@ -281,4 +298,33 @@ void WifiManager::checkWifiConnected()
     QStringList arguments;
     arguments << "wlan0" << "link";
     m_connectedWifiCheckProcess->start(program, arguments);
+
+    //Recherche de l'IP
+    if (m_connectedWifiCheckIP->state() == QProcess::Running) {
+        m_connectedWifiCheckIP->terminate();
+    }
+    QString program2 = "ifconfig";
+    QStringList arguments2;
+    arguments2 << "wlan0";
+    m_connectedWifiCheckIP->start(program2, arguments2);
+}
+
+void WifiManager::checkIPTerminate(int exitCode, QProcess::ExitStatus exitStatus)
+{
+    QString address = "";
+    QString output(m_connectedWifiCheckIP->readAllStandardOutput());
+    QStringList sl = output.split("\n", QString::SkipEmptyParts);
+
+    QRegExp wifiIpRx("inet addr:([0-9\\.]+)  Bcast:.*");
+
+    for (int i = 0; i < sl.length(); i++) {
+        QString s = sl.at(i);
+        s = s.trimmed();
+        if (wifiIpRx.exactMatch(s)) { //On est connecté au wifi
+            address = wifiIpRx.cap(1);
+            break;
+        }
+    }
+
+    setConnectWifiIP(address);
 }

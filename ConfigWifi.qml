@@ -93,9 +93,16 @@ Item {
             color:(parameters.wifiManager.connectWifiQuality > 75) ? "green" :  ((parameters.wifiManager.connectWifiQuality > 45) ? "orange" : (parameters.wifiManager.connectWifiQuality > 0) ? "red" : "black")
         }
         Text {
+            width: parent.width
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             text:parameters.wifiManager.connectedWifi
+        }
+        Text {
+            width: parent.width
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            text:parameters.wifiManager.connectWifiIP
         }
     }
 
@@ -106,8 +113,8 @@ Item {
         anchors.topMargin: 10
         anchors.right: parent.right
         anchors.rightMargin: 10
-        height: 30
-        width: 30
+        height: 60
+        width: 60
         code: "\uf021"
         onClicked: {
             parameters.wifiManager.refreshWifiList();

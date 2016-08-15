@@ -10,8 +10,6 @@
 #include <QFutureWatcher>
 #include "rapidjson/document.h"
 #include <sys/stat.h>
-#include <thread>
-
 #include "photogallery.h"
 #include "parameters.h"
 #include "common.h"
@@ -39,7 +37,7 @@ PhotoGallery::~PhotoGallery()
     QList<QObject*>::iterator it;
 
     for (it = m_photoList.begin(); it != m_photoList.end(); it++) {
-        delete *it;
+        delete *it; //TODO test delete OK
     }
 }
 
@@ -97,8 +95,8 @@ void PhotoGallery::imageDownloaded(Photo *photo) {
     CLog::Write(CLog::Debug, "Image has been downladed");
 
     //m_photoList.prepend(photo); //Pourquoi on l'ajoute ici alors qu'il y a pas encore le nom ?
-    QObject* downloader = sender();
-    delete downloader;
+    //QObject* downloader = sender();
+    //delete downloader; //TODO test delete : BAD GUY, not good delete ???
     CLog::Write(CLog::Debug, "Envoie signal pour affichage de la photo");
     //Message pour afficher le résultat
     emit showPhoto(photo);
@@ -360,28 +358,17 @@ void PhotoGallery::setCurrentCopy(int currentCopy)
 
 void PhotoGallery::Serialize()
 {
-    CLog::Write(CLog::Debug, "Serialize Gallery");
-    SerializeThread();
-    //m_t = std::thread(&PhotoGallery::SerializeThread, this);
-    //m_t.join();  //TODO: bad thread management. Have to terminate later
-}
-
-void PhotoGallery::SerializeThread()
-{
     StringBuffer sb;
     PrettyWriter<StringBuffer> writer(sb);
+
+    CLog::Write(CLog::Debug, "Serialize Gallery");
 
     writer.StartObject();
     writer.Key("photos");
     writer.StartArray();
     for (QList<QObject*>::const_iterator it = m_photoList.begin(); it != m_photoList.end(); it++) {
         if (Photo *p = dynamic_cast<Photo*>(*it)) {
-            //if (p->finalResult().toString() == "") {
-                //TODO: Bug template with no final result, no serialisation, delete it
-            //    m_photoList.removeOne(*it);
-            //} else {
-                p->Serialize(writer);
-            //}
+            p->Serialize(writer);
         } else {
             CLog::Write(CLog::Fatal, "Bad type QObject -> Photo");
         }

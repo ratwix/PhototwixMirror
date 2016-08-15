@@ -12,7 +12,7 @@ Photo::Photo():
     m_photoTweeterProfileName(""),
     m_effectName("")
 {
-
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
 Photo::Photo(QString name, Template *t):
@@ -24,6 +24,8 @@ Photo::Photo(QString name, Template *t):
     m_photoTweeterProfileName(""),
     m_effectName("")
 {
+    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+
     m_name = name;
     m_currentTemplate = t;
 
@@ -66,7 +68,7 @@ Photo::~Photo()
     QList<QObject*>::iterator it;
 
     for (it = m_photoPartList.begin(); it != m_photoPartList.end(); it++) {
-        delete *it;
+        delete *it; //TODO test delete OK
     }
 }
 

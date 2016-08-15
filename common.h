@@ -12,6 +12,8 @@
 #define TEMPLATE_FOLDER     "templates"
 #define BACKGROUND_FOLDER   "background"
 
+#define SCRIPT_CONNECT_WIFI "scripts/connectWifi.sh"
+
 #define VIDEO_PATH          string(m_applicationDirPath.toString().toStdString() + "/video").c_str()
 #define PHOTOS_PATH         string(m_applicationDirPath.toString().toStdString() + "/photos").c_str()
 #define PHOTOSSD_PATH       string(m_applicationDirPath.toString().toStdString() + "/photos/sd").c_str()

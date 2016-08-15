@@ -1,8 +1,6 @@
 import QtQuick.Controls 1.3
 import QtQuick.Layouts 1.1
-import QtMultimedia 5.4
 import QtQuick 2.4
-import QtGraphicalEffects 1.0
 
 import "../renderer"
 
@@ -13,6 +11,7 @@ Item {
     property double destRotation
     property double xphoto : 0.0
     property string effectSource : globalVar.currentEffect
+    property alias photoBase: photoPreview
 
 
     Item {
@@ -21,10 +20,12 @@ Item {
 
         Image {
             id: photoPreview
-            source:(modelData.path !== "") ? modelData.path : ""
+            source:modelData.path
             fillMode: Image.PreserveAspectCrop
             anchors.fill: parent
             mirror: parameters.flipresult
+            cache: false
+            asynchronous: false
             smooth: true
         }
 

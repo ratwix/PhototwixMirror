@@ -7,6 +7,7 @@ Item {
         id: photoPreviewItemDelegate
         PhotoPreviewItem {
             photo:modelData
+            height: choosePhotoControlItem.height
         }
     }
 

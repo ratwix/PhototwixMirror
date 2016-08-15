@@ -31,15 +31,17 @@ Item {
         model:photoPartModel
     }
 
+
     Image { //Back template
         id: photoTemplate
         fillMode: Image.PreserveAspectCrop
         source: photo ? photo.currentTemplate.url : ""
         height: templatePreview.height
-        width: photoTemplate.sourceSize.width / photoTemplate.sourceSize.height * templatePreview.height  //TODO : add for test
+        width: templatePreview.height * 1.5 //TODO for test
+        //width: photoTemplate.sourceSize.width / photoTemplate.sourceSize.height * templatePreview.height
         cache: true
         asynchronous: false
-        antialiasing: true
+        smooth: true
     }
 
     Text {
@@ -94,9 +96,20 @@ Item {
         repeat: false
         triggeredOnStart: false
         onTriggered: {
-            if (photoTemplate.sourceSize.width > 0) {
-                waitLoadingTimer.stop()
-                saveImageToFile();
+            console.log("Test image ready");
+            if (photoTemplate.status === Image.Ready) {
+                var ready = true;
+
+                for (var i = 0; i < photoPartRepeater.count; i++) {
+                    if (photoPartRepeater.itemAt(i).photoBase.status !== Image.Ready) {
+                        ready = false;
+                    }
+                }
+
+                if (ready) {
+                    waitLoadingTimer.stop()
+                    saveImageToFile();
+                }
             }
         }
     }
@@ -122,6 +135,8 @@ Item {
         var photoHeighP = 6;
         var dpi = 300;
         var firstsave = 0;
+
+        console.debug("Save image");
 
         function saveImage(result) {
             var d = new Date();
@@ -160,10 +175,6 @@ Item {
         //HQ
         templatePreview.grabToImage(saveImage, Qt.size(templatePreview.width, templatePreview.height));
         templatePreview.grabToImage(saveImageSD, Qt.size(templatePreview.width / 10, templatePreview.height / 10));
-        /*
-        templatePreview.grabToImage(saveImage, Qt.size(photoTemplate.sourceSize.width, photoTemplate.sourceSize.height));
-        templatePreview.grabToImage(saveImageSD, Qt.size(photoTemplate.sourceSize.width / 5, photoTemplate.sourceSize.height / 5));
-        */
     }
 
 

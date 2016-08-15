@@ -102,7 +102,7 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
         }
-
+        //Bouton de config
         ButtonAwesome {
             id:configButton
             anchors.top: parent.top
@@ -116,6 +116,7 @@ Item {
             }
         }
 
+        //Nombre de photos dans la queue
         Rectangle {
             id:queueNumber
             visible: parameters.twitterListenTwitter
@@ -138,18 +139,30 @@ Item {
                 text: parameters.photoQueueManager.nbPhotoInQueue
             }
         }
-    }
 
-    Item {
-        id:viewResultPhoto
-        anchors.fill: parent
-        visible: false
-
-        ResultScreen {
-            id:viewResultScreen
-            anchors.fill: parent
+        //Connexion Wifi
+        Text {
+            height: parent.height * 0.05
+            width: height
+            anchors.top: parent.top
+            anchors.right: queueNumber.left
+            anchors.topMargin: 10
+            anchors.rightMargin: 10
+            font.pixelSize: height
+            font.family: "FontAwesome"
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            text: "\uf1eb "
+            color:(parameters.wifiManager.connectWifiQuality > 75) ? "green" :  ((parameters.wifiManager.connectWifiQuality > 45) ? "orange" : (parameters.wifiManager.connectWifiQuality > 0) ? "red" : "black")
         }
     }
+
+    ResultScreen {
+        id:viewResultScreen
+        anchors.fill: parent
+        visible: false
+    }
+
 
 
     Item {
@@ -210,9 +223,23 @@ Item {
     Connections {
         target: parameters.photoGallery
         onShowPhoto : {
+            console.debug("On a reçu une nouvelle prise de vue")
             viewResultScreen.currentPhoto = photo
             commandScreenItem.state = "RESULT_PHOTO"
+            console.debug("Démarage du timer de prise de photo")
             viewResultScreen.timerPrint.start()
+            console.debug("Démarage de clignottement")
+            parameters.raspiGPIO.blink(3000,200)
+        }
+    }
+
+    //Quand on essaye de se connecter au wifi
+    Connections {
+        target: parameters.wifiManager
+        onWifiTryConnect : {
+            mbox.message = "Connexion à " + wifiName
+            mbox.imageTag = "\uf1eb"
+            mbox.state = "show"
         }
     }
 
@@ -237,7 +264,7 @@ Item {
         State {
             name: "RESULT_PHOTO"
             PropertyChanges {target: chooseTemplateItem; visible: false}
-            PropertyChanges {target: viewResultPhoto; visible: true}
+            PropertyChanges {target: viewResultScreen; visible: true}
         }
 
     ]

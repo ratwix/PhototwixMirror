@@ -20,15 +20,25 @@ SOURCES += main.cpp \
     photoqueuetwitter.cpp \
     photoqueuemanager.cpp \
     wifimanager.cpp \
-    wifiitem.cpp
+    wifiitem.cpp \
+    raspigpio.cpp
 
 RESOURCES += qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
+INCLUDEPATH += $[QT_SYSROOT]/usr/local/include
+LIBS += -L$[QT_SYSROOT]/usr/local/lib -lwiringPi
 
+QMAKE_CXXFLAGS += -std=c++0x -mno-unaligned-access
 # Default rules for deployment.
 include(deployment.pri)
+
+# TODO: trouver la bonne variable pour pas mettre le path entier $$DESTDIR_TARGET : non
+scripts.path += /opt/PhototwixMirror/bin/scripts
+scripts.files = scripts/*
+INSTALLS += scripts
+
 
 HEADERS += \
     parameters.h \
@@ -48,4 +58,8 @@ HEADERS += \
     photoqueuetwitter.h \
     photoqueuemanager.h \
     wifimanager.h \
-    wifiitem.h
+    wifiitem.h \
+    raspigpio.h
+
+DISTFILES += \
+    scripts/connectWifi.sh

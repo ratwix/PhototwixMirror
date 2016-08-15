@@ -1,4 +1,9 @@
+#include <QProcess>
+#include <QRegExp>
+
 #include "wifimanager.h"
+#include "common.h"
+
 
 WifiManager::WifiManager(QObject *parent) : QObject(parent)
 {
@@ -7,31 +12,92 @@ WifiManager::WifiManager(QObject *parent) : QObject(parent)
 
 WifiManager::WifiManager(Parameters *parameters)
 {
-    m_parameters = parameters;    
+    m_parameters = parameters;
+    m_connectedWifi = "";
+    m_connectWifiQuality = 0;
+
+    m_connectedWifiCheckProcess = new QProcess(this);
+    connect(m_connectedWifiCheckProcess, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+            [=](int exitCode, QProcess::ExitStatus exitStatus){ checkWifiConnectedTerminate(exitCode, exitStatus);});
+
+
+    connect(&m_checkWifiConnected, SIGNAL(timeout()), this, SLOT(checkWifiConnected()));
+    m_checkWifiConnected.start(8000); //Check wifi connected each 5s
+
 }
 
 void WifiManager::refreshWifiList()
 {
-    //clean
-    /*
-    for (QList<WifiItem *>::const_iterator it = m_currentWifiList.begin(); it != m_currentWifiList.end(); it++) {
+    for (QList<QObject *>::const_iterator it = m_currentWifiList.begin(); it != m_currentWifiList.end(); it++) {
         delete (*it);
     }
     m_currentWifiList.clear();
-    */
-    //TODO: Executer la commande iwlist wlan0 scan
-    //TODO: parser le résultat et ajouter chaque wifi a la liste m_currentWifiList. Pour chaque wifi, voir si on a pas deja le mot de passe dans m_knownWifi
 
-    createWifiMokup();
+    QString program = "sudo";
+    QStringList arguments;
+    arguments << "iwlist" << "wlan0" << "scan";
+    QProcess wifiProcess;
+    wifiProcess.start(program, arguments);
+    wifiProcess.waitForFinished(10000);
+    QString output(wifiProcess.readAllStandardOutput());
 
-    CLog::Write(CLog::Debug, QString("Wifi mokup size") + QString::number(m_currentWifiList.length()));
+    QStringList outputSList = output.split("\n", QString::SkipEmptyParts);
 
+    QRegExp newWifiRx("Cell\\s[0-9]{2}.*Address:\\s(.*)");
+    QRegExp qualityRx("Quality=([0-9]+)/([0-9]+).*");
+    QRegExp hasPasswordRx("Encryption key:(on|off)");
+    QRegExp essidRx("ESSID:\"(.*)\"");
+
+    //Rafraichit la liste des wifis actuels
+    WifiItem *wifi;
+
+    for (int i = 0; i < outputSList.length(); i++) {
+        QString wl = outputSList.at(i);
+        wl = wl.trimmed();
+
+        if (newWifiRx.exactMatch(wl)) { //Nouveau wifi
+            CLog::Write(CLog::Debug, QString("Wifi address:") + newWifiRx.cap(1));
+            wifi = new WifiItem();
+            QQmlEngine::setObjectOwnership(wifi, QQmlEngine::CppOwnership);
+            m_currentWifiList.append(wifi);
+            wifi->setWifiAddress(newWifiRx.cap(1).trimmed());
+            continue;
+        }
+        if (qualityRx.exactMatch(wl)) { //Qualité du wifi
+            int aq = qualityRx.cap(1).toInt();
+            int bq = qualityRx.cap(2).toInt();
+            int quality = bq > 0 ? aq * 100 / bq : 0;
+            wifi->setWifiQuality(quality);
+            CLog::Write(CLog::Debug, QString("Wifi quality:") + QString::number(quality));
+            continue;
+        }
+        if (hasPasswordRx.exactMatch(wl)) { //Wifi ouvert
+            if (hasPasswordRx.cap(1) == "on") {
+                wifi->setWifiHasPassword(true);
+            } else {
+                wifi->setWifiHasPassword(false);
+            }
+            CLog::Write(CLog::Debug, QString("Wifi has password:") + QString::number(wifi->wifiHasPassword()));
+        }
+        if (essidRx.exactMatch(wl)) { //Wifi essid
+            wifi->setWifiESSID(essidRx.cap(1));
+            CLog::Write(CLog::Debug, QString("Wifi ESSID:") + wifi->wifiESSID());
+            //Ajout du mot de passe si il est déjà connu
+            for (QList<QObject *>::const_iterator it = m_knownWifi.begin(); it != m_knownWifi.end(); it++) {
+                if (WifiItem *item = dynamic_cast<WifiItem *>(*it)) {
+                    if (item->wifiESSID() == wifi->wifiESSID()) {    //c'est le même wifi
+                        wifi->setWifiPassword(item->wifiPassword()); //met le wifi a jour
+                        break;
+                    }
+                }
+            }
+        }
+    }
     emit currentWifiListChanged();
 }
 
 void WifiManager::connectWifi(WifiItem *wifi)
 {
-    //TODO: mettre le setPassword avant d'appeler connectWifi
     //Mise a jout de la base de wifi connue
     bool find = false;
     for (QList<QObject *>::const_iterator it = m_knownWifi.begin(); it != m_knownWifi.end(); it++) {
@@ -49,7 +115,17 @@ void WifiManager::connectWifi(WifiItem *wifi)
 
     m_parameters->Serialize();
 
+    //Affichage d'un message
+
+    emit wifiTryConnect(wifi->wifiESSID());
+
     //Connection au wifi
+    QString program = "sudo";
+    QStringList arguments;
+    arguments << m_parameters->getApplicationDirPath().toString() + "/" + SCRIPT_CONNECT_WIFI << wifi->wifiESSID() << wifi->wifiPassword();
+    QProcess wifiConnectProcess;
+    wifiConnectProcess.start(program, arguments);
+    wifiConnectProcess.waitForFinished(10000);
 }
 
 void WifiManager::serialize(PrettyWriter<StringBuffer> &writer) const
@@ -102,6 +178,7 @@ void WifiManager::unserialize(const Value &values)
         if (value.HasMember("wifiHasPassword")) {
             wi->setWifiHasPassword(value["wifiHasPassword"].GetBool());
         }
+        m_knownWifi.append(wi);
     }
 }
 
@@ -135,32 +212,73 @@ void WifiManager::setCurrentWifiList(const QList<QObject *> &value)
     m_currentWifiList = value;
 }
 
-void WifiManager::createWifiMokup()
+QString WifiManager::getConnectedWifi() const
 {
-    WifiItem *w1 = new WifiItem();
-    QQmlEngine::setObjectOwnership(w1, QQmlEngine::CppOwnership);
-    w1->setWifiESSID("Wifi1ESSID");
-    w1->setWifiAddress("11:11:11:11:11");
-    w1->setWifiHasPassword(true);
-    w1->setWifiPassword("Wifi1Password");
-    w1->setWifiQuality(83);
-    m_currentWifiList.append(w1);
+    return m_connectedWifi;
+}
 
-    WifiItem *w2 = new WifiItem();
-    QQmlEngine::setObjectOwnership(w2, QQmlEngine::CppOwnership);
-    w2->setWifiESSID("Wifi2ESSID");
-    w2->setWifiAddress("22:22:22:22:22");
-    w2->setWifiHasPassword(true);
-    w2->setWifiPassword("Wifi2Password");
-    w2->setWifiQuality(70);
-    m_currentWifiList.append(w2);
+void WifiManager::setConnectedWifi(const QString &connectedWifi)
+{
+    m_connectedWifi = connectedWifi;
+    emit connectedWifiChanged();
+}
 
-    WifiItem *w3 = new WifiItem();
-    QQmlEngine::setObjectOwnership(w3, QQmlEngine::CppOwnership);
-    w3->setWifiESSID("Wifi3ESSID");
-    w3->setWifiAddress("33:33:33:33:33");
-    w3->setWifiHasPassword(true);
-    w3->setWifiPassword("Wifi3Password");
-    w3->setWifiQuality(45);
-    m_currentWifiList.append(w3);
+int WifiManager::getConnectWifiQuality() const
+{
+    return m_connectWifiQuality;
+}
+
+void WifiManager::setConnectWifiQuality(int connectWifiQuality)
+{
+    m_connectWifiQuality = connectWifiQuality;
+    emit connectWifiQualityChanged();
+}
+
+void WifiManager::checkWifiConnectedTerminate(int exitCode, QProcess::ExitStatus exitStatus)
+{
+    bool        connected = false;
+    QString     ssid = "";
+    int         quality = 0;
+    QString output(m_connectedWifiCheckProcess->readAllStandardOutput());
+    QStringList sl = output.split("\n", QString::SkipEmptyParts);
+
+    QRegExp connectedRx("Connected to.*");
+    QRegExp signalRx("signal: -([0-9]+).*");
+    QRegExp ssidRx("SSID: (.*)");
+
+    for (int i = 0; i < sl.length(); i++) {
+        QString s = sl.at(i);
+        s = s.trimmed();
+        if (connectedRx.exactMatch(s)) { //On est connecté au wifi
+            connected = true;
+            continue;
+        }
+        if (signalRx.exactMatch(s)) {
+            if (connected) {
+                quality = 2 * (signalRx.cap(1).toInt() * -1 + 100);
+                setConnectWifiQuality(quality);
+            }
+            continue;
+        }
+        if (ssidRx.exactMatch(s)) {
+            setConnectedWifi(ssidRx.cap(1));
+        }
+    }
+
+    if (!connected) {
+        setConnectWifiQuality(0);
+        setConnectedWifi("");
+
+    }
+}
+
+void WifiManager::checkWifiConnected()
+{
+    if (m_connectedWifiCheckProcess->state() == QProcess::Running) {
+        m_connectedWifiCheckProcess->terminate();
+    }
+    QString program = "iw";
+    QStringList arguments;
+    arguments << "wlan0" << "link";
+    m_connectedWifiCheckProcess->start(program, arguments);
 }

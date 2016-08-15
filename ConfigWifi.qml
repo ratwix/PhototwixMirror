@@ -19,13 +19,13 @@ Item {
     Component {
         id: wifiListDelegate
         Item {
-            width: 300; height: 40
+            width: 500; height: 40
             Row {
                 height: parent.height
                 spacing: 10
 
                 Text {
-                    color: (model.modelData.wifiQuality > 75) ? "green" : ((model.modelData.wifiQuality > 50) ? "orange" : "red")
+                    color: (model.modelData.wifiQuality > 75) ? "green" : ((model.modelData.wifiQuality > 45) ? "orange" : "red")
                     height: parent.height
                     width: height
                     font.pixelSize: height * 0.8
@@ -36,7 +36,7 @@ Item {
                 }
 
                 Column {
-                    width: 100
+                    width: 200
                     Text { text: model.modelData.wifiESSID }
                     Text { text: model.modelData.wifiAddress }
                 }
@@ -44,7 +44,7 @@ Item {
                 TextField {
                     id:wifiPassword
                     placeholderText: "Password"
-                    width: 100
+                    width: 200
                     text: model.modelData.wifiPassword
                 }
                 ButtonAwesome {
@@ -58,8 +58,6 @@ Item {
                     }
                 }
             }
-
-
         }
     }
 
@@ -67,12 +65,41 @@ Item {
         id: wifiListItem
         anchors.top: parent.top
         anchors.bottom: keyboard.top
+        anchors.bottomMargin: keyboard.height / 4
         anchors.left: parent.left
         anchors.right: parent.right
         spacing: 10
         model:parameters.wifiManager.currentWifiList
         delegate: wifiListDelegate
     }
+
+    //Connexion wifi actuelle
+
+    Column {
+        anchors.bottom: keyboard.top
+        anchors.right: parent.right
+        anchors.bottomMargin: 10
+        anchors.rightMargin: 10
+        width: parent.height * 0.3
+
+        Text {
+            width: parent.width
+            height: width
+            font.pixelSize: height
+            font.family: "FontAwesome"
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            text: "\uf1eb "
+            color:(parameters.wifiManager.connectWifiQuality > 75) ? "green" :  ((parameters.wifiManager.connectWifiQuality > 45) ? "orange" : (parameters.wifiManager.connectWifiQuality > 0) ? "red" : "black")
+        }
+        Text {
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            text:parameters.wifiManager.connectedWifi
+        }
+    }
+
+
 
     ButtonAwesome {
         anchors.top: parent.top

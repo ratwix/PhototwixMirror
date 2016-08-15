@@ -9,6 +9,7 @@
 #include "mail.h"
 #include "photoqueuemanager.h"
 #include "wifimanager.h"
+#include "raspigpio.h"
 
 int main(int argc, char *argv[])
 {
@@ -31,8 +32,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<PhotoQueueManager>("com.phototwix.components", 1, 0, "PhotoQueueManager");
     qmlRegisterType<WifiManager>("com.phototwix.components", 1, 0, "WifiManager");
     qmlRegisterType<WifiItem>("com.phototwix.components", 1, 0, "WifiItem");
+    qmlRegisterType<RaspiGPIO>("com.phototwix.components", 1, 0, "WifiItem");
 
-    engine.rootContext()->setContextProperty("parameters", &parameters);
     engine.rootContext()->setContextProperty("applicationDirPath", QGuiApplication::applicationDirPath());
     engine.rootContext()->setContextProperty("parameters", &parameters);
     engine.rootContext()->setContextProperty("photoGallery", parameters.getPhotogallery());

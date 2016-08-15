@@ -8,15 +8,10 @@ import com.phototwix.components 1.0
 Item {
     id:photoPreviewItem
     property Photo photo
-    width: (photoImage.sourceSize.width / photoImage.sourceSize.height) * parent.height
-    height: parent.height
+    width: photoImage.status === Image.Ready ? photoImage.width : 0
+    //height: parent.height
 
-    Rectangle {
-        anchors.fill:parent
-        color: "yellow"
-    }
-
-    MouseArea {
+     MouseArea {
         anchors.fill: parent
         onClicked: {
             commandScreenItem.viewResultScreenPhoto = photo
@@ -27,8 +22,10 @@ Item {
     Image {
         id:photoImage
         height: parent.height
-        width: (photoImage.sourceSize.width / photoImage.sourceSize.height) * parent.height
-        fillMode: Image.PreserveAspectFit
+        //width: (photoImage.sourceSize.width / photoImage.sourceSize.height) * parent.height
+        fillMode: Image.PreserveAspectFit //TODO: Test
+        asynchronous: true
+        cache: false
         source: photo ? photo.finalResultSD : ""
     }
 
@@ -47,4 +44,11 @@ Item {
         visible: photo ? photo.tweeter : false
     }
 
+    BusyIndicator {
+        anchors.verticalCenter: photoImage.verticalCenter
+        anchors.horizontalCenter: photoImage.horizontalCenter
+        height: photoImage.height * 0.5
+        width: photoImage.height * 0.5
+        running: photoImage.status === Image.Loading
+    }
 }

@@ -34,7 +34,7 @@ Item {
             id:resultPhoto
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
-            height: 1800
+            height: 1300
             photo: currentPhoto
             visible: currentPhoto ? (currentPhoto.finalResult == "" ? true : false) : false
         }
@@ -56,8 +56,18 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             height: parent.height * 0.8
             fillMode: Image.PreserveAspectFit
-            visible: !resultPhoto.visible
+            visible: currentPhoto ? (currentPhoto.finalResult == "" ? false : true) : false
+            cache: false
+            asynchronous: true
             source: currentPhoto ? currentPhoto.finalResult : ""
+        }
+
+        BusyIndicator {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            height: parent.height * 0.5
+            width: parent.height * 0.5
+            running: resultPhotoShader.visible || resultPhotoImage.status === Image.Loading
         }
     }
 

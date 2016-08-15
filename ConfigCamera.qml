@@ -90,14 +90,6 @@ Item {
                    parameters.cameraHeight = parseInt(editCameraHeight.text)
                }
            }
-
-           Button {
-               text:"Focus"
-               onClicked: {
-                   timerPhotoPreview.start()
-                   focusRectangle.visible = true
-               }
-           }
        }
     }
 
@@ -113,44 +105,6 @@ Item {
             onClicked: {}
         }
 
-
-        Image {
-            id: cameraFocusOutput
-            source:"image://camerapreview/1"
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter
-            height: parent.height * 0.6
-            fillMode: Image.PreserveAspectFit
-        }
-
-        Timer {
-            id: timerPhotoPreview
-            interval: 100;
-            running: false;
-            repeat: true
-            onTriggered: {
-                cameraWorker.capturePreview();
-                cameraFocusOutput.source = "image://camerapreview/" + Math.random();
-                // change URL to refresh image. Add random URL part to avoid caching
-            }
-        }
-
-        ButtonAwesome {
-            anchors.right: parent.right
-            anchors.top : parent.top
-            anchors.rightMargin: 10
-            anchors.topMargin: 10
-            size: 60
-            code:"\uf015"
-
-            onClicked: {
-                /*
-                timerPhotoPreview.stop()
-                cameraWorker.closeCamera();
-                focusRectangle.visible = false
-                */
-            }
-        }
 /*
         Rectangle {
             anchors.right: parent.right

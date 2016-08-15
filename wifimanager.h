@@ -14,6 +14,8 @@ class WifiManager : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QList<QObject *> currentWifiList READ getCurrentWifiList WRITE setCurrentWifiList NOTIFY currentWifiListChanged)
+    Q_PROPERTY(QString connectedWifi READ getConnectedWifi WRITE setConnectedWifi NOTIFY connectedWifiChanged)
+    Q_PROPERTY(int connectWifiQuality READ getConnectWifiQuality WRITE setConnectWifiQuality NOTIFY connectWifiQualityChanged)
 public:
     explicit WifiManager(QObject *parent = 0);
     WifiManager(Parameters *parameters);
@@ -36,17 +38,31 @@ public:
     QList<QObject *> getCurrentWifiList() const;
     void setCurrentWifiList(const QList<QObject *> &value);
 
+    QString getConnectedWifi() const;
+    void setConnectedWifi(const QString &connectedWifi);
+
+    int getConnectWifiQuality() const;
+    void setConnectWifiQuality(int connectWifiQuality);
+
 private:
     WifiItem *          m_currentWifi;
-    QList<QObject *>   m_knownWifi;
-    QList<QObject *>   m_currentWifiList;
+    QList<QObject *>    m_knownWifi;
+    QList<QObject *>    m_currentWifiList;
     Parameters  *       m_parameters;
+    QTimer              m_checkWifiConnected;
 
-    void                createWifiMokup();
+    QString             m_connectedWifi;
+    int                 m_connectWifiQuality;
+    QProcess *          m_connectedWifiCheckProcess;
 
 signals:
-    void currentWifiListChanged();
+    void    currentWifiListChanged();
+    void    wifiTryConnect(QString wifiName);
+    void    connectedWifiChanged();
+    void    connectWifiQualityChanged();
 public slots:
+    void    checkWifiConnectedTerminate(int exitCode, QProcess::ExitStatus exitStatus);
+    void    checkWifiConnected();
 };
 
 #endif // WIFIMANAGER_H

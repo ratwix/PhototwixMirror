@@ -7,8 +7,10 @@ import "./resources/controls"
 Window {
     title: "Phototwix V5"
     visible: true
-    height: 480
-    width: 800
+    visibility: Window.FullScreen
+
+    //height: 480
+    //width: 800
     /*
     height: 800
     width: 1200
@@ -32,6 +34,10 @@ Window {
 
     CommandScreen {
         anchors.fill: parent
+    }
+
+    Component.onCompleted: {
+      console.debug("Screen height:" + height + " width:" + width)
     }
 
 }

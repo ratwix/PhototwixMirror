@@ -219,7 +219,7 @@ Item {
                         id:templateImage
                         anchors.horizontalCenter: parent.horizontalCenter
                         source: model.modelData.url
-                        sourceSize.height: 100
+                        height: 100
                         cache: false
                         asynchronous: true
                         antialiasing: true

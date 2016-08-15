@@ -13,6 +13,7 @@
 #include "parameters.h"
 #include "photoqueuemanager.h"
 #include "wifimanager.h"
+#include "raspigpio.h"
 
 class PhotoGallery;
 class VideoItem;
@@ -69,6 +70,7 @@ class Parameters : public QObject
     Q_PROPERTY(QString twitterMessageColor READ getTwitterMessageColor WRITE setTwitterMessageColor NOTIFY twitterMessageColorChanged)
     Q_PROPERTY(PhotoQueueManager * photoQueueManager READ getPhotoQueueManager WRITE setPhotoQueueManager NOTIFY photoQueueManagerChanged)
     Q_PROPERTY(WifiManager * wifiManager READ getWifiManager WRITE setWifiManager NOTIFY wifiManagerChanged)
+    Q_PROPERTY(RaspiGPIO * raspiGPIO READ getRaspiGPIO WRITE setRaspiGPIO NOTIFY raspiGPIOChanged)
 public:
     Parameters(QUrl appDirPath);
     virtual ~Parameters();
@@ -227,6 +229,9 @@ public:
     WifiManager *getWifiManager() const;
     void setWifiManager(WifiManager *wifiManager);
 
+    RaspiGPIO *getRaspiGPIO() const;
+    void setRaspiGPIO(RaspiGPIO *raspiGPIO);
+
 private:
     void addTemplate(QString name);
     void addTemplate(Value const &value);
@@ -309,6 +314,7 @@ private:
 
     PhotoQueueManager *  m_photoQueueManager;
     WifiManager *        m_wifiManager;
+    RaspiGPIO   *        m_raspiGPIO;
 
 
 signals:
@@ -349,6 +355,7 @@ signals:
     void twitterMessageChanged();
     void photoQueueManagerChanged();
     void wifiManagerChanged();
+    void raspiGPIOChanged();
 };
 
 #endif // PARAMETERS_H

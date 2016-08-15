@@ -99,7 +99,7 @@ void PhotoGallery::imageDownloaded(Photo *photo) {
     //m_photoList.prepend(photo); //Pourquoi on l'ajoute ici alors qu'il y a pas encore le nom ?
     QObject* downloader = sender();
     delete downloader;
-
+    CLog::Write(CLog::Debug, "Envoie signal pour affichage de la photo");
     //Message pour afficher le résultat
     emit showPhoto(photo);
 

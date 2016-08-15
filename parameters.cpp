@@ -107,6 +107,8 @@ void Parameters::init() {
     QQmlEngine::setObjectOwnership(m_photoQueueManager, QQmlEngine::CppOwnership);
     m_wifiManager = new WifiManager(this);
     QQmlEngine::setObjectOwnership(m_wifiManager, QQmlEngine::CppOwnership);
+    m_raspiGPIO = new RaspiGPIO();
+
 
     initEffects();
 
@@ -597,6 +599,16 @@ void Parameters::printThread(QUrl m_applicationDirPath, QUrl url, bool doublepri
         CLog::Write(CLog::Debug, "Print cmd :" + cmd);
         system(cmd.c_str());
     }
+}
+
+RaspiGPIO *Parameters::getRaspiGPIO() const
+{
+    return m_raspiGPIO;
+}
+
+void Parameters::setRaspiGPIO(RaspiGPIO *raspiGPIO)
+{
+    m_raspiGPIO = raspiGPIO;
 }
 
 WifiManager *Parameters::getWifiManager() const

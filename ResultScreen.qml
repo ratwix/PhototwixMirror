@@ -11,6 +11,8 @@ Item {
     property Photo currentPhoto
     property alias timerShow : timerClosePhoto
     property alias timerPrint: timerAutoPrint
+    property alias timerStartPrint: timerStartTimerPrint
+    property alias timerStartClose: timerStartTimerClose
 
     Item {
         id:templatePreviewItem
@@ -161,7 +163,7 @@ Item {
             mbox.state = "show"
         } else {
             parameters.printerManager.updatePaperPrint();
-            if (parameters.printerManager.paperprint < 15) { //Warning if paper become low
+            if (parameters.printerManager.paperprint < 15 && parameters.printerManager.paperprint > 2) { //Warning if paper become low
                 mbox.message = "Impression en cours.\nPlus que " + parameters.printerManager.paperprint + " feuilles"
                 mbox.imageTag = "\uf02f"
                 mbox.state = "show"
@@ -188,6 +190,45 @@ Item {
                               currentPhoto.currentTemplate.landscape)
     }
 
+    //Timer qui verifie toute les 0.5s si la photo est chargée
+    Timer {
+        id:timerStartTimerPrint
+        interval: 500
+        running: false
+        repeat: true
+
+        onTriggered: {
+            //Si la photo est visible, demarage du timer
+            if (currentPhoto && (currentPhoto.finalResult != "") && (resultPhotoImage.status !== Image.Loading)) {
+                //Arret du timer actuel
+                timerStartTimerPrint.stop();
+                //Demarage auto print
+                if (parameters.autoPrint) {
+                    timerAutoPrint.start()
+                }
+            }
+        }
+    }
+
+    Timer {
+        id:timerStartTimerClose
+        interval: 500
+        running: false
+        repeat: true
+
+        onTriggered: {
+            //Si la photo est visible, demarage du timer
+            if (currentPhoto && (currentPhoto.finalResult != "") && (resultPhotoImage.status !== Image.Loading)) {
+                //Arret du timer actuel
+                timerStartTimerClose.stop();
+                //Demarage auto close
+                if (parameters.showPhotoDelay > 0) {
+                    timerClosePhoto.start()
+                }
+            }
+        }
+    }
+
     Timer {
         id:timerClosePhoto
         interval: parameters.showPhotoDelay * 1000
@@ -196,7 +237,6 @@ Item {
         triggeredOnStart: false
 
         onTriggered: {
-            timerClosePhoto.stop();
             timerAutoPrint.stop();
             commandScreenItem.state = "CHOOSE_TEMPLATE"
         }
@@ -211,7 +251,6 @@ Item {
         triggeredOnStart: false
 
         onTriggered: {
-            timerAutoPrint.stop();
             if (parameters.autoPrint) {
                 testPrintPhoto();
             }

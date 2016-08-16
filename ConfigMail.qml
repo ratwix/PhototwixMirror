@@ -267,7 +267,7 @@ Item {
     FileDialog {
         id: saveMail
         title: "Sauvegarde mails"
-        folder: shortcuts.home
+        folder: "/media/usb"
         visible:false
         selectMultiple: false
         selectFolder: true

@@ -172,6 +172,7 @@ Rectangle {
             FileDialog {
                 id: updateTemplateFileDialog
                 title: "Mise à jour de de template"
+                folder: "/media/usb"
                 visible:false
                 selectMultiple: false
                 selectExisting: true

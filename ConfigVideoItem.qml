@@ -125,7 +125,7 @@ Rectangle {
     FileDialog {
         id: fileDialog
         title: "Choisir un fichier pour " + videoLabel
-        folder: shortcuts.home
+        folder: "/media/usb"
         onAccepted: {
             videoItem.videoName = fileDialog.fileUrl
             console.log("You chose: " + fileDialog.fileUrl)

@@ -226,8 +226,8 @@ Item {
             console.debug("On a reçu une nouvelle prise de vue")
             viewResultScreen.currentPhoto = photo
             commandScreenItem.state = "RESULT_PHOTO"
-            console.debug("Démarage du timer de prise de photo")
-            viewResultScreen.timerPrint.start()
+            console.debug("Démarage du timer de prise de photo et autoprint")
+            viewResultScreen.timerStartPrint.start()
             console.debug("Démarage de clignottement")
             parameters.raspiGPIO.blink(3000,200)
         }
@@ -250,11 +250,12 @@ Item {
         } else {
             parameters.hideCursor();
         }
-
+        //On a quitté la preview volontairement, on arette l'auto print et auto close
         if (state == "RESULT_PHOTO") {
-            if (parameters.showPhotoDelay > 0) {
-                viewResultScreen.timerShow.start()
-            }
+            viewResultScreen.timerStartClose.start();
+        } else {
+            viewResultScreen.timerPrint.stop()
+            viewResultScreen.timerShow.stop()
         }
     }
 

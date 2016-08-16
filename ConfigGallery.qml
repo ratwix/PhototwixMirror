@@ -317,7 +317,7 @@ Item {
     FileDialog {
         id: importTemplateFileDialog
         title: "Import de template"
-        folder: shortcuts.home
+        folder: "/media/usb"
         visible:false
         selectMultiple: true
         selectExisting: true
@@ -334,7 +334,7 @@ Item {
     FileDialog {
         id: importBackgroundFileDialog
         title: "Import Fond d'écran"
-        folder: shortcuts.home
+        folder: "/media/usb"
         visible:false
         selectMultiple: false
         selectExisting: true
@@ -348,7 +348,7 @@ Item {
     FileDialog {
         id: saveGallerie
         title: "Sauvegarde"
-        folder: shortcuts.home
+        folder: "/media/usb"
         visible:false
         selectMultiple: false
         selectFolder: true

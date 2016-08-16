@@ -1,7 +1,9 @@
 * Timer auto close et auto print déclanché au moment ou l'image est chargé (1)
 * Auto Mount (1)
 * Bouton pour declancher un processus de photo (2)
-* Partie take photo
+* Bouton marche arret Raspberry Pi (2)
+* Démarage au lancement et relance auto si crash (2)
+* Partie take photo avec video
 * Led quand nouvel affichage (3)
 * Changer police twitter et template parmis une liste de police install�e (3)
 * Twitter en portrait (4)

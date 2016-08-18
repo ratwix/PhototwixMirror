@@ -1,0 +1,8 @@
+# Connexion des GPIO
+# Ecran
+* Pin 4 (+5V) --> +5v ecran
+* Pin 6 (GND) --> GND ecran
+
+# Power Button
+* Pin 5 (GPIO 3)  --> Power Button
+* Pin 9 (GND)     --> Power Button

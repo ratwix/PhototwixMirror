@@ -12,10 +12,11 @@
 #include "wifimanager.h"
 #include "raspigpio.h"
 #include "printermanager.h"
+#include "cameraworker.h"
 
 int main(int argc, char *argv[])
 {
-    CLog::SetLevel(CLog::Debug);
+    CLog::SetLevel(CLog::Error);
 
     QApplication app(argc, argv);
     QQmlApplicationEngine engine;
@@ -36,6 +37,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<WifiItem>("com.phototwix.components", 1, 0, "WifiItem");
     qmlRegisterType<RaspiGPIO>("com.phototwix.components", 1, 0, "RaspiGPIO");
     qmlRegisterType<PrinterManager>("com.phototwix.components", 1, 0, "PrinterManager");
+    qmlRegisterType<CameraWorker>("com.phototwix.components", 1, 0, "CameraWorker");
 
     engine.rootContext()->setContextProperty("applicationDirPath", QGuiApplication::applicationDirPath());
     engine.rootContext()->setContextProperty("parameters", &parameters);

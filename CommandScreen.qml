@@ -223,12 +223,12 @@ Item {
     Connections {
         target: parameters.photoGallery
         onShowPhoto : {
-            console.debug("On a reçu une nouvelle prise de vue")
+            //console.debug("On a reçu une nouvelle prise de vue")
             viewResultScreen.currentPhoto = photo
             commandScreenItem.state = "RESULT_PHOTO"
-            console.debug("Démarage du timer de prise de photo et autoprint")
+            //console.debug("Démarage du timer de prise de photo et autoprint")
             viewResultScreen.timerStartPrint.start()
-            console.debug("Démarage de clignottement")
+            //console.debug("Démarage de clignottement")
             parameters.raspiGPIO.blink(3000,200)
         }
     }

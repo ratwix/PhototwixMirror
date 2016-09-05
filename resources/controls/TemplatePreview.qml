@@ -97,7 +97,7 @@ Item {
         repeat: false
         triggeredOnStart: false
         onTriggered: {
-            console.log("Test image ready");
+            //console.debug("Test image ready");
             if (photoTemplate.status === Image.Ready) {
                 var ready = true;
 /*
@@ -137,7 +137,7 @@ Item {
         var dpi = 300;
         var firstsave = 0;
 
-        console.debug("Save image");
+        //console.debug("Save image");
 
         function saveImage(result) {
             var d = new Date();

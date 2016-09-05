@@ -1,0 +1,11 @@
+# Ajouter a /etc/systemd/system
+
+[Unit]
+Description=Phototwix
+
+[Service]
+ExecStart=/opt/PhototwixMirror/bin/PhototwixMirror
+User=pi
+Restart=always
+[Install]
+WantedBy=multi-user.target

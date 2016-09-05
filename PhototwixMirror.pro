@@ -22,14 +22,15 @@ SOURCES += main.cpp \
     wifimanager.cpp \
     wifiitem.cpp \
     raspigpio.cpp \
-    printermanager.cpp
+    printermanager.cpp \
+    cameraworker.cpp
 
 RESOURCES += qml.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
 INCLUDEPATH += $[QT_SYSROOT]/usr/local/include
-LIBS += -L$[QT_SYSROOT]/usr/local/lib -lwiringPi
+LIBS += -L$[QT_SYSROOT]/usr/local/lib -lwiringPi -L$[QT_SYSROOT]/opt/vc/lib -lbcm_host -lmmal -lmmal_core -lmmal_components -lmmal_util -lvcos
 
 QMAKE_CXXFLAGS += -std=c++0x -mno-unaligned-access
 # Default rules for deployment.
@@ -61,7 +62,8 @@ HEADERS += \
     wifimanager.h \
     wifiitem.h \
     raspigpio.h \
-    printermanager.h
+    printermanager.h \
+    cameraworker.h
 
 DISTFILES += \
     scripts/connectWifi.sh \

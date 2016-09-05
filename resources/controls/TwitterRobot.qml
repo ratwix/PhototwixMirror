@@ -58,7 +58,7 @@ Item {
 
     //Recherche de nouveaux Tweets. Complète la liste "tweets"
     function reload() {
-        console.log("Reload Tweets")
+        //console.debug("Reload Tweets")
         tweets.clear()
 
         if (tweeterAccount == "" && tweeterTag == "")
@@ -92,7 +92,7 @@ Item {
         }
         */
 
-        console.debug("Twitter Query : " + query);
+        //console.debug("Twitter Query : " + query);
         //return;
 
 //! [requesting]
@@ -106,7 +106,7 @@ Item {
                 if (objectArray.errors !== undefined)
                     console.log("Error fetching tweets: " + objectArray.errors[0].message)
                 else {
-                    console.debug("Last tweet : " + objectArray.search_metadata.max_id_str)
+                    //console.debug("Last tweet : " + objectArray.search_metadata.max_id_str)
                     //Save last tweet to get only new tweets
                     lastTweetRetrieved = objectArray.search_metadata.max_id_str
                     for (var key in objectArray.statuses) {
@@ -135,9 +135,10 @@ Item {
             var profile_image = tweets.get(i).user.profile_image_url
             var media_url = tweets.get(i).entities.media[0].media_url
 
-            console.log("Date:" + date + "\nid:" + id + "\ntext:" + text +
+            /*
+            console.debug("Date:" + date + "\nid:" + id + "\ntext:" + text +
                         "\nname:" + profile_name + "\navatar:" + profile_image + "\nmedia:" + media_url + "\n\n")
-
+            */
             parameters.photoQueueManager.pushTwitter("photo1_tweet", parameters.twitterDefaultTemplate, parameters.effectDefault, date, id, text, profile_name, profile_image, media_url);
         }
     }
@@ -160,7 +161,7 @@ Item {
         running: (parameters.twitterListenTwitter && (bearerToken !== ""))
         repeat: true;
         onTriggered: {
-            console.debug("Recherche nouveau tweets")
+            //console.debug("Recherche nouveau tweets")
             reload()
         }
     }

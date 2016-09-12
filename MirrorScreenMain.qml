@@ -1,20 +1,14 @@
-import QtQuick 2.6
+import QtQuick 2.0
 import QtQuick.Window 2.2
 
 import com.phototwix.components 1.0
-import "./resources/controls"
 
 Window {
-    title: "Phototwix V5 Command"
+    title: "Phototwix V5 Mirror"
     visible: true
     visibility: Window.FullScreen
 
-    //height: 480
-    //width: 800
-    /*
-    height: 800
-    width: 1200
-    */
+
     QtObject {
         id:globalVar
         property color      backColor:               "#6C6F70"
@@ -22,6 +16,8 @@ Window {
         property color      backColorTemplateLast:   "#F2AF32"
         property Template   currentTemplate;
         property string     currentEffect;
+        property int        screenHeight:            height;
+        property int        screenWidth:             width;
     }
 
     FontLoader {
@@ -32,7 +28,7 @@ Window {
         source: "resources/font/FontAwesome.otf"
     }
 
-    CommandScreen {
+    MirrorScreen {
         anchors.fill: parent
     }
 

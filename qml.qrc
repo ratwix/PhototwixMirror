@@ -104,5 +104,6 @@
         <file>resources/controls/ChoosePhotoControl.qml</file>
         <file>resources/font/Gabrielle.ttf</file>
         <file>ConfigWifi.qml</file>
+        <file>MirrorScreenMain.qml</file>
     </qresource>
 </RCC>

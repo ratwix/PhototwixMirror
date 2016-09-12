@@ -30,7 +30,7 @@ Rectangle {
         width:parent.width * 0.9
 
         Tab {
-            visible: terminalType === "command"
+            visible: terminalType == "command"
             title: "Impression"
             ConfigPrinter {
                 id:configPrinter
@@ -39,6 +39,7 @@ Rectangle {
         }
 
         Tab {
+            visible: terminalType == "mirror"
             title: "Camera"
             ConfigCamera {
                 id:configCamera
@@ -47,7 +48,7 @@ Rectangle {
         }
 
         Tab {
-            visible: terminalType === "command"
+            visible: terminalType == "command"
             title: "Gallerie & Visuels"
             ConfigGallery {
                 id:configGallery
@@ -56,7 +57,7 @@ Rectangle {
         }
 
         Tab {
-            visible: terminalType === "command"
+            visible: terminalType == "command"
             title: "Twitter"
             ConfigTwitter {
                 id:configTwitter
@@ -65,7 +66,7 @@ Rectangle {
         }
 
         Tab {
-            visible: terminalType === "command"
+            visible: terminalType == "command"
             title: "Mail"
             ConfigMail {
                 id:configMail
@@ -74,7 +75,7 @@ Rectangle {
         }
 
         Tab {
-            visible: terminalType === "mirror"
+            visible: terminalType == "mirror"
             title: "Videos"
             ConfigVideo {
                 id:configVideo
@@ -83,7 +84,7 @@ Rectangle {
         }
 
         Tab {
-            visible: terminalType === "command"
+            visible: terminalType == "command"
             title: "Effets"
             ConfigEffects {
                 id:configEffets
@@ -92,7 +93,6 @@ Rectangle {
         }
 
         Tab {
-            visible: terminalType === "command"
             title: "Wifi"
             ConfigWifi {
                 id:configWifi
@@ -115,7 +115,13 @@ Rectangle {
             size: parent.width * 0.85
             code: "\uf015"
             onClicked: {
-                commandScreenItem.state = "CHOOSE_TEMPLATE"
+                if (terminalType == "command") {
+                    commandScreenItem.state = "CHOOSE_TEMPLATE"
+                } else {
+                    mirrorScreen.state = "VIDEO_MODE"
+                }
+
+
             }
         }
 

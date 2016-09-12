@@ -12,6 +12,7 @@
 
 #include "rapidjson/document.h"
 #include "clog.h"
+#include "cameraworker.h"
 
 using namespace std;
 using namespace rapidjson;
@@ -39,8 +40,8 @@ void Parameters::init() {
     m_flipcamera = false;
     m_flipresult = false;
     m_backgroundImage = "";
-    m_cameraHight = 1728;
-    m_cameraWidth = 2592;
+    m_cameraHight = CAMERA_HEIGHT;
+    m_cameraWidth = CAMERA_WIDTH;
     m_blockPrint = false;
     m_blockPrintNb = 700;
     createFolders();

@@ -16,6 +16,11 @@
 
 int main(int argc, char *argv[])
 {
+    //TODO: changer avec argument
+    bool mirror = true;
+
+    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
+
     CLog::SetLevel(CLog::Error);
 
     QApplication app(argc, argv);
@@ -23,6 +28,12 @@ int main(int argc, char *argv[])
 
     Parameters parameters(QGuiApplication::applicationDirPath());
     KeyEmitter keyEmitter;
+    CameraWorker camera;
+
+    /**
+     *  Share context for omxplayer
+     */
+
 
     qmlRegisterType<VideoItem>("com.phototwix.components", 1, 0, "VideoItem");
     qmlRegisterType<Template>("com.phototwix.components", 1, 0, "Template");
@@ -44,12 +55,21 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("photoGallery", parameters.getPhotogallery());
     engine.rootContext()->setContextProperty("keyEmitter", &keyEmitter);
 
-    engine.rootContext()->setContextProperty("terminalType", "command");
-    //engine.rootContext()->setContextProperty("terminalType", "mirror");
+    if (mirror) {
+        engine.rootContext()->setContextProperty("terminalType", "mirror");
+    } else {
+        engine.rootContext()->setContextProperty("terminalType", "command");
+    }
 
     CLog::Write(CLog::Debug, ("Application dir path "  + QGuiApplication::applicationDirPath()).toStdString());
 
-    engine.load(QUrl(QStringLiteral("qrc:/CommandScreenMain.qml")));
+    if (mirror) {
+        engine.rootContext()->setContextProperty("camera", &camera);
+        engine.load(QUrl(QStringLiteral("qrc:/MirrorScreenMain.qml")));
+    } else {
+        engine.load(QUrl(QStringLiteral("qrc:/CommandScreenMain.qml")));
+    }
+
     parameters.hideCursor();
 
     return app.exec();

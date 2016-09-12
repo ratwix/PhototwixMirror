@@ -30,7 +30,7 @@ RESOURCES += qml.qrc
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
 INCLUDEPATH += $[QT_SYSROOT]/usr/local/include
-LIBS += -L$[QT_SYSROOT]/usr/local/lib -lwiringPi -L$[QT_SYSROOT]/opt/vc/lib -lbcm_host -lmmal -lmmal_core -lmmal_components -lmmal_util -lvcos
+LIBS += -L$[QT_SYSROOT]/usr/local/lib -lwiringPi -L$[QT_SYSROOT]/opt/vc/lib -lbcm_host
 
 QMAKE_CXXFLAGS += -std=c++0x -mno-unaligned-access
 # Default rules for deployment.

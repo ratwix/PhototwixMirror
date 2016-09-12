@@ -1,6 +1,6 @@
 import QtQuick 2.4
 import QtQuick.Controls 1.4
-import QtMultimedia 5.4
+import QtMultimedia 5.0
 
 Item {
     id:configVideo
@@ -53,6 +53,12 @@ Item {
         id: previewPlayer
         loops: MediaPlayer.Infinite
         autoPlay: false
+        /*
+        onStopped: {
+            previewPlayer.seek(0)
+            previewPlayer.play()
+        }
+        */
     }
 
     VideoOutput {

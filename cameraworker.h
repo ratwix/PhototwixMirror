@@ -2,79 +2,53 @@
 #define CAMERAWORKER_H
 
 #include <QObject>
-#include <QImage>
-#include <QQuickImageProvider>
-
-#include "interface/vcos/vcos.h"
-
-#include "interface/mmal/mmal.h"
-#include "interface/mmal/mmal_logging.h"
-#include "interface/mmal/mmal_buffer.h"
-#include "interface/mmal/util/mmal_util.h"
-#include "interface/mmal/util/mmal_util_params.h"
-#include "interface/mmal/util/mmal_default_components.h"
-#include "interface/mmal/util/mmal_connection.h"
-#include "interface/mmal/mmal_parameters_camera.h"
+#include <QProcess>
 
 // Standard port setting for the camera component
-#define MMAL_CAMERA_PREVIEW_PORT 0
-#define MMAL_CAMERA_VIDEO_PORT 1
-#define MMAL_CAMERA_CAPTURE_PORT 2
-
-
-// Stills format information
-// 0 implies variable
-#define STILLS_FRAME_RATE_NUM 0
-#define STILLS_FRAME_RATE_DEN 1
-
-/// Video render needs at least 2 buffers.
-#define VIDEO_OUTPUT_BUFFERS_NUM 3
-
-#define PREVIEW_FRAME_RATE_NUM 0
-#define PREVIEW_FRAME_RATE_DEN 1
 
 #define PICAM_JPEG_QUALITY  85
-#define PICAM_RESTART_INTERVAL  0
+#define CAMERA_WIDTH    3280    //2592
+#define CAMERA_HEIGHT   2464    //1944
 
-class CameraWorker : public QObject, public QQuickImageProvider
+#define CAMERA_PREVIEW_4x3_WIDTH    1296    //1024
+#define CAMERA_PREVIEW_4x3_HEIGHT   972     //768
+
+#define CAMERA_PREVIEW_16x9_WIDTH   1280
+#define CAMERA_PREVIEW_16x9_HEIGHT  720
+
+#define CAMERA_PREVIEW_X            0
+#define CAMERA_PREVIEW_Y            0
+#define CAMERA_PREVIEW_WIDTH        639
+#define CAMERA_PREVIEW_HEIGHT       480
+
+class CameraWorker : public QObject
 {
     Q_OBJECT
 public:
-    CameraWorker(QQuickImageProvider::ImageType type=QQuickImageProvider::Image,
-                 QQuickImageProvider::Flags flags=QQmlImageProviderBase::ForceAsynchronousImageLoading);
+    CameraWorker();
 
     ~CameraWorker();
 
-    Q_INVOKABLE void capturePhoto(const QString &fileName);
-    Q_INVOKABLE void openCamera();
-    Q_INVOKABLE void closeCamera();
+    /**
+      * Send a signal to prreview to take the photo and quit
+      * */
+    Q_INVOKABLE void capturePhoto();
 
-    virtual QImage requestImage(const QString &id, QSize *size, const QSize& requestedSize);
-    QImage preview_result() const;
-    void setPreview_result(const QImage &preview_result);
+    /**
+      * Start a preview and wait a keypress to exit (capturePhoto() )
+      * */
+    Q_INVOKABLE void startPreview(const QString &fileName, int previewX=CAMERA_PREVIEW_X,
+                                                            int previewY=CAMERA_PREVIEW_Y,
+                                                            int previewWidth=CAMERA_PREVIEW_WIDTH,
+                                                            int previewHeight=CAMERA_PREVIEW_HEIGHT);
 
 private:
-    bool                m_camera_enabled;
-
-    MMAL_PORT_T         *m_preview_port;
-    MMAL_PORT_T         *m_still_port;
-    MMAL_PORT_T         *m_video_port;
-    MMAL_COMPONENT_T    *m_camera;
-    MMAL_POOL_T         *m_encoder_pool;
-    MMAL_COMPONENT_T    *m_encoder_component;
-    MMAL_CONNECTION_T   *m_encoder_connection;
-
-    QImage              m_preview_result;
-
-    MMAL_STATUS_T connect_ports(MMAL_PORT_T *output_port, MMAL_PORT_T *input_port, MMAL_CONNECTION_T **connection);
-    void          initCamera();
-    void          freeCamera();
-    void          init_still_encoder();
-
+    QProcess *  m_previewProcess;
+    QString     currentFilename;
 signals:
     void imageCaptured(const QString &filename);
 public slots:
-
+    void capturePhotoEnd();
 };
 
 #endif // CAMERA_H

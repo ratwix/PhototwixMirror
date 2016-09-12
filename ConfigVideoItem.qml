@@ -29,7 +29,7 @@ Rectangle {
         Label {
             id:label
             height: configVideoItem.height
-            width: 50
+            width: 150
             text: videoLabel
             verticalAlignment: Text.AlignVCenter
         }

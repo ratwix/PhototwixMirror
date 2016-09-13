@@ -2,6 +2,10 @@
 
 #include "photoqueuemanager.h"
 #include "photoqueuetwitter.h"
+#include "photoqueuemirror.h"
+
+#include "rapidjson/document.h"
+#include "clog.h"
 
 PhotoQueueManager::PhotoQueueManager(QObject *parent) : QObject(parent)
 {
@@ -56,6 +60,64 @@ void PhotoQueueManager::pushTwitter(QString name,
     setNbPhotoInQueue(m_photoQueueList.length());
 }
 
+void PhotoQueueManager::pushMirror(QString name, QString json)
+{
+    PhotoQueueMirror *photo = new PhotoQueueMirror();
+
+    photo->setName(name);
+    photo->setJson(json);
+    //Parse JSON
+    Document document;
+    document.Parse(json.toStdString().c_str());
+
+    if (document.HasMember("templateName")) {
+        QString templateName = QString(document["nbPrint"].GetString());
+        bool found = false;
+        for (int i = 0; i < m_parameter->getActivesTemplates().length(); i++) {
+            if (Template *t = dynamic_cast<Template*>(m_parameter->getActivesTemplates()[i])) {
+                if (t->getName() == templateName) {
+                    found = true;
+                    photo->setUsedTemplate(t);
+                    break;
+                }
+            }else {
+                CLog::Write(CLog::Fatal, "Bad type QObject -> Template");
+            }
+        }
+        if (!found) {
+            CLog::Write(CLog::Fatal, "Template from name not found in active template");
+        }
+    }
+
+    if (document.HasMember("effectName")) {
+        photo->setEffect(QString(document["effectName"].GetString()));
+    }
+
+    if (document.HasMember("nbPhoto")) {
+        photo->setNbPhotos(document["nbPhoto"].GetInt());
+    }
+
+    if (document.HasMember("photosPath")) {
+        photo->setPhotoPath(QString(document["photosPath"].GetString()));
+    }
+
+    if (document.HasMember("photos")) {
+        const Value& photos = document["photos"];
+        if (photos.IsArray()) {
+            for (SizeType i = 0; i < photos.Size(); i++) {
+                Value const &value = photos[i];
+                if (value.HasMember("fileName")) {
+                    photo->photosList().append(QString(value["fileName"].GetString()));
+                }
+            }
+        }
+    }
+
+    //Push front, les photos du photomaton sont prioritaires
+    m_photoQueueList.push_front(photo);
+    setNbPhotoInQueue(m_photoQueueList.length());
+}
+
 
 /**
  * @brief PhotoQueueManager::pushTwitter
@@ -79,6 +141,17 @@ void PhotoQueueManager::pop()
                             photoTwitter->twitText(),
                             photoTwitter->twitProfileName(),
                             photoTwitter->twitMediaUrl()
+                );
+            }
+            //If it is a mirror
+            if (PhotoQueueMirror *photoMirror = dynamic_cast<PhotoQueueMirror*>(photo)) {
+                m_parameter->getPhotogallery()->addPhotoMirror(
+                            photoMirror->name(),
+                            photoMirror->usedTemplate(),
+                            photoMirror->effect(),
+                            photoMirror->mirrorIP(),
+                            photoMirror->photoPath(),
+                            photoMirror->photosList()
                 );
             }
             setNbPhotoInQueue(m_photoQueueList.length());

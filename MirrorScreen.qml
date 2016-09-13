@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQml 2.2
 import QtMultimedia 5.6
+import QtWebSockets 1.0
 import "./resources/controls"
 
 Item {
@@ -10,6 +11,8 @@ Item {
 
     QtObject {
         id:p
+        property string templateName : ""
+        property string effectName : ""
         property int currentPhoto : 0
         property int nb_photos : 0
         property int countdown_delay : 0
@@ -133,6 +136,10 @@ Item {
         startWaitVideo()
     }
 
+    PhotoClientRobot {
+        id:photoClientRobot
+        visible: false;
+    }
 
     states: [
         State {
@@ -187,7 +194,9 @@ Item {
     }
 
     //Start the wall photo process
-    function startGlobalPhotoProcess(photoNumber) {
+    function startGlobalPhotoProcess(templateName, effectName, photoNumber) {
+        p.templateName = templateName;
+        p.effectName = effectName;
         p.nb_photos = photoNumber;
         p.currentPhoto = 0;
         mirrorScreenPhotoModel.clear()
@@ -264,6 +273,23 @@ Item {
         console.log("End global Photo Process")
         mirrorScreen.state = "PHOTO_FINAL_RESULT"
         //TODO: Prepare JSON message to send
+        if (photoClientRobot.client.status == WebSocket.Open) {
+            var message= JSON.stringify({ //TODO
+                  photoProcessResult:{
+                    templateName: p.templateName,
+                    effectName: p.effectName,
+                    nbPhoto: p.nb_photos,
+                    photos: [
+                        {fileName:"phototwix_1.jpg",fileUrl:"/tmp/"},
+                        {fileName:"phototwix_2.jpg",fileUrl:"/tmp/"},
+                        {fileName:"phototwix_3.jpg",fileUrl:"/tmp/"}
+                    ]
+                  }
+                });
+            photoClientRobot.client.sendTextMessage(message);
+        }
+
+
         mirrorScreenDisplayFinalResult.start()
     }
 

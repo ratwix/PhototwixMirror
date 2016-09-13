@@ -25,6 +25,14 @@ public:
                                 QString twitterMessage,
                                 QString twitterProfileName,
                                 QUrl twitterPhotoSource);
+
+    Q_INVOKABLE Photo* addPhotoMirror(QString name,
+                                Template *t,
+                                QString effectName,
+                                QString mirrorIP,
+                                QString photoPath,
+                                QList<QString> photosList);
+
     Q_INVOKABLE void    prependPhoto(Photo *photo);
 
     Q_INVOKABLE void   removePhoto(QString name);

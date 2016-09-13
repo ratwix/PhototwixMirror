@@ -105,5 +105,7 @@
         <file>resources/font/Gabrielle.ttf</file>
         <file>ConfigWifi.qml</file>
         <file>MirrorScreenMain.qml</file>
+        <file>resources/controls/PhotoClientRobot.qml</file>
+        <file>resources/controls/PhotoServerRobot.qml</file>
     </qresource>
 </RCC>

@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick widgets concurrent core network
+QT += qml quick widgets concurrent core network websockets
 CONFIG += c++11
 
 SOURCES += main.cpp \
@@ -23,7 +23,8 @@ SOURCES += main.cpp \
     wifiitem.cpp \
     raspigpio.cpp \
     printermanager.cpp \
-    cameraworker.cpp
+    cameraworker.cpp \
+    photoqueuemirror.cpp
 
 RESOURCES += qml.qrc
 
@@ -63,7 +64,8 @@ HEADERS += \
     wifiitem.h \
     raspigpio.h \
     printermanager.h \
-    cameraworker.h
+    cameraworker.h \
+    photoqueuemirror.h
 
 DISTFILES += \
     scripts/connectWifi.sh \

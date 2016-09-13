@@ -68,12 +68,39 @@ Photo *PhotoGallery::addPhotoTwitter(QString name, Template *t, QString effectNa
 
     //Download image from URL and attach it to first gallery item
     CLog::Write(CLog::Debug, QString("Try to download ") + twitterPhotoSource.toDisplayString() + " to folder" + QString(PHOTOSS_FOLDER));
-    FileDownloader *imageDownloader = new FileDownloader(twitterPhotoSource, PHOTOSS_FOLDER, p, m_applicationDirPath, this);
+    FileDownloader *imageDownloader = new FileDownloader(twitterPhotoSource, PHOTOSS_FOLDER, p, m_applicationDirPath, 0, this);
     QQmlEngine::setObjectOwnership(imageDownloader, QQmlEngine::CppOwnership);
 
     QObject::connect(imageDownloader, &FileDownloader::downloaded, this, &PhotoGallery::imageDownloaded);
 
     QQmlEngine::setObjectOwnership(p, QQmlEngine::CppOwnership);
+    return p;
+}
+
+Photo *PhotoGallery::addPhotoMirror(QString name, Template *t, QString effectName, QString mirrorIP, QString photoPath, QList<QString> photosList)
+{
+    //TODO: attention a photoList car l'objet qui le contient est deleted. Passer en pointer ?
+    CLog::Write(CLog::Debug, "Add a new mirror Photo");
+
+    Photo *p = new Photo(name, t);
+    QQmlEngine::setObjectOwnership(p, QQmlEngine::CppOwnership);
+    p->setPhotoTweeter(false);
+    p->setEffectName(effectName);
+
+    //Download image from URL and attach it to first gallery item
+    CLog::Write(CLog::Debug, QString("Try to download all photos:") + photosList.length());
+    /* Lancer tout les download en même temps --> non car pas de garanti de la liste
+     * On sauvegarde la liste actuelle.
+     * A chaque réception, supprimer de la liste
+     * Si la liste est vide, alors Show Photo
+    FileDownloader *imageDownloader = new FileDownloader(twitterPhotoSource, PHOTOSS_FOLDER, p, m_applicationDirPath, 0, this);
+
+    QQmlEngine::setObjectOwnership(imageDownloader, QQmlEngine::CppOwnership);
+
+    QObject::connect(imageDownloader, &FileDownloader::downloaded, this, &PhotoGallery::imageDownloaded);
+
+    QQmlEngine::setObjectOwnership(p, QQmlEngine::CppOwnership);
+    */
     return p;
 }
 

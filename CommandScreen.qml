@@ -205,6 +205,12 @@ Item {
         visible: false
     }
 
+    //Robot de connection au Mirroir (server)
+    PhotoServerRobot {
+        id:photoServerRobot
+        visible:false
+    }
+
     //Timer pour depiler toute les PhotoShootRenderer
     Timer {
         id:timerPopPhoto

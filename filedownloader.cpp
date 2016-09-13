@@ -1,6 +1,6 @@
 #include "filedownloader.h"
 
-FileDownloader::FileDownloader(QUrl imageUrl, QString distPath, Photo *photo, QUrl applicationDirPath, QObject *parent) :
+FileDownloader::FileDownloader(QUrl imageUrl, QString distPath, Photo *photo, QUrl applicationDirPath, int imageNumber, QObject *parent) :
  QObject(parent)
 {
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
@@ -8,6 +8,7 @@ FileDownloader::FileDownloader(QUrl imageUrl, QString distPath, Photo *photo, QU
     m_distDir = distPath;
     m_photo = photo;
     m_url = imageUrl;
+    m_imageNumber = imageNumber;
     connect(
         &m_webCtrl,
                 SIGNAL (finished(QNetworkReply*)),
@@ -39,8 +40,8 @@ void FileDownloader::fileDownloaded(QNetworkReply* pReply) {
         file.write(m_downloadedData);
         file.close();
         CLog::Write(CLog::Debug, "Fin de l'ecriture du download de l'image");
-        if (m_photo->photoPartList().length() > 0) {
-            if (PhotoPart *photoPart = dynamic_cast<PhotoPart *>(m_photo->photoPartList().at(0))) {
+        if (m_photo->photoPartList().length() > m_imageNumber) {
+            if (PhotoPart *photoPart = dynamic_cast<PhotoPart *>(m_photo->photoPartList().at(m_imageNumber))) { //TODO: changer 0 avec un parametre a mettre dans le constructeur
                 QFileInfo fi(file);
                 QUrl destPath(QString("file:///") + m_applicationDirPath.toDisplayString() + "/" + m_distDir + "/" + fi.fileName());
                 photoPart->setPath(destPath);
@@ -54,7 +55,7 @@ void FileDownloader::fileDownloaded(QNetworkReply* pReply) {
     }
     //emit a signal
     pReply->deleteLater();
-    emit m_photo->tweeterLoadingComplete();
+    //emit m_photo->tweeterLoadingComplete();
     emit downloaded(m_photo);
 }
 

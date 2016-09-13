@@ -13,7 +13,7 @@ class FileDownloader : public QObject
 {
  Q_OBJECT
  public:
-  explicit FileDownloader(QUrl imageUrl, QString distDir, Photo *photo, QUrl applicationDirPath, QObject *parent);
+  explicit FileDownloader(QUrl imageUrl, QString distDir, Photo *photo, QUrl applicationDirPath, int imageNumber, QObject *parent);
   virtual ~FileDownloader();
   QByteArray downloadedData() const;
 
@@ -33,6 +33,7 @@ private:
   Photo *   m_photo;
   QUrl      m_url;
   QUrl      m_applicationDirPath;
+  int       m_imageNumber;
 };
 
 #endif // FILEDOWNLOADER_H

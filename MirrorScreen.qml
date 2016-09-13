@@ -5,14 +5,15 @@ import "./resources/controls"
 
 Item {
     id: mirrorScreen
-    property alias videoSource : mirrorScreenMediaPlayer.source
-    property alias imageSource : mirrorScreenImage.source
+    //property alias videoSource : mirrorScreenMediaPlayer.source
+    //property alias imageSource : mirrorScreenImage.source
 
     QtObject {
         id:p
         property int currentPhoto : 0
         property int nb_photos : 0
         property int countdown_delay : 0
+        property string current_effect: "Noir et Blanc"
     }
 
     state:"VIDEO_MODE"
@@ -41,6 +42,7 @@ Item {
         source: mirrorScreenMediaPlayer
     }
 
+    /*
     Image {
         id:mirrorScreenImage
         anchors.verticalCenter: parent.verticalCenter
@@ -49,6 +51,18 @@ Item {
         rotation: 5
         visible: false
         fillMode: Image.PreserveAspectFit
+    }
+    */
+    //TODO: aspect ratio not preserved Image.PreserveAspectCrop --> Image.PreserveAspectFit
+    PhotoShootRenderer {
+        id:mirrorScreenImage
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
+        height: parent.height * 0.8
+        width: parent.width * 0.8
+        rotation: 5
+        visible: false
+        effectSource: p.current_effect
     }
 
     Text {
@@ -235,7 +249,8 @@ Item {
     Connections {
         target: camera
         onImageCaptured : {
-            mirrorScreenImage.source = "file:///" + filename;
+            //mirrorScreenImage.source = "file:///" + filename;
+            mirrorScreenImage.photoBase.source = "file:///" + filename;
             var data = {'photo_number' : p.currentPhoto,'url' : filename};
             mirrorScreenPhotoModel.append(data);
             mirrorScreen.state = "PHOTO_RESULT"
@@ -246,7 +261,7 @@ Item {
     //Temps durant lequel on affiche la photo de résultat
     Timer {
         id:mirrorScreenDisplayPhotoMirror
-        interval: 3000; //TODO: put that value in parameter
+        interval: 5000; //TODO: put that value in parameter
         running: false;
         repeat: false
         onTriggered: {

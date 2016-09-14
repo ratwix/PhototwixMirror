@@ -30,22 +30,8 @@ Item {
         ConfigVideoItem {
             id:startGlobalPhotoProcessVideo
             height: 50
-            videoLabel: "Start Global Photo Process:"
+            videoLabel: "Start Photo:"
             videoItem: parameters.startGlobalPhotoProcessVideo
-        }
-
-        ConfigVideoItem {
-            id:startPhotoProcessVideo
-            height: 50
-            videoLabel: "Start Photo Process:"
-            videoItem: parameters.startPhotoProcessVideo
-        }
-
-        ConfigVideoItem {
-            id:endGlobalPhotoProcessVideo
-            height: 50
-            videoLabel: "End Global Photo Process:"
-            videoItem: parameters.endGlobalPhotoProcessVideo
         }
     }
 

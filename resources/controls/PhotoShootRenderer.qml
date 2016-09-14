@@ -12,6 +12,7 @@ Item {
     property double xphoto : 0.0
     property string effectSource : globalVar.currentEffect
     property alias photoBase: photoPreview
+    property alias photoBaseSource: photoPreview.source
 
 
     Item {

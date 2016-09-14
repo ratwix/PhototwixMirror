@@ -62,7 +62,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
         height: parent.height * 0.8
-        width: parent.width * 0.8
+        width: height / parameters.cameraHeight * parameters.cameraWidth
         rotation: 5
         visible: false
         effectSource: p.current_effect
@@ -100,6 +100,17 @@ Item {
                 height: mirrorScreenFinalResultGrid.cellHeight - 10
                 width: mirrorScreenFinalResultGrid.cellWidth - 10
 
+                /*
+                PhotoShootRenderer {
+                    anchors.centerIn: parent
+                    height: parent.height * 0.95
+                    width: height / parameters.cameraHeight * parameters.cameraWidth
+                    visible: false
+                    effectSource: p.current_effect
+                    photoBaseSource: "file:///" + url
+                }
+                */
+
                 Image {
                     anchors.centerIn: parent
                     height: parent.height * 0.95
@@ -135,7 +146,7 @@ Item {
         size:parent.height * 0.10
         code:"\uf030"
         onClicked: {
-            startGlobalPhotoProcess(3);
+            startGlobalPhotoProcess("", "Sepia", 3);
         }
     }
 

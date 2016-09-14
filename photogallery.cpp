@@ -127,7 +127,6 @@ void PhotoGallery::imageDownloaded(Photo *photo) {
     CLog::Write(CLog::Debug, "Envoie signal pour affichage de la photo");
     //Message pour afficher le résultat
     emit showPhoto(photo);
-
 }
 
 void PhotoGallery::removePhoto(QString name)

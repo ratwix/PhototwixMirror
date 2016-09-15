@@ -1,42 +1,75 @@
 #include <wiringPi.h>
 #include <QQmlEngine>
+#include <iostream>
 #include "raspigpio.h"
 #include "clog.h"
+
+std::function<void()> cbfunc;
+
+void actionButtonCallback()
+{
+    cbfunc();
+}
+
+void actionButtonRealCallback(RaspiGPIO *r)
+{
+    if (r && r->canPush()) {
+        emit r->canPushFalse(); //Disable button for 1 second
+        CLog::Write(CLog::Debug, "Action button pushed");
+        emit r->actionButtonPushed();
+    }
+}
+
+int myWiringPiISR(int val, int mask, std::function<void()> callback)
+{
+  cbfunc = callback;
+  return wiringPiISR(val, mask, &actionButtonCallback);
+}
 
 RaspiGPIO::RaspiGPIO(QObject *parent) : QObject(parent)
 {
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
-    m_blinkState = false;
 
-    m_blinkTimer.stop();
-    connect(&m_blinkTimer, SIGNAL(timeout()), this, SLOT(blinkChange()));
+    //Export pin
+    QString cmd = QString("sudo gpio export ") + BUTTON_ACTION_PIN_EXPORT + " in";
+    system(cmd.toStdString().c_str());
 
-    //CALL system "gpio export 18 out"
+    //Setup button
     wiringPiSetupSys();
-    pinMode (LED_PIN, OUTPUT);
-}
+    pinMode (BUTTON_ACTION_PIN, INPUT);
+    pullUpDnControl(BUTTON_ACTION_PIN, PUD_DOWN);
 
-void RaspiGPIO::blink(int msec, int mspeed)
-{
+    //Setup button delay
+    m_canPush = true;
+    m_canPushTimer = new QTimer(this);
+    m_canPushTimer->setSingleShot(true);
+    connect(this, SIGNAL(canPushFalse()), this, SLOT(canPushTimerFalse()));
+    connect(m_canPushTimer, SIGNAL(timeout()), this, SLOT(canPushTimerTrue()));
 
-    m_blinkTimer.start(mspeed);
-    QTimer::singleShot(msec, this, SLOT(blinkStop()));
-}
-
-void RaspiGPIO::blinkChange()
-{
-    if (m_blinkState) {
-        digitalWrite(LED_PIN, HIGH);
-    } else {
-        digitalWrite(LED_PIN, LOW);
+    //action button callback
+    if (myWiringPiISR(BUTTON_ACTION_PIN, INT_EDGE_FALLING, std::bind(actionButtonRealCallback, this)) < 0) {
+        CLog::Write(CLog::Error, QString("Unable to setup ISR: ") + QString::number(errno));
     }
-     m_blinkState = !m_blinkState;
 }
 
-void RaspiGPIO::blinkStop()
+
+bool RaspiGPIO::canPush() const
 {
-    CLog::Write(CLog::Debug, "blink stop");
-    m_blinkTimer.stop();
-    m_blinkState = false;
-    digitalWrite(LED_PIN, LOW);
+    return m_canPush;
+}
+
+void RaspiGPIO::setCanPush(bool canPush)
+{
+    m_canPush = canPush;
+}
+
+void RaspiGPIO::canPushTimerTrue()
+{
+    m_canPush = true;
+}
+
+void RaspiGPIO::canPushTimerFalse()
+{
+    m_canPush = false;
+    m_canPushTimer->start(1000);
 }

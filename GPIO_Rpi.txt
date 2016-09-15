@@ -6,3 +6,7 @@
 # Power Button
 * Pin 5 (GPIO 3)  --> Power Button
 * Pin 9 (GND)     --> Power Button
+
+# Action Button
+* Pin 3 (GIPO 2)  --> Action Button
+* Pin 14 (GND)    --> Action Button

@@ -255,6 +255,11 @@ void Template::updateImageFromUrl(QUrl source_url)
     emit templateChanged();
 }
 
+int Template::nbPhotos()
+{
+    return m_templatePhotoPositions.length();
+}
+
 
 bool Template::getPrintcutter() const
 {

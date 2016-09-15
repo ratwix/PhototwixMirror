@@ -58,6 +58,7 @@ public:
     Q_INVOKABLE void addTemplatePhotoPosition();
     Q_INVOKABLE void deleteTemplatePhotoPosition(int i);
     Q_INVOKABLE void updateImageFromUrl(QUrl url);
+    Q_INVOKABLE int  nbPhotos();
 
     bool getPrintcutter() const;
     void setPrintcutter(bool printcutter);

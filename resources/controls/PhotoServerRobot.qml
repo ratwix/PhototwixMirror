@@ -20,6 +20,15 @@ Item {
     }
     */
 
+    //Connection to Action button
+    Connections {
+        target: parameters.raspiGPIO
+        onActionButtonPushed: {
+            console.debug("Receive command button");
+            sendStartGlobalPhotoProcess();
+        }
+    }
+
     WebSocketServer {
         id: phototwixServer
         listen: true
@@ -56,13 +65,13 @@ Item {
     function sendStartGlobalPhotoProcess() {
         var message = JSON.stringify({
                                          startGlobalPhotoProcess: {
-                                             templateName: "myTemplateName", //TODO:
-                                             effectName: "Noir et Blanc",   //TODO:
-                                             nbPhoto: 3                     //TODO
+                                             templateName: globalVar.currentTemplate.name,
+                                             effectName: globalVar.currentEffect,
+                                             nbPhoto: globalVar.currentTemplate.nbPhotos()                     //TODO
                                          }
 
                                      });
-
+        console.debug(message);
         if ((phototwixServerItem.clientSocket != null) && (phototwixServerItem.clientSocket.status == WebSocket.Open)) {
             phototwixServerItem.clientSocket.sendTextMessage(message);
         } else {
@@ -78,7 +87,6 @@ Item {
         surl = surl.match(".*://(.*):.*")[1];
         j.photoProcessResult["serverIP"] = surl;
         message = JSON.stringify(j);
-        //parameters.photoQueueManager.pushMirror(message); Push directement du message JSON, on parse en c++
-        parameters.photoQueueManager.pushTwitter("photo1_mirror", message);
+        parameters.photoQueueManager.pushMirror("photo1_mirror", message);
     }
 }

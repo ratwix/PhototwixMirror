@@ -3,9 +3,11 @@
 
 #include <QObject>
 #include <QTimer>
+#include "clog.h"
 
-#define LED_PIN             18 //PIN 12 / GPIO_GEN1 / GPIO18
-#define BUTTON_PHOTO_PIN    27 //PIN 13 / GPIO_GEN2 / GPIO27
+
+#define BUTTON_ACTION_PIN           2  //PIN 5 / GPIO_GEN3
+#define BUTTON_ACTION_PIN_EXPORT    3  //PIN 5 / GPIO_GEN3
 
 class RaspiGPIO : public QObject
 {
@@ -13,17 +15,19 @@ class RaspiGPIO : public QObject
 public:
     explicit RaspiGPIO(QObject *parent = 0);
 
-    Q_INVOKABLE void blink(int msec, int mspeed);
+
+    bool canPush() const;
+    void setCanPush(bool canPush);
 
 private:
-    QTimer  m_blinkTimer;
-    bool    m_blinkState;
+    bool    m_canPush;
+    QTimer  *m_canPushTimer;
 signals:
-    void    blinkSignal();
+    void    actionButtonPushed();
+    void    canPushFalse();
 public slots:
-    void    blinkChange();
-    void    blinkStop();
-
+    void    canPushTimerTrue();
+    void    canPushTimerFalse();
 };
 
 #endif // RASPIGPIO_H

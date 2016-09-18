@@ -10,35 +10,9 @@ Item {
     property alias client : phototwixClient;
     property bool photoInProgress: false
 
-    /*
-    Column {
-        Button {
-            text:"Send Finish"
-            onClicked: {
-                if (phototwixClient.status == WebSocket.Open) {
-                    var message= JSON.stringify({ //TODO
-                          photoProcessResult:{
-                            templateName: "myTemplateName",
-                            effectName: "Noir et Blanc",
-                            nbPhoto: 3,
-                            photosPath: "/tmp/",
-                            photos: [
-                                {fileName:"phototwix_1.jpg"},
-                                {fileName:"phototwix_2.jpg"},
-                                {fileName:"phototwix_3.jpg"}
-                            ]
-                          }
-                        });
-                    phototwixClient.sendTextMessage(message);
-                }
-            }
-        }
-    }
-    */
-
     WebSocket {
             id: phototwixClient
-            url: "ws://127.0.0.1:54345" //TODO : IP parameter
+            url: "ws://" + parameters.commandIP  + ":54345"
             onTextMessageReceived: {
                 if (!phototwixClientItem.photoInProgress) {
                     phototwixClientItem.photoInProgress = true;

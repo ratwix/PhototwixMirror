@@ -23,7 +23,7 @@ Item {
         id:photoImage
         height: parent.height
         //width: (photoImage.sourceSize.width / photoImage.sourceSize.height) * parent.height
-        fillMode: Image.PreserveAspectFit //TODO: Test
+        fillMode: Image.PreserveAspectFit
         asynchronous: true
         cache: false
         source: photo ? photo.finalResultSD : ""

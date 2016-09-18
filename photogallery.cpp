@@ -37,7 +37,7 @@ PhotoGallery::~PhotoGallery()
     QList<QObject*>::iterator it;
 
     for (it = m_photoList.begin(); it != m_photoList.end(); it++) {
-        delete *it; //TODO test delete OK
+        delete *it;
     }
 }
 
@@ -77,7 +77,7 @@ Photo *PhotoGallery::addPhotoTwitter(QString name, Template *t, QString effectNa
     return p;
 }
 
-Photo *PhotoGallery::addPhotoMirror(QString name, Template *t, QString effectName, QString mirrorIP, QString photoPath, QList<QString> photosList)
+Photo *PhotoGallery::addPhotoMirror(QString name, Template *t, QString effectName, QString mirrorIP, QString photoPath, QList<QString> *photosList)
 {
     //TODO: attention a photoList car l'objet qui le contient est deleted. Passer en pointer ?
     CLog::Write(CLog::Debug, "Add a new mirror Photo");
@@ -88,19 +88,22 @@ Photo *PhotoGallery::addPhotoMirror(QString name, Template *t, QString effectNam
     p->setEffectName(effectName);
 
     //Download image from URL and attach it to first gallery item
-    CLog::Write(CLog::Debug, QString("Try to download all photos:") + photosList.length());
-    /* Lancer tout les download en même temps --> non car pas de garanti de la liste
-     * On sauvegarde la liste actuelle.
-     * A chaque réception, supprimer de la liste
-     * Si la liste est vide, alors Show Photo
-    FileDownloader *imageDownloader = new FileDownloader(twitterPhotoSource, PHOTOSS_FOLDER, p, m_applicationDirPath, 0, this);
+    CLog::Write(CLog::Debug, QString("Try to download all photos:") + photosList->length());
 
-    QQmlEngine::setObjectOwnership(imageDownloader, QQmlEngine::CppOwnership);
+    /**
+      * Lancer tout les download en même temps.
+      * Quand ils sont tous fini, afficher l'image
+      * */
+    for (int i = 0; i < photosList->length(); i++) {
+        QString filename = photosList->at(i);
+        QString url = QString("ftp://") + mirrorIP + photoPath + filename;
+        FileDownloader *imageDownloader = new FileDownloader(url, PHOTOSS_FOLDER, p, m_applicationDirPath, i, this);
 
-    QObject::connect(imageDownloader, &FileDownloader::downloaded, this, &PhotoGallery::imageDownloaded);
+        QQmlEngine::setObjectOwnership(imageDownloader, QQmlEngine::CppOwnership);
+        QObject::connect(imageDownloader, &FileDownloader::downloaded, this, &PhotoGallery::imageDownloaded);
+        QQmlEngine::setObjectOwnership(p, QQmlEngine::CppOwnership);
+    }
 
-    QQmlEngine::setObjectOwnership(p, QQmlEngine::CppOwnership);
-    */
     return p;
 }
 
@@ -121,12 +124,22 @@ void PhotoGallery::prependPhoto(Photo *photo)
 void PhotoGallery::imageDownloaded(Photo *photo) {
     CLog::Write(CLog::Debug, "Image has been downladed");
 
-    //m_photoList.prepend(photo); //Pourquoi on l'ajoute ici alors qu'il y a pas encore le nom ?
-    //QObject* downloader = sender();
-    //delete downloader; //TODO test delete : BAD GUY, not good delete ???
-    CLog::Write(CLog::Debug, "Envoie signal pour affichage de la photo");
     //Message pour afficher le résultat
-    emit showPhoto(photo);
+    bool allPhotosDownloaded = true;
+    for (int i = 0; i < photo->photoPartList().length(); i++) {
+        if (PhotoPart *photoPart = dynamic_cast<PhotoPart *>(photo->photoPartList().at(i))) {
+            if (photoPart->path().toString() == "") {
+                allPhotosDownloaded = false;
+            }
+        }
+    }
+    if (allPhotosDownloaded) {
+        CLog::Write(CLog::Debug, "Envoie signal pour affichage de la photo");
+        emit showPhoto(photo);
+    } else {
+        CLog::Write(CLog::Debug, "All photos not downloaded yet");
+    }
+
 }
 
 void PhotoGallery::removePhoto(QString name)

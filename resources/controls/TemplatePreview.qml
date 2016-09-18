@@ -21,7 +21,7 @@ Item {
             height: photoTemplate.height * modelData.photoPosition.height
             width: photoTemplate.width * modelData.photoPosition.width - photoTemplate.width * modelData.photoPosition.width * modelData.photoPosition.xphoto * 2
             rotation: modelData.photoPosition.rotate
-            effectSource: photo.tweeter ? parameters.effectDefault : globalVar.currentEffect
+            effectSource: photo.tweeter ? parameters.effectDefault : photo.effectName
         }
     }
 
@@ -38,7 +38,6 @@ Item {
         fillMode: Image.PreserveAspectCrop
         source: photo ? photo.currentTemplate.url : ""
         height: templatePreview.height
-        //width: templatePreview.height * 1.5 //TODO for test
         width:  photoTemplate.sourceSize.height > 0 ? photoTemplate.sourceSize.width / photoTemplate.sourceSize.height * templatePreview.height : templatePreview.height * 1.5
         cache: true
         asynchronous: false
@@ -100,13 +99,7 @@ Item {
             //console.debug("Test image ready");
             if (photoTemplate.status === Image.Ready) {
                 var ready = true;
-/*
-                for (var i = 0; i < photoPartRepeater.count; i++) {
-                    if (photoPartRepeater.itemAt(i).photoBase.status !== Image.Ready) {
-                        ready = false;
-                    }
-                }
-*/
+
                 if (ready) {
                     waitLoadingTimer.stop()
                     saveImageToFile();

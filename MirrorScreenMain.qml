@@ -25,6 +25,10 @@ Window {
     }
 
     FontLoader {
+        source: "resources/font/arista.ttf"
+    }
+
+    FontLoader {
         source: "resources/font/FontAwesome.otf"
     }
 

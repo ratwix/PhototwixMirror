@@ -172,6 +172,14 @@ Item {
             verticalAlignment: Text.AlignVCenter
             text: "\uf083"
             color:(parameters.mirrorConnected) ? "green" :  "black"
+            MouseArea { //TODO: test envoie message
+                anchors.fill: parent
+                onClicked: {
+                    //var message = '{"photoProcessResult":{"effectName":"Couleur","nbPhoto":1,"photos":[{"fileName":"phototwix_2016_9_18_9h47m18s_0.jpg","fileUrl":"/tmp/","number":0}],"photosPath":"/tmp/","templateName":"lucie_1.png"}}'
+                    var message = '{"photoProcessResult":{"effectName":"Sepia","nbPhoto":3,"photos":[{"fileName":"phototwix_2016_9_18_9h55m39s_0.jpg","fileUrl":"/tmp/","number":0},{"fileName":"phototwix_2016_9_18_9h55m50s_1.jpg","fileUrl":"/tmp/","number":1},{"fileName":"phototwix_2016_9_18_9h56m1s_2.jpg","fileUrl":"/tmp/","number":2}],"photosPath":"/tmp/","templateName":"lucie_2.png"}}';
+                    photoServerRobot.getResultPhotoProcess(message)
+                }
+            }
         }
     }
 
@@ -206,6 +214,7 @@ Item {
              id: configScreen
              anchors.fill: parent
              visible: false
+             admin: true
          }
     }
 

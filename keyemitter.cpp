@@ -135,8 +135,6 @@ void KeyEmitter::emitKey(KeyEmitter::keyMesage k)
     QKeyEvent* releaseEvent = new QKeyEvent(QEvent::KeyRelease, k.key, k.modifiers);
     QCoreApplication::sendEvent(receiver, pressEvent);
     QCoreApplication::sendEvent(receiver, releaseEvent);
-
-    //TODO : memory leak or managed by qml ?
 }
 
 void KeyEmitter::emitKey(QString key)

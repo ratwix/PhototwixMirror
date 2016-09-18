@@ -16,9 +16,6 @@
 
 int main(int argc, char *argv[])
 {
-    //TODO: changer avec argument
-    bool mirror = true;
-
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
 
     CLog::SetLevel(CLog::Error);
@@ -55,15 +52,10 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("photoGallery", parameters.getPhotogallery());
     engine.rootContext()->setContextProperty("keyEmitter", &keyEmitter);
 
-    if (mirror) {
-        engine.rootContext()->setContextProperty("terminalType", "mirror");
-    } else {
-        engine.rootContext()->setContextProperty("terminalType", "command");
-    }
 
     CLog::Write(CLog::Debug, ("Application dir path "  + QGuiApplication::applicationDirPath()).toStdString());
 
-    if (mirror) {
+    if (parameters.getIsMirror()) {
         engine.rootContext()->setContextProperty("camera", &camera);
         engine.load(QUrl(QStringLiteral("qrc:/MirrorScreenMain.qml")));
     } else {

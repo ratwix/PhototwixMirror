@@ -107,5 +107,7 @@
         <file>MirrorScreenMain.qml</file>
         <file>resources/controls/PhotoClientRobot.qml</file>
         <file>resources/controls/PhotoServerRobot.qml</file>
+        <file>ConfigGeneral.qml</file>
+        <file>resources/font/arista.ttf</file>
     </qresource>
 </RCC>

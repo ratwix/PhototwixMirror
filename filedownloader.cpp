@@ -41,7 +41,7 @@ void FileDownloader::fileDownloaded(QNetworkReply* pReply) {
         file.close();
         CLog::Write(CLog::Debug, "Fin de l'ecriture du download de l'image");
         if (m_photo->photoPartList().length() > m_imageNumber) {
-            if (PhotoPart *photoPart = dynamic_cast<PhotoPart *>(m_photo->photoPartList().at(m_imageNumber))) { //TODO: changer 0 avec un parametre a mettre dans le constructeur
+            if (PhotoPart *photoPart = dynamic_cast<PhotoPart *>(m_photo->photoPartList().at(m_imageNumber))) {
                 QFileInfo fi(file);
                 QUrl destPath(QString("file:///") + m_applicationDirPath.toDisplayString() + "/" + m_distDir + "/" + fi.fileName());
                 photoPart->setPath(destPath);

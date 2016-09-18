@@ -74,10 +74,14 @@ void Parameters::init() {
     m_countdown = 5;
     m_viewPhotoTime = 5;
     m_viewAllPhotoTime = 5;
+    m_isMirror = false;
+    m_commandIP = "127.0.0.1";
 
 
     m_waitVideo = new VideoItem(this, VIDEO_WAIT);
     QQmlEngine::setObjectOwnership(m_waitVideo, QQmlEngine::CppOwnership);
+    m_twitterVideo = new VideoItem(this, VIDEO_TWITTER);
+    QQmlEngine::setObjectOwnership(m_twitterVideo, QQmlEngine::CppOwnership);
     m_startGlobalPhotoProcessVideo = new VideoItem(this, VIDEO_STARTGLOBALPHOTOPROCESS);
     QQmlEngine::setObjectOwnership(m_startGlobalPhotoProcessVideo, QQmlEngine::CppOwnership);
     m_startPhotoProcessVideo = new VideoItem(this, VIDEO_STARTPHOTOPROCESS);
@@ -233,6 +237,12 @@ void Parameters::Serialize() {
         writer.Key("viewAllPhotoTime");
         writer.Int(m_viewAllPhotoTime);
 
+        writer.Key("isMirror");
+        writer.Bool(m_isMirror);
+
+        writer.Key("commandIP");
+        writer.String(m_commandIP.toStdString().c_str());
+
 
         writer.Key("templates");
         writer.StartArray();
@@ -259,6 +269,7 @@ void Parameters::Serialize() {
         writer.Key("videos");
         writer.StartArray();
         m_waitVideo->serialize(writer);
+        m_twitterVideo->serialize(writer);
         m_startGlobalPhotoProcessVideo->serialize(writer);
         m_startPhotoProcessVideo->serialize(writer);
         m_endGlobalPhotoProcessVideo->serialize(writer);
@@ -448,6 +459,14 @@ void Parameters::Unserialize() {
         m_viewAllPhotoTime = document["viewAllPhotoTime"].GetInt();
     }
 
+    if (document.HasMember("isMirror")) {
+        m_isMirror = document["isMirror"].GetBool();
+    }
+
+    if (document.HasMember("commandIP")) {
+        m_commandIP = document["commandIP"].GetString();
+    }
+
     if (document.HasMember("templates")) {
         const Value& templates = document["templates"];
         if (templates.IsArray()) {
@@ -491,6 +510,9 @@ void Parameters::Unserialize() {
                     switch (type) {
                         case VIDEO_WAIT:
                             m_waitVideo->unserialize(videos[i]);
+                        break;
+                        case VIDEO_TWITTER:
+                            m_twitterVideo->unserialize(videos[i]);
                         break;
                         case VIDEO_STARTGLOBALPHOTOPROCESS:
                             m_startGlobalPhotoProcessVideo->unserialize(videos[i]);
@@ -879,7 +901,7 @@ void Parameters::addTemplate(Value const &value) {
         if (fileInf.exists()) {
             m_templates.append(t);
         } else {
-            delete t; //TODO test delete : OK
+            delete t;
         }
     } else {
         CLog::Write(CLog::Info, "Template file not found " + string(value["template_name"].GetString()));
@@ -1019,7 +1041,7 @@ static void delAllFileInDirectory(const char* p) {
 
 void Parameters::clearGallery(bool del)
 {
-    delete m_photogallery; //TODO test delete OK
+    delete m_photogallery;
     m_photogallery = new PhotoGallery(this);
     QQmlEngine::setObjectOwnership(m_photogallery, QQmlEngine::CppOwnership);
     m_photogallery->setApplicationDirPath(m_applicationDirPath);
@@ -1037,6 +1059,40 @@ void Parameters::clearGallery(bool del)
     Serialize();
     m_photogallery->Serialize();
     emit photoGalleryChanged();
+}
+
+VideoItem *Parameters::getTwitterVideo() const
+{
+    return m_twitterVideo;
+}
+
+void Parameters::setTwitterVideo(VideoItem *twitterVideo)
+{
+    m_twitterVideo = twitterVideo;
+}
+
+QString Parameters::getCommandIP() const
+{
+    return m_commandIP;
+}
+
+void Parameters::setCommandIP(const QString &commandIP)
+{
+    m_commandIP = commandIP;
+    emit commandIPChanged();
+    Serialize();
+}
+
+bool Parameters::getIsMirror() const
+{
+    return m_isMirror;
+}
+
+void Parameters::setIsMirror(bool isMirror)
+{
+    m_isMirror = isMirror;
+    emit isMirrorChanged();
+    Serialize();
 }
 
 int Parameters::getViewAllPhotoTime() const

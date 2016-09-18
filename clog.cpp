@@ -3,7 +3,7 @@
 #include <qstring.h>
 
 bool CLog::m_bInitialised = false;
-int  CLog::m_nLevel = CLog::Error;
+int  CLog::m_nLevel = CLog::Info;
 
 void CLog::Write(int nLevel, const char *szFormat)
 {

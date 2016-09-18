@@ -32,6 +32,10 @@ Window {
         source: "resources/font/FontAwesome.otf"
     }
 
+    FontLoader {
+        source: "resources/font/arista.ttf"
+    }
+
     CommandScreen {
         anchors.fill: parent
     }

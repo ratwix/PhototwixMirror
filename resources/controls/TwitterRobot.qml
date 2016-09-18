@@ -81,16 +81,15 @@ Item {
         //Ne recherche que les photos
         query += encodeURIComponent(" filter:images")
 
-        //TODO : remove this after debug
+        /*
         if (lastTweetRetrieved != "") {
             query += "&since_id=" + lastTweetRetrieved
         }
+        */
 
-        /*
         if (parameters.twitterLastRetrieved != "") {
             query += "&since_id=" + parameters.twitterLastRetrieved
         }
-        */
 
         //console.debug("Twitter Query : " + query);
         //return;
@@ -108,7 +107,7 @@ Item {
                 else {
                     //console.debug("Last tweet : " + objectArray.search_metadata.max_id_str)
                     //Save last tweet to get only new tweets
-                    lastTweetRetrieved = objectArray.search_metadata.max_id_str
+                    parameters.twitterLastRetrieved = objectArray.search_metadata.max_id_str
                     for (var key in objectArray.statuses) {
                         var jsonObject = objectArray.statuses[key];
                         tweets.append(jsonObject);

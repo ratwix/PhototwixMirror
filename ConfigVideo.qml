@@ -28,6 +28,13 @@ Item {
         }
 
         ConfigVideoItem {
+            id:twitterVideo
+            height: 50
+            videoLabel: "Twitter Video:"
+            videoItem: parameters.twitterVideo
+        }
+
+        ConfigVideoItem {
             id:startGlobalPhotoProcessVideo
             height: 50
             videoLabel: "Start Photo:"
@@ -42,7 +49,7 @@ Item {
         }
 
         Row {
-            height: 50
+            height: 30
             Label {
                 width: 200
                 text: "Photo Countdown"
@@ -53,7 +60,7 @@ Item {
                 width: parent.height
                 text: "-"
                 onClicked: {
-                    parameters.countdown = parameters.countdown - 1 < 0 ? 0 : parameters.countdown;
+                    parameters.countdown = parameters.countdown - 1 < 0 ? 0 : parameters.countdown - 1;
                 }
             }
 
@@ -77,7 +84,7 @@ Item {
         }
 
         Row {
-            height: 50
+            height: 30
             Label {
                 width: 200
                 text: "View Photo"
@@ -88,7 +95,7 @@ Item {
                 width: parent.height
                 text: "-"
                 onClicked: {
-                    parameters.viewPhotoTime = parameters.viewPhotoTime - 1 < 0 ? 0 : parameters.viewPhotoTime;
+                    parameters.viewPhotoTime = parameters.viewPhotoTime - 1 < 0 ? 0 : parameters.viewPhotoTime - 1;
                 }
             }
 
@@ -112,7 +119,7 @@ Item {
         }
 
         Row {
-            height: 50
+            height: 30
             Label {
                 width: 200
                 text: "View All Photos"
@@ -123,7 +130,7 @@ Item {
                 width: parent.height
                 text: "-"
                 onClicked: {
-                    parameters.viewAllPhotoTime = parameters.viewAllPhotoTime - 1 < 0 ? 0 : parameters.viewAllPhotoTime;
+                    parameters.viewAllPhotoTime = parameters.viewAllPhotoTime - 1 < 0 ? 0 : parameters.viewAllPhotoTime - 1;
                 }
             }
 

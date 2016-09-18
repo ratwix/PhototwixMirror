@@ -68,7 +68,7 @@ Photo::~Photo()
     QList<QObject*>::iterator it;
 
     for (it = m_photoPartList.begin(); it != m_photoPartList.end(); it++) {
-        delete *it; //TODO test delete OK
+        delete *it;
     }
 }
 

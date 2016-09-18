@@ -34,7 +34,7 @@ WifiManager::WifiManager(Parameters *parameters)
 void WifiManager::refreshWifiList()
 {
     for (QList<QObject *>::const_iterator it = m_currentWifiList.begin(); it != m_currentWifiList.end(); it++) {
-        delete (*it); //TODO test delete OK
+        delete (*it);
     }
     m_currentWifiList.clear();
 
@@ -160,7 +160,7 @@ void WifiManager::unserialize(const Value &values)
 {
     //clean m_knownWifi
     for (QList<QObject *>::const_iterator it = m_knownWifi.begin(); it != m_knownWifi.end(); it++) {
-        delete (*it); //TODO test delete OK
+        delete (*it);
     }
     m_knownWifi.clear();
 

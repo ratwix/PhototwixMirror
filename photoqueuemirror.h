@@ -15,21 +15,21 @@ public:
     int nbPhotos() const;
     void setNbPhotos(int nbPhotos);
 
-    QString mirrorIP() const;
-    void setMirrorIP(const QString &mirrorIP);
-
-    QList<QString> photosList() const;
-    void setPhotosList(const QList<QString> &photosList);
-
     QString photoPath() const;
     void setPhotoPath(const QString &photoPath);
+
+    QString clientIP() const;
+    void setClientIP(const QString &clientIP);
+
+    QList<QString> *photosList() const;
+    void setPhotosList(QList<QString> *photosList);
 
 private:
     QString         m_json;
     int             m_nbPhotos;
-    QString         m_mirrorIP;
-    QList<QString>  m_photosList;
+    QList<QString>  *m_photosList;
     QString         m_photoPath;
+    QString         m_clientIP;
 };
 
 #endif // PHOTOQUEUEMIRROR_H

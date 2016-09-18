@@ -59,6 +59,7 @@ class Parameters : public QObject
     Q_PROPERTY(VideoItem* startGlobalPhotoProcessVideo READ startGlobalPhotoProcessVideo WRITE setStartGlobalPhotoProcessVideo NOTIFY parameterVideoChanged)
     Q_PROPERTY(VideoItem* endGlobalPhotoProcessVideo READ endGlobalPhotoProcessVideo WRITE setEndGlobalPhotoProcessVideo NOTIFY parameterVideoChanged)
     Q_PROPERTY(VideoItem* startPhotoProcessVideo READ startPhotoProcessVideo WRITE setStartPhotoProcessVideo NOTIFY parameterVideoChanged)
+    Q_PROPERTY(VideoItem* twitterVideo READ getTwitterVideo WRITE setTwitterVideo NOTIFY twitterVideoChanged)
     Q_PROPERTY(bool twitterTwitterOnly READ getTwitterTwitterOnly WRITE setTwitterTwitterOnly NOTIFY twitterTwitterOnlyChanged)
     Q_PROPERTY(bool twitterListenTwitter READ getTwitterListenTwitter WRITE setTwitterListenTwitter NOTIFY twitterListenTwitterChanged)
     Q_PROPERTY(QString twitterKey READ getTwitterKey WRITE setTwitterKey NOTIFY twitterKeyChanged)
@@ -77,6 +78,8 @@ class Parameters : public QObject
     Q_PROPERTY(int countdown READ getCountdown WRITE setCountdown NOTIFY countdownChanged)
     Q_PROPERTY(int viewPhotoTime READ getViewPhotoTime WRITE setViewPhotoTime NOTIFY viewPhotoTimeChanged)
     Q_PROPERTY(int viewAllPhotoTime READ getViewAllPhotoTime WRITE setViewAllPhotoTime NOTIFY viewAllPhotoTimeChanged)
+    Q_PROPERTY(bool isMirror READ getIsMirror WRITE setIsMirror NOTIFY isMirrorChanged)
+    Q_PROPERTY(QString commandIP READ getCommandIP WRITE setCommandIP NOTIFY commandIPChanged)
 public:
     Parameters(QUrl appDirPath);
     virtual ~Parameters();
@@ -249,6 +252,15 @@ public:
     int getViewAllPhotoTime() const;
     void setViewAllPhotoTime(int viewAllPhotoTime);
 
+    bool getIsMirror() const;
+    void setIsMirror(bool isMirror);
+
+    QString getCommandIP() const;
+    void setCommandIP(const QString &commandIP);
+
+    VideoItem *getTwitterVideo() const;
+    void setTwitterVideo(VideoItem *twitterVideo);
+
 private:
     void addTemplate(QString name);
     void addTemplate(Value const &value);
@@ -312,6 +324,7 @@ private:
     QString              m_mailSubject;
     QString              m_mailContent;
     VideoItem *          m_waitVideo;
+    VideoItem *          m_twitterVideo;
     VideoItem *          m_startGlobalPhotoProcessVideo;
     VideoItem *          m_startPhotoProcessVideo;
     VideoItem *          m_endGlobalPhotoProcessVideo;
@@ -327,10 +340,11 @@ private:
     QString              m_twitterMessageColor;
     QString              m_effectDefault;
     bool                 m_mirrorConnected;
-
     int                  m_countdown;
     int                  m_viewPhotoTime;
     int                  m_viewAllPhotoTime;
+    bool                 m_isMirror;
+    QString              m_commandIP;
 
     PhotoQueueManager *  m_photoQueueManager;
     WifiManager *        m_wifiManager;
@@ -381,6 +395,9 @@ signals:
     void countdownChanged();
     void viewPhotoTimeChanged();
     void viewAllPhotoTimeChanged();
+    void isMirrorChanged();
+    void commandIPChanged();
+    void twitterVideoChanged();
 };
 
 #endif // PARAMETERS_H

@@ -9,17 +9,6 @@ Item {
 
     property WebSocket clientSocket: null
 
-    /* TODO: Connecter a un signal d'un press button
-    Row {
-        Button {
-            text:"Start Photo"
-            onClicked: {
-                phototwixServerItem.sendStartGlobalPhotoProcess();
-            }
-        }
-    }
-    */
-
     //Connection to Action button
     Connections {
         target: parameters.raspiGPIO
@@ -73,7 +62,6 @@ Item {
                                          }
 
                                      });
-        console.debug(message);
         if ((phototwixServerItem.clientSocket != null) && (phototwixServerItem.clientSocket.status == WebSocket.Open)) {
             phototwixServerItem.clientSocket.sendTextMessage(message);
         } else {
@@ -85,9 +73,12 @@ Item {
         //Get the json message
         var j = JSON.parse(message);
         //extract IP url from
-        var surl = phototwixServerItem.clientSocket.url.toString();
+        var surl = "ws://127.0.0.1:54345";
+        if (phototwixServerItem.clientSocket) {
+            surl = phototwixServerItem.clientSocket.url.toString();
+        }
         surl = surl.match(".*://(.*):.*")[1];
-        j.photoProcessResult["serverIP"] = surl;
+        j.photoProcessResult["clientIP"] = surl;
         message = JSON.stringify(j);
         parameters.photoQueueManager.pushMirror("photo1_mirror", message);
     }

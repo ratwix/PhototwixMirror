@@ -41,8 +41,6 @@ public:
     Q_INVOKABLE void pushMirror(QString name,
                                 QString json);
 
-    //TODO: pushMirror(Template *t,QString effectName, image list);
-
     Q_INVOKABLE void pop();
 
     bool canPop() const;

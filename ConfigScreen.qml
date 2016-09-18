@@ -30,7 +30,14 @@ Rectangle {
         width:parent.width * 0.9
 
         Tab {
-            visible: terminalType == "command"
+            title:"General"
+            ConfigGeneral {
+                id:configGeneral
+                anchors.fill: parent
+            }
+        }
+
+        Tab {
             title: "Impression"
             ConfigPrinter {
                 id:configPrinter
@@ -39,7 +46,22 @@ Rectangle {
         }
 
         Tab {
-            visible: terminalType == "mirror"
+            title: "Photos"
+            ConfigGallery {
+                id:configGallery
+                anchors.fill: parent
+            }
+        }
+
+        Tab {
+            title: "Effets"
+            ConfigEffects {
+                id:configEffets
+                anchors.fill: parent
+            }
+        }
+
+        Tab {
             title: "Camera"
             ConfigCamera {
                 id:configCamera
@@ -48,34 +70,6 @@ Rectangle {
         }
 
         Tab {
-            visible: terminalType == "command"
-            title: "Gallerie & Visuels"
-            ConfigGallery {
-                id:configGallery
-                anchors.fill: parent
-            }
-        }
-
-        Tab {
-            visible: terminalType == "command"
-            title: "Twitter"
-            ConfigTwitter {
-                id:configTwitter
-                anchors.fill: parent
-            }
-        }
-
-        Tab {
-            visible: terminalType == "command"
-            title: "Mail"
-            ConfigMail {
-                id:configMail
-                anchors.fill: parent
-            }
-        }
-
-        Tab {
-            visible: terminalType == "mirror"
             title: "Videos"
             ConfigVideo {
                 id:configVideo
@@ -84,10 +78,9 @@ Rectangle {
         }
 
         Tab {
-            visible: terminalType == "command"
-            title: "Effets"
-            ConfigEffects {
-                id:configEffets
+            title: "Twitter"
+            ConfigTwitter {
+                id:configTwitter
                 anchors.fill: parent
             }
         }
@@ -99,6 +92,18 @@ Rectangle {
                 anchors.fill: parent
             }
         }
+
+
+        /*
+        Tab {
+            visible: terminalType == "command"
+            title: "Mail"
+            ConfigMail {
+                id:configMail
+                anchors.fill: parent
+            }
+        }
+        */
     }
 
     Column {
@@ -115,10 +120,10 @@ Rectangle {
             size: parent.width * 0.85
             code: "\uf015"
             onClicked: {
-                if (terminalType == "command") {
-                    commandScreenItem.state = "CHOOSE_TEMPLATE"
-                } else {
+                if (parameters.isMirror) {
                     mirrorScreen.state = "VIDEO_MODE"
+                } else {
+                    commandScreenItem.state = "CHOOSE_TEMPLATE"
                 }
 
 

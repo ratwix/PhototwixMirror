@@ -31,7 +31,7 @@ public:
                                 QString effectName,
                                 QString mirrorIP,
                                 QString photoPath,
-                                QList<QString> photosList);
+                                QList<QString> *photosList);
 
     Q_INVOKABLE void    prependPhoto(Photo *photo);
 

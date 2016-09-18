@@ -18,6 +18,9 @@ Item {
         property int countdown_delay : 0
         property string current_effect: "Couleur"
         property string current_video_stage: "wait"
+        property string pbase: "/tmp/"
+        property int nb_video_before_twitter: 3
+        property int nb_current_video:0
     }
 
     state:"VIDEO_MODE"
@@ -38,6 +41,22 @@ Item {
         onStopped: {
             var stage = p.current_video_stage
             if (p.current_video_stage == "wait") {
+                if (p.nb_current_video == 0) {
+                    tweeterTextMirror.opacity = 0.0
+                    mirrorScreenMediaPlayer.source = "file:///" + parameters.waitVideo.videoPath
+                }
+
+
+                if (p.nb_current_video >= p.nb_video_before_twitter) {
+                    if (parameters.twitterListenTwitter) {
+                        tweeterTextMirror.opacity = 1.0
+                        mirrorScreenMediaPlayer.source = "file:///" + parameters.twitterVideo.videoPath
+                    }
+                    p.nb_current_video = 0;
+                } else {
+                    p.nb_current_video = p.nb_current_video + 1
+                }
+
                 mirrorScreenMediaPlayer.seek(0);
                 mirrorScreenMediaPlayer.play();
             }
@@ -54,11 +73,13 @@ Item {
                 if (p.current_video_stage == "intro") {
                     mirrorScreenMediaPlayer.play();
                     p.current_video_stage = "intro_play"
+                    mirrorScreen.state = "VIDEO_MODE"
                 }
 
                 if (p.current_video_stage == "outro") {
                     mirrorScreenMediaPlayer.play();
                     p.current_video_stage = "outro_play"
+                    mirrorScreen.state = "VIDEO_MODE"
                 }
             }
             if (status == MediaPlayer.InvalidMedia) {
@@ -76,6 +97,28 @@ Item {
         source: mirrorScreenMediaPlayer
     }
 
+    Item {
+        id: tweeterTextMirror
+        height: parent.height * 0.3
+        width: parent.width * 0.8
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        opacity: 0.0
+
+
+        Text {
+            anchors.fill: parent
+            horizontalAlignment:Text.AlignHCenter
+            verticalAlignment:Text.AlignVCenter
+            font.pixelSize:height / 4
+            elide: Text.ElideMiddle
+            font.family: "arista"
+            color:"#3a3a3a"
+            text: qsTr(parameters.twitterMessage).arg(parameters.twitterAccount).arg(parameters.twitterTag)
+        }
+    }
+
 
     Image {
         id:mirrorScreenImage
@@ -88,7 +131,6 @@ Item {
         antialiasing: true
     }
 
-    //TODO: aspect ratio not preserved Image.PreserveAspectCrop --> Image.PreserveAspectFit
     /*
     PhotoShootRenderer {
         id:mirrorScreenImage
@@ -170,8 +212,8 @@ Item {
         code:"\uf030"
         onClicked: {
             //var message = '{"startGlobalPhotoProcess":{"effectName":"Couleur","nbPhoto":1,"templateName":"lucie_1.png"}}';
-            //var message = '{"startGlobalPhotoProcess":{"effectName":"Sepia","nbPhoto":3,"templateName":"lucie_2.png"}}';
-            var message = '{"startGlobalPhotoProcess":{"effectName":"Inkwell","nbPhoto":3,"templateName":"lucie_3.png"}}';
+            var message = '{"startGlobalPhotoProcess":{"effectName":"Sepia","nbPhoto":3,"templateName":"lucie_2.png"}}';
+            //var message = '{"startGlobalPhotoProcess":{"effectName":"Inkwell","nbPhoto":3,"templateName":"lucie_3.png"}}';
             receiveMessage(message);
         }
     }
@@ -200,6 +242,7 @@ Item {
             PropertyChanges { target: mirrorScreenImage; visible: false }
             PropertyChanges { target: countdown; visible: false }
             PropertyChanges { target: mirrorScreenFinalResultGrid; visible: false }
+            PropertyChanges { target: tweeterTextMirror; visible: true }
         },
         State {
             name: "PHOTO_MODE"
@@ -208,6 +251,7 @@ Item {
             PropertyChanges { target: mirrorScreenImage; visible: false }
             PropertyChanges { target: countdown; visible: true }
             PropertyChanges { target: mirrorScreenFinalResultGrid; visible: false }
+            PropertyChanges { target: tweeterTextMirror; visible: false }
         },
         State {
             name: "PHOTO_RESULT"
@@ -216,6 +260,7 @@ Item {
             PropertyChanges { target: mirrorScreenImage; visible: true }
             PropertyChanges { target: countdown; visible: false }
             PropertyChanges { target: mirrorScreenFinalResultGrid; visible: false }
+            PropertyChanges { target: tweeterTextMirror; visible: false }
         },
         State {
             name: "PHOTO_FINAL_RESULT"
@@ -224,6 +269,7 @@ Item {
             PropertyChanges { target: mirrorScreenImage; visible: false }
             PropertyChanges { target: countdown; visible: false }
             PropertyChanges { target: mirrorScreenFinalResultGrid; visible: true }
+            PropertyChanges { target: tweeterTextMirror; visible: false }
         },
         State {
             name: "CONFIG"
@@ -232,6 +278,7 @@ Item {
             PropertyChanges { target: mirrorScreenImage; visible: false}
             PropertyChanges { target: countdown; visible: false }
             PropertyChanges { target: mirrorScreenFinalResultGrid; visible: false }
+            PropertyChanges { target: tweeterTextMirror; visible: false }
         }
     ]
 
@@ -271,10 +318,9 @@ Item {
     }
 
     function startIntroVideo() {
-        mirrorScreen.state = "VIDEO_MODE"
         mirrorScreenMediaPlayer.stop()
         mirrorScreenMediaPlayer.source = "file:///" + parameters.startGlobalPhotoProcessVideo.videoPath
-        mirrorScreenMediaPlayer.play()
+        //mirrorScreenMediaPlayer.play()
         p.current_video_stage = "intro"
     }
 
@@ -291,7 +337,7 @@ Item {
         var camera_x = parent.width - camera_width;
         var date = new Date();
         var n = date.getFullYear() + "_" + (date.getMonth() + 1) + "_" + date.getDate() + "_" + date.getHours() + "h" + date.getMinutes() + "m" + date.getSeconds() + "s";
-        camera.startPreview("/tmp/phototwix_" + n + "_" + photoNumber + ".jpg", camera_x, camera_y, camera_width, camera_height);
+        camera.startPreview(p.pbase + "phototwix_" + n + "_" + photoNumber + ".jpg", camera_x, camera_y, camera_width, camera_height);
         mirrorScreenCountdown.start();
     }
 
@@ -347,18 +393,19 @@ Item {
     function endGlobalPhotoProcess() {
         console.log("End global Photo Process")
         if (p.nb_photos <= 1) {
-            mirrorScreenDisplayFinalResult.interval = 10
+            mirrorScreenDisplayFinalResult.interval = 1000
         } else {
             mirrorScreenDisplayFinalResult.interval = parameters.viewAllPhotoTime * 1000
         }
 
         mirrorScreen.state = "PHOTO_FINAL_RESULT"
 
-        var message_json= { //TODO
+        var message_json= {
               photoProcessResult:{
                 templateName: p.templateName,
                 effectName: p.effectName,
                 nbPhoto: p.nb_photos,
+                photosPath: p.pbase,
                 photos: []
               }
         };
@@ -367,7 +414,7 @@ Item {
             var fileNumber = mirrorScreenPhotoModel.get(i).photo_number;
             var fileUrl = mirrorScreenPhotoModel.get(i).url;
             var file = fileUrl.substring(fileUrl.lastIndexOf('/')+1);
-            var dir = "/tmp/";
+            var dir = p.pbase;
             message_json.photoProcessResult.photos.push({
                 fileName: file,
                 fileUrl: dir,
@@ -378,7 +425,6 @@ Item {
         var message = JSON.stringify(message_json);
         console.debug(message);
 
-        //TODO: Prepare JSON message to send
         if (photoClientRobot.client.status == WebSocket.Open) {
             photoClientRobot.client.sendTextMessage(message);
         }
@@ -397,9 +443,8 @@ Item {
     }
 
     function startOutroVideo() {
-        mirrorScreen.state = "VIDEO_MODE"
+        mirrorScreenMediaPlayer.stop()
         mirrorScreenMediaPlayer.source = "file:///" + parameters.endGlobalPhotoProcessVideo.videoPath
-        mirrorScreenMediaPlayer.play()
         p.current_video_stage = "outro"
     }
 }

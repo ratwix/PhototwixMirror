@@ -80,7 +80,7 @@ Item {
            }
 
            Label {
-               text:" (ratio:" + Math.round((parameters.cameraWidth / parameters.cameraHeight) * 100) / 100 + ")"
+               text:" (ratio:" + Number((parameters.cameraWidth / parameters.cameraHeight).toFixed(2)) + ")"
            }
 
            Button {

@@ -70,8 +70,15 @@ void PhotoQueueManager::pushMirror(QString name, QString json)
     Document document;
     document.Parse(json.toStdString().c_str());
 
-    if (document.HasMember("templateName")) {
-        QString templateName = QString(document["nbPrint"].GetString());
+    if (!document.HasMember("photoProcessResult")) {
+        CLog::Write(CLog::Error, "JSON didn't have photoProcessResult");
+        return;
+    }
+
+    const Value& result = document["photoProcessResult"];
+
+    if (result.HasMember("templateName")) {
+        QString templateName = QString(result["templateName"].GetString());
         bool found = false;
         for (int i = 0; i < m_parameter->getActivesTemplates().length(); i++) {
             if (Template *t = dynamic_cast<Template*>(m_parameter->getActivesTemplates()[i])) {
@@ -89,30 +96,35 @@ void PhotoQueueManager::pushMirror(QString name, QString json)
         }
     }
 
-    if (document.HasMember("effectName")) {
-        photo->setEffect(QString(document["effectName"].GetString()));
+    if (result.HasMember("effectName")) {
+        photo->setEffect(QString(result["effectName"].GetString()));
     }
 
-    if (document.HasMember("nbPhoto")) {
-        photo->setNbPhotos(document["nbPhoto"].GetInt());
+    if (result.HasMember("nbPhoto")) {
+        photo->setNbPhotos(result["nbPhoto"].GetInt());
     }
 
-    if (document.HasMember("photosPath")) {
-        photo->setPhotoPath(QString(document["photosPath"].GetString()));
+    if (result.HasMember("photosPath")) {
+        photo->setPhotoPath(QString(result["photosPath"].GetString()));
     }
 
-    if (document.HasMember("photos")) {
-        const Value& photos = document["photos"];
+    if (result.HasMember("clientIP")) {
+        photo->setClientIP(QString(result["clientIP"].GetString()));
+    }
+
+    if (result.HasMember("photos")) {
+        const Value& photos = result["photos"];
         if (photos.IsArray()) {
             for (SizeType i = 0; i < photos.Size(); i++) {
                 Value const &value = photos[i];
                 if (value.HasMember("fileName")) {
-                    photo->photosList().append(QString(value["fileName"].GetString()));
+                    QString fn = QString(value["fileName"].GetString());
+                    photo->photosList()->append(fn);
                 }
             }
         }
     }
-
+    int tmp = photo->photosList()->length();
     //Push front, les photos du photomaton sont prioritaires
     m_photoQueueList.push_front(photo);
     setNbPhotoInQueue(m_photoQueueList.length());
@@ -149,13 +161,13 @@ void PhotoQueueManager::pop()
                             photoMirror->name(),
                             photoMirror->usedTemplate(),
                             photoMirror->effect(),
-                            photoMirror->mirrorIP(),
+                            photoMirror->clientIP(),
                             photoMirror->photoPath(),
                             photoMirror->photosList()
                 );
             }
             setNbPhotoInQueue(m_photoQueueList.length());
-            delete photo; //TODO test delete OK ???
+            delete photo;
         }
     }
 }

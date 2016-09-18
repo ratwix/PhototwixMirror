@@ -142,6 +142,7 @@ Item {
 
         //Connexion Wifi
         Text {
+            id:wifiIcon
             height: parent.height * 0.05
             width: height
             anchors.top: parent.top
@@ -152,8 +153,25 @@ Item {
             font.family: "FontAwesome"
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            text: "\uf1eb "
+            text: "\uf1eb"
             color:(parameters.wifiManager.connectWifiQuality > 75) ? "green" :  ((parameters.wifiManager.connectWifiQuality > 45) ? "orange" : (parameters.wifiManager.connectWifiQuality > 0) ? "red" : "black")
+        }
+
+        //Connexion au mirroir
+        Text {
+            id:photoIcon
+            height: parent.height * 0.05
+            width: height
+            anchors.top: parent.top
+            anchors.right: wifiIcon.left
+            anchors.topMargin: 10
+            anchors.rightMargin: 10
+            font.pixelSize: height
+            font.family: "FontAwesome"
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            text: "\uf083"
+            color:(parameters.mirrorConnected) ? "green" :  "black"
         }
     }
 

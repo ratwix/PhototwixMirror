@@ -70,6 +70,10 @@ void Parameters::init() {
     m_autoPrintDelay = 5;
     m_autoPrint = false;
     m_showPhotoDelay = 15;
+    m_mirrorConnected = false;
+    m_countdown = 5;
+    m_viewPhotoTime = 5;
+    m_viewAllPhotoTime = 5;
 
 
     m_waitVideo = new VideoItem(this, VIDEO_WAIT);
@@ -219,6 +223,16 @@ void Parameters::Serialize() {
 
         writer.Key("twitterMessageColor");
         writer.String(m_twitterMessageColor.toStdString().c_str());
+
+        writer.Key("countdown");
+        writer.Int(m_countdown);
+
+        writer.Key("viewPhotoTime");
+        writer.Int(m_viewPhotoTime);
+
+        writer.Key("viewAllPhotoTime");
+        writer.Int(m_viewAllPhotoTime);
+
 
         writer.Key("templates");
         writer.StartArray();
@@ -420,6 +434,18 @@ void Parameters::Unserialize() {
 
     if (document.HasMember("twitterMessageColor")) {
         m_twitterMessageColor = QString(document["twitterMessageColor"].GetString());
+    }
+
+    if (document.HasMember("countdown")) {
+        m_countdown = document["countdown"].GetInt();
+    }
+
+    if (document.HasMember("viewPhotoTime")) {
+        m_viewPhotoTime = document["viewPhotoTime"].GetInt();
+    }
+
+    if (document.HasMember("viewAllPhotoTime")) {
+        m_viewAllPhotoTime = document["viewAllPhotoTime"].GetInt();
     }
 
     if (document.HasMember("templates")) {
@@ -1011,6 +1037,53 @@ void Parameters::clearGallery(bool del)
     Serialize();
     m_photogallery->Serialize();
     emit photoGalleryChanged();
+}
+
+int Parameters::getViewAllPhotoTime() const
+{
+    return m_viewAllPhotoTime;
+}
+
+void Parameters::setViewAllPhotoTime(int viewAllPhotoTime)
+{
+    m_viewAllPhotoTime = viewAllPhotoTime;
+    emit viewAllPhotoTimeChanged();
+    Serialize();
+}
+
+int Parameters::getViewPhotoTime() const
+{
+    return m_viewPhotoTime;
+}
+
+void Parameters::setViewPhotoTime(int viewPhotoTime)
+{
+    m_viewPhotoTime = viewPhotoTime;
+    emit viewPhotoTimeChanged();
+    Serialize();
+}
+
+int Parameters::getCountdown() const
+{
+    return m_countdown;
+}
+
+void Parameters::setCountdown(int countdown)
+{
+    m_countdown = countdown;
+    emit countdownChanged();
+    Serialize();
+}
+
+bool Parameters::getMirrorConnected() const
+{
+    return m_mirrorConnected;
+}
+
+void Parameters::setMirrorConnected(bool mirrorConnected)
+{
+    m_mirrorConnected = mirrorConnected;
+    emit mirrorConnectedChanged();
 }
 
 /*

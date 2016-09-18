@@ -181,7 +181,6 @@ Item {
                height: parent.height
                width: parent.height
                text: "+"
-               visible: admin
                onClicked: {
                    parameters.autoPrintDelay = parameters.autoPrintDelay + 1
                }

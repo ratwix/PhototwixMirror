@@ -17,7 +17,7 @@
 int main(int argc, char *argv[])
 {
     //TODO: changer avec argument
-    bool mirror = false;
+    bool mirror = true;
 
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
 

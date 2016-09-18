@@ -73,6 +73,10 @@ class Parameters : public QObject
     Q_PROPERTY(WifiManager * wifiManager READ getWifiManager WRITE setWifiManager NOTIFY wifiManagerChanged)
     Q_PROPERTY(RaspiGPIO * raspiGPIO READ getRaspiGPIO WRITE setRaspiGPIO NOTIFY raspiGPIOChanged)
     Q_PROPERTY(PrinterManager * printerManager READ getPrinterManager WRITE setPrinterManager NOTIFY printerManagerChanged)
+    Q_PROPERTY(bool mirrorConnected READ getMirrorConnected WRITE setMirrorConnected NOTIFY mirrorConnectedChanged)
+    Q_PROPERTY(int countdown READ getCountdown WRITE setCountdown NOTIFY countdownChanged)
+    Q_PROPERTY(int viewPhotoTime READ getViewPhotoTime WRITE setViewPhotoTime NOTIFY viewPhotoTimeChanged)
+    Q_PROPERTY(int viewAllPhotoTime READ getViewAllPhotoTime WRITE setViewAllPhotoTime NOTIFY viewAllPhotoTimeChanged)
 public:
     Parameters(QUrl appDirPath);
     virtual ~Parameters();
@@ -233,6 +237,18 @@ public:
     PrinterManager *getPrinterManager() const;
     void setPrinterManager(PrinterManager *printerManager);
 
+    bool getMirrorConnected() const;
+    void setMirrorConnected(bool mirrorConnected);
+
+    int getCountdown() const;
+    void setCountdown(int countdown);
+
+    int getViewPhotoTime() const;
+    void setViewPhotoTime(int viewPhotoTime);
+
+    int getViewAllPhotoTime() const;
+    void setViewAllPhotoTime(int viewAllPhotoTime);
+
 private:
     void addTemplate(QString name);
     void addTemplate(Value const &value);
@@ -310,6 +326,11 @@ private:
     QString              m_twitterMessage;
     QString              m_twitterMessageColor;
     QString              m_effectDefault;
+    bool                 m_mirrorConnected;
+
+    int                  m_countdown;
+    int                  m_viewPhotoTime;
+    int                  m_viewAllPhotoTime;
 
     PhotoQueueManager *  m_photoQueueManager;
     WifiManager *        m_wifiManager;
@@ -356,6 +377,10 @@ signals:
     void wifiManagerChanged();
     void raspiGPIOChanged();
     void printerManagerChanged();
+    void mirrorConnectedChanged();
+    void countdownChanged();
+    void viewPhotoTimeChanged();
+    void viewAllPhotoTimeChanged();
 };
 
 #endif // PARAMETERS_H

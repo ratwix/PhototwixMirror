@@ -45,9 +45,11 @@ Item {
                 function(status) {
                     if (status === webSocket.Open) {
                         phototwixServerItem.clientSocket = webSocket;
+                        parameters.mirrorConnected = true;
                     } else {
                         console.debug("Client not connected");
                         phototwixServerItem.clientSocket = null;
+                        parameters.mirrorConnected = false;
                     }
                 }
             )

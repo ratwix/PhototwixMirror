@@ -8,7 +8,9 @@ Item {
     anchors.fill: parent
 
     property alias client : phototwixClient;
+    property bool photoInProgress: false
 
+    /*
     Column {
         Button {
             text:"Send Finish"
@@ -32,26 +34,30 @@ Item {
             }
         }
     }
+    */
 
     WebSocket {
             id: phototwixClient
             url: "ws://127.0.0.1:54345" //TODO : IP parameter
             onTextMessageReceived: {
-                var j = JSON.parse(message);
-                var templateName = j.startGlobalPhotoProcess.templateName;
-                //TODO: search template from templateName
-                var effectName = j.startGlobalPhotoProcess.effectName;
-                var nbPhoto = j.startGlobalPhotoProcess.nbPhoto;
-                mirrorScreen.startGlobalPhotoProcess(templateName, effectName, nbPhoto)
+                if (!phototwixClientItem.photoInProgress) {
+                    phototwixClientItem.photoInProgress = true;
+                    mirrorScreen.receiveMessage(message);
+                }
+
             }
             onStatusChanged: if (phototwixClient.status == WebSocket.Error) {
                                  console.log("Error: " + phototwixClient.errorString)
+                                 parameters.mirrorConnected = false;
                              } else if (phototwixClient.status == WebSocket.Open) {
-                                 //TODO: mettre un indicateur
-                                 console.log("Session open")
+                                 console.log("Session open");
+                                 parameters.mirrorConnected = true;
                              } else if (phototwixClient.status == WebSocket.Closed) {
                                  console.log("Socket closed");
+                             } else {
+                                 parameters.mirrorConnected = false;
                              }
+
             active: false
     }
 

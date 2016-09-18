@@ -33,18 +33,123 @@ Item {
             videoLabel: "Start Photo:"
             videoItem: parameters.startGlobalPhotoProcessVideo
         }
+
+        ConfigVideoItem {
+            id:endGlobalPhotoProcessVideo
+            height: 50
+            videoLabel: "End Video:"
+            videoItem: parameters.endGlobalPhotoProcessVideo
+        }
+
+        Row {
+            height: 50
+            Label {
+                width: 200
+                text: "Photo Countdown"
+            }
+
+            Button {
+                height: parent.height
+                width: parent.height
+                text: "-"
+                onClicked: {
+                    parameters.countdown = parameters.countdown - 1 < 0 ? 0 : parameters.countdown;
+                }
+            }
+
+            Text {
+                anchors.leftMargin: 30
+                height: parent.height
+                width: parent.height * 3
+                font.pixelSize: parent.height * 0.9
+                text: parameters.countdown
+            }
+
+            Button {
+                height: parent.height
+                width: parent.height
+                text: "+"
+                onClicked: {
+                    parameters.countdown = parameters.countdown + 1
+                }
+            }
+
+        }
+
+        Row {
+            height: 50
+            Label {
+                width: 200
+                text: "View Photo"
+            }
+
+            Button {
+                height: parent.height
+                width: parent.height
+                text: "-"
+                onClicked: {
+                    parameters.viewPhotoTime = parameters.viewPhotoTime - 1 < 0 ? 0 : parameters.viewPhotoTime;
+                }
+            }
+
+            Text {
+                anchors.leftMargin: 30
+                height: parent.height
+                width: parent.height * 3
+                font.pixelSize: parent.height * 0.9
+                text: parameters.viewPhotoTime
+            }
+
+            Button {
+                height: parent.height
+                width: parent.height
+                text: "+"
+                onClicked: {
+                    parameters.viewPhotoTime = parameters.viewPhotoTime + 1
+                }
+            }
+
+        }
+
+        Row {
+            height: 50
+            Label {
+                width: 200
+                text: "View All Photos"
+            }
+
+            Button {
+                height: parent.height
+                width: parent.height
+                text: "-"
+                onClicked: {
+                    parameters.viewAllPhotoTime = parameters.viewAllPhotoTime - 1 < 0 ? 0 : parameters.viewAllPhotoTime;
+                }
+            }
+
+            Text {
+                anchors.leftMargin: 30
+                height: parent.height
+                width: parent.height * 3
+                font.pixelSize: parent.height * 0.9
+                text: parameters.viewAllPhotoTime
+            }
+
+            Button {
+                height: parent.height
+                width: parent.height
+                text: "+"
+                onClicked: {
+                    parameters.viewAllPhotoTime = parameters.viewAllPhotoTime + 1
+                }
+            }
+        }
     }
 
     MediaPlayer {
         id: previewPlayer
         loops: MediaPlayer.Infinite
         autoPlay: false
-        /*
-        onStopped: {
-            previewPlayer.seek(0)
-            previewPlayer.play()
-        }
-        */
     }
 
     VideoOutput {

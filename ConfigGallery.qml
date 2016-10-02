@@ -167,12 +167,13 @@ Item {
                     width: parent.height * 3
                     font.pixelSize: parent.height * 0.9
                     text: parameters.showPhotoDelay
+
                 }
                 Button {
+                    anchors.leftMargin: 30
                     height: parent.height
                     width: parent.height
                     text: "+"
-                    visible: admin
                     onClicked: {
                         parameters.showPhotoDelay = parameters.showPhotoDelay + 5
                     }

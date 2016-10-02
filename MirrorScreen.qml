@@ -21,6 +21,7 @@ Item {
         property string pbase: "/tmp/"
         property int nb_video_before_twitter: 3
         property int nb_current_video:0
+        property bool session_in_progress:false
     }
 
     state:"VIDEO_MODE"
@@ -114,7 +115,7 @@ Item {
             font.pixelSize:height / 4
             elide: Text.ElideMiddle
             font.family: "arista"
-            color:"#3a3a3a"
+            color:"black"
             text: qsTr(parameters.twitterMessage).arg(parameters.twitterAccount).arg(parameters.twitterTag)
         }
     }
@@ -284,8 +285,9 @@ Item {
 
     //Start wait video
     function startWaitVideo() {
-        mirrorScreenMediaPlayer.stop()
+        parameters.raspiGPIO.activeFlash(false);
         p.current_video_stage = "wait"
+        mirrorScreenMediaPlayer.stop()
         mirrorScreen.state = "VIDEO_MODE"
         mirrorScreenMediaPlayer.source = "file:///" + parameters.waitVideo.videoPath
         mirrorScreenMediaPlayer.play()
@@ -303,8 +305,10 @@ Item {
         } else {
             console.error("JSON didn't contain startGlobalPhotoProcess")
         }
-
-        startGlobalPhotoProcess(templateName, effectName, photoNumber);
+        if (!p.session_in_progress) {
+            p.session_in_progress = true;
+            startGlobalPhotoProcess(templateName, effectName, photoNumber);
+        }
     }
 
     //Start the wall photo process
@@ -313,15 +317,16 @@ Item {
         p.effectName = effectName;
         p.nb_photos = photoNumber;
         p.currentPhoto = 0;
+        mirrorScreenPhotoModel.clear();
+        parameters.raspiGPIO.activeFlash(true);
         startIntroVideo()
 
     }
 
     function startIntroVideo() {
+        p.current_video_stage = "intro"
         mirrorScreenMediaPlayer.stop()
         mirrorScreenMediaPlayer.source = "file:///" + parameters.startGlobalPhotoProcessVideo.videoPath
-        //mirrorScreenMediaPlayer.play()
-        p.current_video_stage = "intro"
     }
 
     //for each photo, take the photo
@@ -392,6 +397,7 @@ Item {
     //End of photo process
     function endGlobalPhotoProcess() {
         console.log("End global Photo Process")
+        parameters.raspiGPIO.activeFlash(false);
         if (p.nb_photos <= 1) {
             mirrorScreenDisplayFinalResult.interval = 1000
         } else {
@@ -443,8 +449,12 @@ Item {
     }
 
     function startOutroVideo() {
+        p.session_in_progress = false;
+        startWaitVideo();
+        /* TODO Bug : video did not start
+        p.current_video_stage = "outro"
         mirrorScreenMediaPlayer.stop()
         mirrorScreenMediaPlayer.source = "file:///" + parameters.endGlobalPhotoProcessVideo.videoPath
-        p.current_video_stage = "outro"
+        */
     }
 }

@@ -10,3 +10,8 @@
 # Action Button
 * Pin 3 (GIPO 2)  --> Action Button
 * Pin 14 (GND)    --> Action Button
+
+# Camera Flash
+* Pin 2 (+5V) --> +5v flash
+* Pin 6 (GND) --> GND Flash
+* Pin 7 (GPIO 4) --> GPIO Flash

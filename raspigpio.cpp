@@ -34,6 +34,9 @@ RaspiGPIO::RaspiGPIO(QObject *parent) : QObject(parent)
     QString cmd = QString("sudo gpio export ") + BUTTON_ACTION_PIN_EXPORT + " in";
     system(cmd.toStdString().c_str());
 
+    cmd = QString("sudo gpio export ") + FLASH_COMMAND_PIN_EXPORT + " out";
+    system(cmd.toStdString().c_str());
+
     //Setup button
     wiringPiSetupSys();
     pinMode (BUTTON_ACTION_PIN, INPUT);
@@ -49,6 +52,19 @@ RaspiGPIO::RaspiGPIO(QObject *parent) : QObject(parent)
     //action button callback
     if (myWiringPiISR(BUTTON_ACTION_PIN, INT_EDGE_FALLING, std::bind(actionButtonRealCallback, this)) < 0) {
         CLog::Write(CLog::Error, QString("Unable to setup ISR: ") + QString::number(errno));
+    }
+
+    //Setup flash gpio
+    pinMode (FLASH_COMMAND_PIN, OUTPUT);
+    activeFlash(false);
+}
+
+void RaspiGPIO::activeFlash(bool on)
+{
+    if (on) {
+        digitalWrite(FLASH_COMMAND_PIN, HIGH);
+    } else {
+        digitalWrite(FLASH_COMMAND_PIN, LOW);
     }
 }
 
@@ -73,3 +89,4 @@ void RaspiGPIO::canPushTimerFalse()
     m_canPush = false;
     m_canPushTimer->start(1000);
 }
+

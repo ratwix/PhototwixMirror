@@ -1,9 +1,10 @@
 #include "photoqueue.h"
 
 PhotoQueue::PhotoQueue() :
+    m_usedTemplate(NULL),
     m_effect(""),
     m_date(""),
-    m_usedTemplate(NULL)
+    m_name("")
 {
 
 }

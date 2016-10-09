@@ -80,7 +80,7 @@ Item {
            }
 
            Label {
-               text:" (ratio:" + Number((parameters.cameraWidth / parameters.cameraHeight).toFixed(2)) + ")"
+               text:" (ratio:" + getCameraRatio() + "%)"
            }
 
            Button {
@@ -91,6 +91,11 @@ Item {
                }
            }
        }
+    }
+
+    function getCameraRatio() {
+        var num = Math.round(parameters.cameraWidth / parameters.cameraHeight * 100);
+        return num.toString();
     }
 
     Rectangle {

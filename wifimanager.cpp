@@ -23,11 +23,15 @@ WifiManager::WifiManager(Parameters *parameters)
 
     m_connectedWifiCheckIP = new QProcess(this);
     connect(m_connectedWifiCheckIP, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
-            [=](int exitCode, QProcess::ExitStatus exitStatus){ checkIPTerminate(exitCode, exitStatus);});
+            [=](int exitCode, QProcess::ExitStatus exitStatus){ checkIPWlan0Terminate(exitCode, exitStatus);});
+
+    m_connectedEthernetCheckIP = new QProcess(this);
+    connect(m_connectedEthernetCheckIP, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished),
+            [=](int exitCode, QProcess::ExitStatus exitStatus){ checkIPEth0Terminate(exitCode, exitStatus);});
 
 
-    connect(&m_checkWifiConnected, SIGNAL(timeout()), this, SLOT(checkWifiConnected()));
-    m_checkWifiConnected.start(8000); //Check wifi connected each 5s
+    connect(&m_checkNetworkConnected, SIGNAL(timeout()), this, SLOT(checkNetworkConnected()));
+    m_checkNetworkConnected.start(8000); //Check wifi connected each 5s
 
 }
 
@@ -131,6 +135,17 @@ void WifiManager::connectWifi(WifiItem *wifi)
     QProcess wifiConnectProcess;
     wifiConnectProcess.start(program, arguments);
     wifiConnectProcess.waitForFinished(10000);
+}
+
+void WifiManager::changeEthIP(QString IP)
+{
+    QString routerIP = IP.left(IP.lastIndexOf('.') + 1) + "254";
+    QString program = "sudo";
+    QStringList arguments;
+    arguments << m_parameters->getApplicationDirPath().toString() + "/" + SCRIPT_CHANGE_IP_ETH0 << IP << routerIP;
+    QProcess ethConnectProcess;
+    ethConnectProcess.start(program, arguments);
+    ethConnectProcess.waitForFinished(10000);
 }
 
 void WifiManager::serialize(PrettyWriter<StringBuffer> &writer) const
@@ -250,6 +265,16 @@ void WifiManager::setConnectWifiIP(const QString &connectWifiIP)
     emit connectWifiIPChanged();
 }
 
+QString WifiManager::getConnectedEthernetIP() const
+{
+    return m_connectedEthernetIP;
+}
+
+void WifiManager::setConnectedEthernetIP(const QString &connectedEthernetIP)
+{
+    m_connectedEthernetIP = connectedEthernetIP;
+}
+
 void WifiManager::checkWifiConnectedTerminate(int exitCode, QProcess::ExitStatus exitStatus)
 {
     bool        connected = false;
@@ -288,7 +313,7 @@ void WifiManager::checkWifiConnectedTerminate(int exitCode, QProcess::ExitStatus
     }
 }
 
-void WifiManager::checkWifiConnected()
+void WifiManager::checkNetworkConnected()
 {
     //Regarde si on est connecté a un wifi
     if (m_connectedWifiCheckProcess->state() == QProcess::Running) {
@@ -299,7 +324,7 @@ void WifiManager::checkWifiConnected()
     arguments << "wlan0" << "link";
     m_connectedWifiCheckProcess->start(program, arguments);
 
-    //Recherche de l'IP
+    //Recherche de l'IP wlan0 : wifi
     if (m_connectedWifiCheckIP->state() == QProcess::Running) {
         m_connectedWifiCheckIP->terminate();
     }
@@ -307,9 +332,20 @@ void WifiManager::checkWifiConnected()
     QStringList arguments2;
     arguments2 << "wlan0";
     m_connectedWifiCheckIP->start(program2, arguments2);
+
+    //Recherche de l'IP eth0 : ethernet
+    if (m_connectedEthernetCheckIP->state() == QProcess::Running) {
+        m_connectedEthernetCheckIP->terminate();
+    }
+    QString program3 = "ifconfig";
+    QStringList arguments3;
+    arguments3 << "eth0";
+    m_connectedEthernetCheckIP->start(program3, arguments3);
+
+
 }
 
-void WifiManager::checkIPTerminate(int exitCode, QProcess::ExitStatus exitStatus)
+void WifiManager::checkIPWlan0Terminate(int exitCode, QProcess::ExitStatus exitStatus)
 {
     QString address = "";
     QString output(m_connectedWifiCheckIP->readAllStandardOutput());
@@ -327,4 +363,24 @@ void WifiManager::checkIPTerminate(int exitCode, QProcess::ExitStatus exitStatus
     }
 
     setConnectWifiIP(address);
+}
+
+void WifiManager::checkIPEth0Terminate(int exitCode, QProcess::ExitStatus exitStatus)
+{
+    QString address = "";
+    QString output(m_connectedEthernetCheckIP->readAllStandardOutput());
+    QStringList sl = output.split("\n", QString::SkipEmptyParts);
+
+    QRegExp ethIpRx("inet addr:([0-9\\.]+)  Bcast:.*");
+
+    for (int i = 0; i < sl.length(); i++) {
+        QString s = sl.at(i);
+        s = s.trimmed();
+        if (ethIpRx.exactMatch(s)) { //On est connecté aa eth0
+            address = ethIpRx.cap(1);
+            break;
+        }
+    }
+
+    setConnectedEthernetIP(address);
 }

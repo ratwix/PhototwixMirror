@@ -10,6 +10,24 @@ Item {
     property alias client : phototwixClient;
     property bool photoInProgress: false
 
+    //Connection to Action button
+    Connections {
+        target: parameters.raspiGPIO
+        onActionButtonPushed: {
+            console.debug("Receive command button");
+            if (!phototwixClientItem.photoInProgress) {
+                console.debug("Send ask Photo");
+                if (phototwixClient.status == WebSocket.Open) {
+                    phototwixClient.sendTextMessage("askPhoto");
+                } else {
+                    console.debug("Socket not open");
+                }
+            } else {
+                console.debug("Photo process running");
+            }
+        }
+    }
+
     WebSocket {
             id: phototwixClient
             url: "ws://" + parameters.commandIP  + ":54345"
@@ -18,7 +36,6 @@ Item {
                     phototwixClientItem.photoInProgress = true;
                     mirrorScreen.receiveMessage(message);
                 }
-
             }
             onStatusChanged: if (phototwixClient.status == WebSocket.Error) {
                                  console.log("Error: " + phototwixClient.errorString)

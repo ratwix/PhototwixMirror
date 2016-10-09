@@ -71,4 +71,7 @@ DISTFILES += \
     scripts/connectWifi.sh \
     scripts/get_paper.sh \
     scripts/print.sh \
-    scripts/dnpds40
+    scripts/dnpds40 \
+    scripts/export_gpio.sh \
+    scripts/power.py \
+    scripts/connectEth.sh

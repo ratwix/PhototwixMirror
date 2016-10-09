@@ -13,6 +13,7 @@
 #define BACKGROUND_FOLDER   "background"
 
 #define SCRIPT_CONNECT_WIFI "scripts/connectWifi.sh"
+#define SCRIPT_CHANGE_IP_ETH0 "scripts/connectEth.sh"
 #define SCRIPT_GET_PAPER    "scripts/dnpds40"
 #define SCRIPT_PRINT        "scripts/print.sh"
 

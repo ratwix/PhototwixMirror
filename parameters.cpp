@@ -75,7 +75,9 @@ void Parameters::init() {
     m_viewPhotoTime = 5;
     m_viewAllPhotoTime = 5;
     m_isMirror = false;
-    m_commandIP = "127.0.0.1";
+    m_commandIP = "192.168.30.1";
+    m_mirrorIP = "192.168.30.2";
+    m_waitVideoRepeatBeforeTwitter = 2;
 
 
     m_waitVideo = new VideoItem(this, VIDEO_WAIT);
@@ -243,6 +245,11 @@ void Parameters::Serialize() {
         writer.Key("commandIP");
         writer.String(m_commandIP.toStdString().c_str());
 
+        writer.Key("mirrorIP");
+        writer.String(m_mirrorIP.toStdString().c_str());
+
+        writer.Key("waitVideoRepeatBeforeTwitter");
+        writer.Int(m_waitVideoRepeatBeforeTwitter);
 
         writer.Key("templates");
         writer.StartArray();
@@ -465,6 +472,14 @@ void Parameters::Unserialize() {
 
     if (document.HasMember("commandIP")) {
         m_commandIP = document["commandIP"].GetString();
+    }
+
+    if (document.HasMember("mirrorIP")) {
+        m_mirrorIP = document["mirrorIP"].GetString();
+    }
+
+    if (document.HasMember("waitVideoRepeatBeforeTwitter")) {
+        m_waitVideoRepeatBeforeTwitter = document["waitVideoRepeatBeforeTwitter"].GetInt();
     }
 
     if (document.HasMember("templates")) {
@@ -1041,10 +1056,13 @@ static void delAllFileInDirectory(const char* p) {
 
 void Parameters::clearGallery(bool del)
 {
+    /*
     delete m_photogallery;
     m_photogallery = new PhotoGallery(this);
     QQmlEngine::setObjectOwnership(m_photogallery, QQmlEngine::CppOwnership);
     m_photogallery->setApplicationDirPath(m_applicationDirPath);
+    */
+    m_photogallery->clearGallery();
 
 
     if (del) {
@@ -1059,6 +1077,30 @@ void Parameters::clearGallery(bool del)
     Serialize();
     m_photogallery->Serialize();
     emit photoGalleryChanged();
+}
+
+int Parameters::getWaitVideoRepeatBeforeTwitter() const
+{
+    return m_waitVideoRepeatBeforeTwitter;
+}
+
+void Parameters::setWaitVideoRepeatBeforeTwitter(int waitVideoRepeatBeforeTwitter)
+{
+    m_waitVideoRepeatBeforeTwitter = waitVideoRepeatBeforeTwitter;
+    emit waitVideoRepeatBeforeTwitterChanged();
+    Serialize();
+}
+
+QString Parameters::getMirrorIP() const
+{
+    return m_mirrorIP;
+}
+
+void Parameters::setMirrorIP(const QString &mirrorIP)
+{
+    m_mirrorIP = mirrorIP;
+    emit mirrorIPChanged();
+    Serialize();
 }
 
 VideoItem *Parameters::getTwitterVideo() const

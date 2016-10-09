@@ -19,8 +19,7 @@ Item {
         property string current_effect: "Couleur"
         property string current_video_stage: "wait"
         property string pbase: "/tmp/"
-        property int nb_video_before_twitter: 3
-        property int nb_current_video:0
+        property int nb_current_video:1
         property bool session_in_progress:false
     }
 
@@ -48,7 +47,7 @@ Item {
                 }
 
 
-                if (p.nb_current_video >= p.nb_video_before_twitter) {
+                if (p.nb_current_video >= parameters.waitVideoRepeatBeforeTwitter) {
                     if (parameters.twitterListenTwitter) {
                         tweeterTextMirror.opacity = 1.0
                         mirrorScreenMediaPlayer.source = "file:///" + parameters.twitterVideo.videoPath
@@ -62,9 +61,11 @@ Item {
                 mirrorScreenMediaPlayer.play();
             }
             if (p.current_video_stage == "intro_play") {
+                tweeterTextMirror.opacity = 0.0
                 startPhotoProcess(p.currentPhoto);
             }
             if (p.current_video_stage == "outro_play") {
+                tweeterTextMirror.opacity = 0.0
                 startWaitVideo();
             }
         }
@@ -193,16 +194,18 @@ Item {
         id:configButton
         anchors.top: parent.top
         anchors.right: parent.right
-        anchors.topMargin: 10
-        anchors.rightMargin: 10
-        size:parent.height * 0.10
+        //anchors.topMargin: 10
+        //anchors.rightMargin: 10
+        size:parent.height * 0.05
         code:"\uf085"
+        opacity: 0.4
         onClicked: {
             mirrorScreenMediaPlayer.stop()
             mirrorScreen.state = "CONFIG"
         }
     }
 
+    /*
     ButtonAwesome {
         id:startPhotoProcessButton
         anchors.top: parent.top
@@ -218,6 +221,7 @@ Item {
             receiveMessage(message);
         }
     }
+    */
 
     //Ecran de configuration
     ConfigScreen {
@@ -233,6 +237,14 @@ Item {
     PhotoClientRobot {
         id:photoClientRobot
         visible: false;
+    }
+
+    onStateChanged: {
+        if (state == "CONFIG") {
+            parameters.showCursor();
+        } else {
+            parameters.hideCursor();
+        }
     }
 
     states: [
@@ -445,6 +457,7 @@ Item {
         repeat: false
         onTriggered: {
             startOutroVideo()
+            photoClientRobot.photoInProgress = false;
         }
     }
 

@@ -17,12 +17,14 @@ class WifiManager : public QObject
     Q_PROPERTY(QString connectedWifi READ getConnectedWifi WRITE setConnectedWifi NOTIFY connectedWifiChanged)
     Q_PROPERTY(int connectWifiQuality READ getConnectWifiQuality WRITE setConnectWifiQuality NOTIFY connectWifiQualityChanged)
     Q_PROPERTY(QString connectWifiIP READ getConnectWifiIP WRITE setConnectWifiIP NOTIFY connectWifiIPChanged)
+    Q_PROPERTY(QString connectEthernetIP READ getConnectedEthernetIP WRITE setConnectedEthernetIP NOTIFY connectEthernetIPChanged)
 public:
     explicit WifiManager(QObject *parent = 0);
     WifiManager(Parameters *parameters);
 
     Q_INVOKABLE void refreshWifiList();
     Q_INVOKABLE void connectWifi(WifiItem *wifi);
+    Q_INVOKABLE void changeEthIP(QString IP);
 
     void serialize(PrettyWriter<StringBuffer>& writer) const;
     void unserialize(Value const &values);
@@ -48,18 +50,23 @@ public:
     QString getConnectWifiIP() const;
     void setConnectWifiIP(const QString &connectWifiIP);
 
+    QString getConnectedEthernetIP() const;
+    void setConnectedEthernetIP(const QString &connectedEthernetIP);
+
 private:
     WifiItem *          m_currentWifi;
     QList<QObject *>    m_knownWifi;
     QList<QObject *>    m_currentWifiList;
     Parameters  *       m_parameters;
-    QTimer              m_checkWifiConnected;
+    QTimer              m_checkNetworkConnected;
 
     QString             m_connectedWifi;
     int                 m_connectWifiQuality;
     QString             m_connectWifiIP;
+    QString             m_connectedEthernetIP;
     QProcess *          m_connectedWifiCheckProcess;
     QProcess *          m_connectedWifiCheckIP;
+    QProcess *          m_connectedEthernetCheckIP;
 
 signals:
     void    currentWifiListChanged();
@@ -67,10 +74,13 @@ signals:
     void    connectedWifiChanged();
     void    connectWifiQualityChanged();
     void    connectWifiIPChanged();
+    void    connectEthernetIPChanged();
+
 public slots:
     void    checkWifiConnectedTerminate(int exitCode, QProcess::ExitStatus exitStatus);
-    void    checkWifiConnected();
-    void    checkIPTerminate(int exitCode, QProcess::ExitStatus exitStatus);
+    void    checkNetworkConnected();
+    void    checkIPWlan0Terminate(int exitCode, QProcess::ExitStatus exitStatus);
+    void    checkIPEth0Terminate(int exitCode, QProcess::ExitStatus exitStatus);
 };
 
 #endif // WIFIMANAGER_H

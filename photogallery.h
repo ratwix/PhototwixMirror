@@ -57,6 +57,8 @@ public:
     int totalFileNumber() const;
     void setTotalFileNumber(int totalFileNumber);
 
+    void clearGallery();
+
 private:
     void            addPhoto(Value const &value, QList<QObject*> &templates);
 

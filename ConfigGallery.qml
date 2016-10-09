@@ -53,10 +53,10 @@ Item {
                 visible: admin
                 onClicked: {
                     console.debug("Reset photos & delete");
-                    cbox.message = "Vider la gallerie et supprimer les photos et mails ?"
+                    cbox.message = "Vider la gallerie et supprimer les photos ?"
                     cbox.acceptFunction = function () {
                         parameters.clearGalleryDeleteImages();
-                        mbox.message = "La gallerie les photos et mes mailsont étés effacés"
+                        mbox.message = "La gallerie et les photos ont étés effacés"
                         mbox.state = "show"
                     }
                     cbox.state = "show"

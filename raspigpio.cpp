@@ -13,9 +13,10 @@ void actionButtonCallback()
 
 void actionButtonRealCallback(RaspiGPIO *r)
 {
+    CLog::Write(CLog::Debug, "Action button pushed");
     if (r && r->canPush()) {
         emit r->canPushFalse(); //Disable button for 1 second
-        CLog::Write(CLog::Debug, "Action button pushed");
+        CLog::Write(CLog::Debug, "Action button pushed can pushed");
         emit r->actionButtonPushed();
     }
 }
@@ -31,16 +32,16 @@ RaspiGPIO::RaspiGPIO(QObject *parent) : QObject(parent)
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 
     //Export pin
-    QString cmd = QString("sudo gpio export ") + BUTTON_ACTION_PIN_EXPORT + " in";
-    system(cmd.toStdString().c_str());
+    //QString cmd = QString("sudo gpio export ") + BUTTON_ACTION_PIN_EXPORT + " in";
+    //system(cmd.toStdString().c_str());
 
-    cmd = QString("sudo gpio export ") + FLASH_COMMAND_PIN_EXPORT + " out";
-    system(cmd.toStdString().c_str());
+    //cmd = QString("sudo gpio export ") + FLASH_COMMAND_PIN_EXPORT + " out";
+    //system(cmd.toStdString().c_str());
 
     //Setup button
     wiringPiSetupSys();
     pinMode (BUTTON_ACTION_PIN, INPUT);
-    pullUpDnControl(BUTTON_ACTION_PIN, PUD_DOWN);
+    pullUpDnControl(BUTTON_ACTION_PIN, PUD_UP);
 
     //Setup button delay
     m_canPush = true;
@@ -50,7 +51,7 @@ RaspiGPIO::RaspiGPIO(QObject *parent) : QObject(parent)
     connect(m_canPushTimer, SIGNAL(timeout()), this, SLOT(canPushTimerTrue()));
 
     //action button callback
-    if (myWiringPiISR(BUTTON_ACTION_PIN, INT_EDGE_FALLING, std::bind(actionButtonRealCallback, this)) < 0) {
+    if (myWiringPiISR(BUTTON_ACTION_PIN, INT_EDGE_BOTH, std::bind(actionButtonRealCallback, this)) < 0) {
         CLog::Write(CLog::Error, QString("Unable to setup ISR: ") + QString::number(errno));
     }
 

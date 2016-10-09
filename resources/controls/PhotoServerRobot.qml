@@ -14,7 +14,7 @@ Item {
         target: parameters.raspiGPIO
         onActionButtonPushed: {
             console.debug("Receive command button");
-            sendStartGlobalPhotoProcess();
+            sendStartGlobalPhotoProcess(clientSocket);
         }
     }
 
@@ -22,12 +22,29 @@ Item {
         id: phototwixServer
         listen: true
         port:54345
+        host: parameters.commandIP
+        accept: true
+
+        onErrorStringChanged: {
+            console.error("Error server:" + errorString)
+        }
+
+        onUrlChanged: {
+            console.debug("Server URL : " + url)
+        }
+
         onClientConnected: {
             phototwixServerItem.clientSocket = webSocket
             webSocket.onTextMessageReceived.connect(
                 function(message) {
-                    //console.log("Server received message: " + message);
-                    phototwixServerItem.getResultPhotoProcess(message);
+                    //console.debug("Server received message: " + message);
+                    if (message == "askPhoto") {
+                        console.debug("Ask start photo from mirror");
+                        sendStartGlobalPhotoProcess(webSocket);
+                    } else {
+                        console.debug("Get photo result");
+                        phototwixServerItem.getResultPhotoProcess(webSocket, message);
+                    }
                 }
             );
             webSocket.onStatusChanged.connect (
@@ -44,41 +61,30 @@ Item {
             )
 
             console.log("Client connected");
-        }
-        onErrorStringChanged: {
-            console.log("Server error: " + errorString);
-        }
-        onListenChanged: {
-            console.log("Client url : " + phototwixServer.url);
+            parameters.mirrorConnected = true;
         }
     }
 
-    function sendStartGlobalPhotoProcess() {
+    function sendStartGlobalPhotoProcess(socket) {
         var message = JSON.stringify({
                                          startGlobalPhotoProcess: {
                                              templateName: globalVar.currentTemplate.name,
                                              effectName: globalVar.currentEffect,
-                                             nbPhoto: globalVar.currentTemplate.nbPhotos()                     //TODO
+                                             nbPhoto: globalVar.currentTemplate.nbPhotos()
                                          }
 
                                      });
-        if ((phototwixServerItem.clientSocket != null) && (phototwixServerItem.clientSocket.status == WebSocket.Open)) {
-            phototwixServerItem.clientSocket.sendTextMessage(message);
+        if ((socket != null) && (socket.status == WebSocket.Open)) {
+            socket.sendTextMessage(message);
         } else {
             console.error("No connection to mirror")
         }
     }
 
-    function getResultPhotoProcess(message) {
+    function getResultPhotoProcess(socket, message) {
         //Get the json message
         var j = JSON.parse(message);
-        //extract IP url from
-        var surl = "ws://127.0.0.1:54345";
-        if (phototwixServerItem.clientSocket) {
-            surl = phototwixServerItem.clientSocket.url.toString();
-        }
-        surl = surl.match(".*://(.*):.*")[1];
-        j.photoProcessResult["clientIP"] = surl;
+        j.photoProcessResult["clientIP"] = parameters.mirrorIP;
         message = JSON.stringify(j);
         parameters.photoQueueManager.pushMirror("photo1_mirror", message);
     }

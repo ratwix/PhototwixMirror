@@ -4,25 +4,24 @@
 #include "photo.h"
 
 Photo::Photo():
+    m_nbPrint(0),
     m_finalResult(""),
     m_finalResultSD(""),
-    m_nbPrint(0),
+    m_effectName(""),
     m_photoTweeter(false),
     m_photoTweeterMessage(""),
-    m_photoTweeterProfileName(""),
-    m_effectName("")
+    m_photoTweeterProfileName("")
 {
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 }
 
 Photo::Photo(QString name, Template *t):
+    m_nbPrint(0),
     m_finalResult(""),
     m_finalResultSD(""),
-    m_nbPrint(0),
     m_photoTweeter(false),
     m_photoTweeterMessage(""),
-    m_photoTweeterProfileName(""),
-    m_effectName("")
+    m_photoTweeterProfileName("")
 {
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
 

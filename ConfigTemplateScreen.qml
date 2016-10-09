@@ -329,12 +329,13 @@ Rectangle {
                                     if (Math.abs(templatePhotoPosition.rotation) < 0.6)
                                         templatePhotoPosition.rotation = 0;
                                 } else {
-                                    templatePhotoPosition.rotation += wheel.angleDelta.x / 120;
-                                    if (Math.abs(templatePhotoPosition.rotation) < 0.6)
-                                        templatePhotoPosition.rotation = 0;
+                                    //templatePhotoPosition.rotation += wheel.angleDelta.x / 120;
+                                    //if (Math.abs(templatePhotoPosition.rotation) < 0.6)
+                                    //    templatePhotoPosition.rotation = 0;
                                     var heighBefore = templatePhotoPosition.height;
                                     var widthBefore = templatePhotoPosition.width;
-                                    templatePhotoPosition.height += templatePhotoPosition.height * wheel.angleDelta.y / 120 / 60;
+                                    //templatePhotoPosition.height += templatePhotoPosition.height * wheel.angleDelta.y / 120 / 60;
+                                    templatePhotoPosition.height += wheel.angleDelta.y / 240;
                                     templatePhotoPosition.width =  widthBefore / heighBefore * templatePhotoPosition.height
                                     templatePhotoPosition.x -= (templatePhotoPosition.width - widthBefore) / 2.0;
                                     templatePhotoPosition.y -= (templatePhotoPosition.height - heighBefore) / 2.0;

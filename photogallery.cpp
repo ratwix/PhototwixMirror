@@ -371,6 +371,11 @@ void PhotoGallery::setTotalFileNumber(int totalFileNumber)
     emit totalFileNumberChanged();
 }
 
+void PhotoGallery::clearGallery()
+{
+    m_photoList.clear();
+}
+
 qint64 PhotoGallery::totalFileSize() const
 {
     return m_totalFileSize;

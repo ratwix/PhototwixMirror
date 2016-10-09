@@ -80,6 +80,9 @@ class Parameters : public QObject
     Q_PROPERTY(int viewAllPhotoTime READ getViewAllPhotoTime WRITE setViewAllPhotoTime NOTIFY viewAllPhotoTimeChanged)
     Q_PROPERTY(bool isMirror READ getIsMirror WRITE setIsMirror NOTIFY isMirrorChanged)
     Q_PROPERTY(QString commandIP READ getCommandIP WRITE setCommandIP NOTIFY commandIPChanged)
+    Q_PROPERTY(QString mirrorIP READ getMirrorIP WRITE setMirrorIP NOTIFY mirrorIPChanged)
+    Q_PROPERTY(int waitVideoRepeatBeforeTwitter READ getWaitVideoRepeatBeforeTwitter WRITE setWaitVideoRepeatBeforeTwitter NOTIFY waitVideoRepeatBeforeTwitterChanged)
+
 public:
     Parameters(QUrl appDirPath);
     virtual ~Parameters();
@@ -261,6 +264,12 @@ public:
     VideoItem *getTwitterVideo() const;
     void setTwitterVideo(VideoItem *twitterVideo);
 
+    QString getMirrorIP() const;
+    void setMirrorIP(const QString &mirrorIP);
+
+    int getWaitVideoRepeatBeforeTwitter() const;
+    void setWaitVideoRepeatBeforeTwitter(int waitVideoRepeatBeforeTwitter);
+
 private:
     void addTemplate(QString name);
     void addTemplate(Value const &value);
@@ -338,6 +347,7 @@ private:
     QString              m_twitterLastRetrieved;
     QString              m_twitterMessage;
     QString              m_twitterMessageColor;
+    int                  m_waitVideoRepeatBeforeTwitter;
     QString              m_effectDefault;
     bool                 m_mirrorConnected;
     int                  m_countdown;
@@ -345,6 +355,7 @@ private:
     int                  m_viewAllPhotoTime;
     bool                 m_isMirror;
     QString              m_commandIP;
+    QString              m_mirrorIP;
 
     PhotoQueueManager *  m_photoQueueManager;
     WifiManager *        m_wifiManager;
@@ -397,7 +408,9 @@ signals:
     void viewAllPhotoTimeChanged();
     void isMirrorChanged();
     void commandIPChanged();
+    void mirrorIPChanged();
     void twitterVideoChanged();
+    void waitVideoRepeatBeforeTwitterChanged();
 };
 
 #endif // PARAMETERS_H

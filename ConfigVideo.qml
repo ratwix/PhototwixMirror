@@ -48,11 +48,47 @@ Item {
             videoItem: parameters.endGlobalPhotoProcessVideo
         }
 
+
         Row {
             height: 30
             Label {
                 width: 200
-                text: "Photo Countdown"
+                text: "Loop Wait -> Twitter"
+            }
+
+            Button {
+                height: parent.height
+                width: parent.height
+                text: "-"
+                onClicked: {
+                    parameters.waitVideoRepeatBeforeTwitter = parameters.waitVideoRepeatBeforeTwitter - 1 < 1 ? 1 : parameters.waitVideoRepeatBeforeTwitter - 1;
+                }
+            }
+
+            Text {
+                anchors.leftMargin: 30
+                height: parent.height
+                width: parent.height * 3
+                font.pixelSize: parent.height * 0.9
+                text: parameters.waitVideoRepeatBeforeTwitter
+            }
+
+            Button {
+                height: parent.height
+                width: parent.height
+                text: "+"
+                onClicked: {
+                    parameters.waitVideoRepeatBeforeTwitter = parameters.waitVideoRepeatBeforeTwitter + 1
+                }
+            }
+
+        }
+
+        Row {
+            height: 30
+            Label {
+                width: 200
+                text: "Photo Countdown (s)"
             }
 
             Button {
@@ -87,7 +123,7 @@ Item {
             height: 30
             Label {
                 width: 200
-                text: "View Photo"
+                text: "View Photo (s)"
             }
 
             Button {
@@ -122,7 +158,7 @@ Item {
             height: 30
             Label {
                 width: 200
-                text: "View All Photos"
+                text: "View All Photos (s)"
             }
 
             Button {

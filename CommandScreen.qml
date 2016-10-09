@@ -172,6 +172,7 @@ Item {
             verticalAlignment: Text.AlignVCenter
             text: "\uf083"
             color:(parameters.mirrorConnected) ? "green" :  "black"
+            /*
             MouseArea { //TODO: test envoie message
                 anchors.fill: parent
                 onClicked: {
@@ -180,6 +181,7 @@ Item {
                     photoServerRobot.getResultPhotoProcess(message)
                 }
             }
+            */
         }
     }
 

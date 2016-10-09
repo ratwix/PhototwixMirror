@@ -100,13 +100,17 @@ Item {
         }
         Text {
             width: parent.width
-            horizontalAlignment: Text.AlignHCenter
+            horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
-            text:parameters.wifiManager.connectWifiIP
+            text:"WIFI:" + parameters.wifiManager.connectWifiIP
+        }
+        Text {
+            width: parent.width
+            horizontalAlignment: Text.AlignLeft
+            verticalAlignment: Text.AlignVCenter
+            text:"Eth:" + parameters.wifiManager.connectEthernetIP
         }
     }
-
-
 
     ButtonAwesome {
         anchors.top: parent.top
